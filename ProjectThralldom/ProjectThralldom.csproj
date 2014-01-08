@@ -19,7 +19,6 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="default.htm" />
-    <Content Include="Scripts\gl-matrix-min.js" />
     <Content Include="Tests\TestingPage.html" />
     <Content Include="web.config" />
   </ItemGroup>
@@ -35,7 +34,6 @@
   <ItemGroup>
     <TypeScriptCompile Include="Application.ts" />
     <TypeScriptCompile Include="Main.ts" />
-    <TypeScriptCompile Include="Scripts\typings\gl-matrix\gl-matrix.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\qunit\qunit.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\threejs\three.d.ts" />
     <TypeScriptCompile Include="Tests\Tests.ts" />
