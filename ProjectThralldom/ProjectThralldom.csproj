@@ -34,6 +34,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Code\Application.ts" />
+    <TypeScriptCompile Include="Code\LangagePacks\Bulgarian.ts" />
+    <TypeScriptCompile Include="Code\LangagePacks\English.ts" />
+    <TypeScriptCompile Include="Code\LangagePacks\ILanguagePack.ts" />
     <TypeScriptCompile Include="Code\Main.ts" />
     <TypeScriptCompile Include="Code\Managers\IDeferred.ts" />
     <TypeScriptCompile Include="Code\Managers\InputManager.ts" />

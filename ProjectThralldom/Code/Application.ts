@@ -18,11 +18,13 @@ module Thralldom {
 
         // Managers
         private input: InputManager;
+        private language: Languages.ILanguagePack;
 
         constructor(container: HTMLElement, updateInterval: number) {
             this.container = container;
             this.updateInterval = updateInterval;
             this.input = new InputManager();
+            this.language = new Languages.Bulgarian();
         }
 
         private init(): void {
@@ -95,7 +97,7 @@ module Thralldom {
             //this.handleMouse();
 
             var node = document.getElementsByTagName("nav").item(0).getElementsByTagName("p").item(0);
-            node.innerText = this.input.mouse.toString();
+            node.innerText = this.language.welcome + "\n" +  this.input.mouse.toString();
 
             this.input.swap();
 
