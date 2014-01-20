@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="Code\StringExtensions.js" />
     <Content Include="default.htm" />
     <Content Include="Tests\TestingPage.html" />
     <Content Include="web.config" />
@@ -32,8 +33,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Application.ts" />
-    <TypeScriptCompile Include="Main.ts" />
+    <TypeScriptCompile Include="Code\Application.ts" />
+    <TypeScriptCompile Include="Code\Main.ts" />
+    <TypeScriptCompile Include="Code\Managers\IDeferred.ts" />
+    <TypeScriptCompile Include="Code\Managers\InputManager.ts" />
+    <TypeScriptCompile Include="Code\Managers\MouseData.ts" />
+    <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />
+    <TypeScriptCompile Include="Code\Utilities.ts" />
     <TypeScriptCompile Include="Scripts\typings\qunit\qunit.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\threejs\three.d.ts" />
     <TypeScriptCompile Include="Tests\Tests.ts" />

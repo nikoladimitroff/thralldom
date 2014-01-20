@@ -5,15 +5,23 @@
     <title>Project Thralldom</title>
     <link rel="stylesheet" href="app.css" type="text/css" />
 </head>
-<body>
-    <h1>Thralldom</h1>
-    <div id="content"></div>
+<body class="unselectable">
+    <div id="webGL" class="maximized"></div>
+    <nav id="ui" class="maximized">
+        <p></p>
+    </nav>
 
     <!-- External libs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r61/three.min.js"></script>
 
+    <!--JS Polyfill-->
+    <script src="Code/StringExtensions.js"></script>
     <!-- Ours -->
-    <script src="application.js"></script>
-    <script src="main.js"></script>
+    <script src="Code/Utilities.js"></script>
+    <script src="Code/Managers/MouseData.js"></script>
+    <script src="Code/Managers/InputManager.js"></script>
+
+    <script src="Code/application.js"></script>
+    <script src="Code/main.js"></script>
 </body>
 </html>
