@@ -19,6 +19,7 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
+    <Content Include="Content\Textures\blue-green-checker.png" />
     <Content Include="Content\Textures\red-checker.png" />
     <Content Include="default.htm" />
     <Content Include="Tests\TestingPage.html" />
@@ -36,6 +37,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="Code\Application.ts" />
     <TypeScriptCompile Include="Code\Character.ts" />
+    <TypeScriptCompile Include="Code\GeometryUtils.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\Bulgarian.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\English.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\ILanguagePack.ts" />
