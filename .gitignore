@@ -13,6 +13,10 @@ TestResults
 *.user
 *.sln.docstates
 
+## Javascript and javascript maps are usually not needed
+*.js
+*.js.map
+
 # Build results
 [Dd]ebug/
 [Rr]elease/
