@@ -19,6 +19,7 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
+    <Content Include="Content\Textures\red-checker.png" />
     <Content Include="default.htm" />
     <Content Include="Tests\TestingPage.html" />
     <Content Include="web.config" />
@@ -34,9 +35,10 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Code\Application.ts" />
-    <TypeScriptCompile Include="Code\LangagePacks\Bulgarian.ts" />
-    <TypeScriptCompile Include="Code\LangagePacks\English.ts" />
-    <TypeScriptCompile Include="Code\LangagePacks\ILanguagePack.ts" />
+    <TypeScriptCompile Include="Code\Character.ts" />
+    <TypeScriptCompile Include="Code\LanguagePacks\Bulgarian.ts" />
+    <TypeScriptCompile Include="Code\LanguagePacks\English.ts" />
+    <TypeScriptCompile Include="Code\LanguagePacks\ILanguagePack.ts" />
     <TypeScriptCompile Include="Code\Main.ts" />
     <TypeScriptCompile Include="Code\Managers\IDeferred.ts" />
     <TypeScriptCompile Include="Code\Managers\InputManager.ts" />
