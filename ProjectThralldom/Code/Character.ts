@@ -3,7 +3,7 @@ module Thralldom {
         public mesh: THREE.Mesh;
 
         constructor() {
-            var texture = THREE.ImageUtils.loadTexture("Content/Textures/blue-green-checker.png");
+            var texture = THREE.ImageUtils.loadTexture(ContentLibrary.Textures.BlueGreenCheckerPNG);
             var scale = 20;
             var geometry = new THREE.CubeGeometry(scale, scale, scale);
             var material = new THREE.MeshPhongMaterial({ map: texture});

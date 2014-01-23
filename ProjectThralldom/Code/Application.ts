@@ -46,7 +46,7 @@ module Thralldom {
             this.scene.add(this.hero.mesh);
 
             // Floor
-            var texture = THREE.ImageUtils.loadTexture("Content/Textures/red-checker.png");
+            var texture = THREE.ImageUtils.loadTexture(ContentLibrary.Textures.RedCheckerPNG);
             var planeGeometry = new THREE.PlaneGeometry(300, 300);
             var planeMaterial = new THREE.MeshPhongMaterial({ map: texture});
             var plane = new THREE.Mesh(planeGeometry, planeMaterial);

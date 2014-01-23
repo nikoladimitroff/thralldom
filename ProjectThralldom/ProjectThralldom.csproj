@@ -19,8 +19,8 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
-    <Content Include="Content\Textures\blue-green-checker.png" />
-    <Content Include="Content\Textures\red-checker.png" />
+    <Content Include="Content\Textures\BlueGreenChecker.png" />
+    <Content Include="Content\Textures\RedChecker.png" />
     <Content Include="default.htm" />
     <Content Include="Tests\TestingPage.html" />
     <Content Include="web.config" />
@@ -42,6 +42,8 @@
     <TypeScriptCompile Include="Code\LanguagePacks\English.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\ILanguagePack.ts" />
     <TypeScriptCompile Include="Code\Main.ts" />
+    <TypeScriptCompile Include="Code\Managers\ContentLibrary.ts" />
+    <TypeScriptCompile Include="Code\Managers\ContentManager.ts" />
     <TypeScriptCompile Include="Code\Managers\IDeferred.ts" />
     <TypeScriptCompile Include="Code\Managers\InputManager.ts" />
     <TypeScriptCompile Include="Code\Managers\MouseData.ts" />
@@ -91,4 +93,7 @@
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>"$(SolutionDir)\Thralldom.OfflineTool\bin\Debug\Thralldom.OfflineTool.exe" "$(ProjectDir)Content" "$(ProjectDir)Code\Managers\ContentLibrary.ts"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
