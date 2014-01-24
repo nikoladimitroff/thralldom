@@ -19,6 +19,12 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
+    <Content Include="Content\Models\Spartan\Ccloth.png" />
+    <Content Include="Content\Models\Spartan\Cgold.png" />
+    <Content Include="Content\Models\Spartan\Cnormal.png" />
+    <Content Include="Content\Models\Spartan\Cskin.png" />
+    <Content Include="Content\Models\Spartan\Csword.png" />
+    <Content Include="Content\Models\Spartan\spartan.js" />
     <Content Include="Content\Textures\BlueGreenChecker.png" />
     <Content Include="Content\Textures\RedChecker.png" />
     <Content Include="default.htm" />
@@ -55,6 +61,7 @@
     <TypeScriptCompile Include="Scripts\typings\threejs\three.d.ts" />
     <TypeScriptCompile Include="Tests\Tests.ts" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

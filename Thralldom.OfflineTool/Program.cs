@@ -30,15 +30,13 @@ namespace Thralldom.OfflineTool
             // Enumerate trough all directories and create a new object for each one. Enumerate trough all files and add them as properties to their parent's folder
             StringBuilder content = new StringBuilder();
             content.AppendLine(@"//@StartContent");
-            content.Append("\t\t");
             foreach (var dir in Directory.EnumerateDirectories(folder))
             {
 
                 string name = GetDirName(dir);
-                content.AppendFormat("public static {0} = {{ ", name);
+                content.AppendFormat("\t\tpublic static {0} = {{ ", name);
                 // Recursively add other folders as sub properties
                 AddPropertiesRecursively(content, dir, name);
-                content.Remove(content.Length - 2, 1);
                 content.AppendLine(" };");
             }
             content.AppendLine();
@@ -56,7 +54,7 @@ namespace Thralldom.OfflineTool
             {
                 string folderName = GetDirName(folder);
                 content.AppendFormat("{0}: {{ ", folderName);
-                AddPropertiesRecursively(content, folder, folderName);
+                AddPropertiesRecursively(content, folder, dirName + "/" + folderName);
                 content.Append("},");
             }
 

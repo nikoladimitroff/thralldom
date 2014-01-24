@@ -1,22 +1,21 @@
 module Thralldom {
     export class Character {
-        public mesh: THREE.Mesh;
+        public mesh: THREE.Object3D;
 
-        constructor() {
+        constructor(content: ContentManager) {
 
-            var texture = THREE.ImageUtils.loadTexture(ContentLibrary.Textures.BlueGreenCheckerPNG);
-            var scale = 20;
-            var geometry = new THREE.CubeGeometry(scale, scale, scale);
-            var material = new THREE.MeshPhongMaterial({ map: texture});
-            this.mesh = new THREE.Mesh(geometry, material);
-            this.mesh.position.y = scale / 2;
-            this.mesh.castShadow = true;
-        }
+            //var texture = THREE.ImageUtils.loadTexture(ContentLibrary.Textures.BlueGreenCheckerPNG);
+            //var scale = 20;
+            //var geometry = new THREE.CubeGeometry(scale, scale, scale);
+            //var material = new THREE.MeshPhongMaterial({ map: texture});
+            //this.mesh = new THREE.Mesh(geometry, material);
+            //this.mesh.position.y = scale / 2;
+            //this.mesh.castShadow = true;
 
-        get forward(): THREE.Vector3 {
-            var normal = new THREE.Vector3(0, 0, 1).transformDirection(this.mesh.matrix);
-            normal.normalize();
-            return normal;
+            this.mesh = content.getContent(ContentLibrary.Models.Spartan.spartanJS);
+            this.mesh.scale.set(20, 20, 20);
+
+
         }
     }
 } 

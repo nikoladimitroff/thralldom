@@ -13,6 +13,8 @@ module Thralldom {
         private keybindings = {
             rotateLeft: InputManager.keyNameToKeyCode("A"),
             rotateRight: InputManager.keyNameToKeyCode("D"),
+            strafeLeft: InputManager.keyNameToKeyCode("Q"),
+            strafeRight: InputManager.keyNameToKeyCode("E"),
             moveForward: InputManager.keyNameToKeyCode("W"),
             moveBackward: InputManager.keyNameToKeyCode("S")
         };
@@ -24,6 +26,7 @@ module Thralldom {
 
         // Managers
         private input: InputManager;
+        private content: ContentManager;
         private language: Languages.ILanguagePack;
 
         constructor(container: HTMLElement, updateInterval: number) {
@@ -31,6 +34,7 @@ module Thralldom {
             this.updateInterval = updateInterval;
             this.input = new InputManager();
             this.language = new Languages.Bulgarian();
+            this.content = new ContentManager();
         }
 
         private init(): void {
@@ -44,7 +48,7 @@ module Thralldom {
             this.container.appendChild(this.renderer.domElement);
 
             // Scene (ugly one)
-            this.hero = new Character();
+            this.hero = new Character(this.content);
             // TP Camera controller
             this.cameraController = new CameraControllers.ThirdPersonLockCameraController(
                 this.camera, this.hero.mesh, 70, new THREE.Vector3(0, 25, 0));
@@ -65,9 +69,18 @@ module Thralldom {
             var pointLight = new THREE.PointLight(0xffffff, 2, 1000);
             pointLight.position = new THREE.Vector3(0, 30, 30);
             this.scene.add(pointLight);
+            var ambient = new THREE.AmbientLight(0xffffff);
+            this.scene.add(ambient);
 
             var axes = new THREE.AxisHelper(1000);
             this.scene.add(axes);
+        }
+
+        private loadContent(): void {
+            this.content.loadModel(ContentLibrary.Models.Spartan.spartanJS);
+            this.content.loadTexture(ContentLibrary.Textures.BlueGreenCheckerPNG);
+            this.content.loadTexture(ContentLibrary.Textures.RedCheckerPNG);
+            //this.content.loadTexture(ContentLibrary.Models.Spartan.CclothPSD);
         }
 
         private handleKeyboard() {
@@ -79,6 +92,12 @@ module Thralldom {
             }
             if (this.input.keyboard[this.keybindings.moveForward]) {
                 this.hero.mesh.translateZ(1);
+            }
+            if (this.input.keyboard[this.keybindings.strafeLeft]) {
+                this.hero.mesh.translateX(-1);
+            }
+            if (this.input.keyboard[this.keybindings.strafeRight]) {
+                this.hero.mesh.translateX(1);
             }
             if (this.input.keyboard[this.keybindings.moveBackward]) {
                 this.hero.mesh.translateZ(-1);
@@ -116,9 +135,12 @@ module Thralldom {
         }
 
         public run(): void {
-            this.init();
-            this.update();
-            this.draw(0);
+            this.loadContent();
+            this.content.onLoaded = () => {
+                this.init();
+                this.update();
+                this.draw(0);
+            }
         }
     }
 }
