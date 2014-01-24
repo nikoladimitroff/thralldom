@@ -3,6 +3,7 @@ module Thralldom {
         public mesh: THREE.Mesh;
 
         constructor() {
+
             var texture = THREE.ImageUtils.loadTexture(ContentLibrary.Textures.BlueGreenCheckerPNG);
             var scale = 20;
             var geometry = new THREE.CubeGeometry(scale, scale, scale);
@@ -13,7 +14,7 @@ module Thralldom {
         }
 
         get forward(): THREE.Vector3 {
-            var normal = new THREE.Vector3(0, 0, 1).applyMatrix4(this.mesh.matrix);
+            var normal = new THREE.Vector3(0, 0, 1).transformDirection(this.mesh.matrix);
             normal.normalize();
             return normal;
         }

@@ -22,6 +22,11 @@ namespace Thralldom.OfflineTool
                 destination = args[1];
 
 
+            CreateContentLibrary(folder, destination);
+        }
+
+        private static void CreateContentLibrary(string folder, string destination)
+        {
             // Enumerate trough all directories and create a new object for each one. Enumerate trough all files and add them as properties to their parent's folder
             StringBuilder content = new StringBuilder();
             content.AppendLine(@"//@StartContent");
@@ -45,11 +50,6 @@ namespace Thralldom.OfflineTool
             File.WriteAllText(destination, fileContent);
         }
 
-        private static string GetDirName(string directory)
-        {
-            return directory.Replace(Path.GetDirectoryName(directory), "").Remove(0, 1);
-        }
-
         private static void AddPropertiesRecursively(StringBuilder content, string dir, string dirName)
         {
             foreach (var folder in Directory.EnumerateDirectories(dir))
@@ -65,6 +65,11 @@ namespace Thralldom.OfflineTool
                 string fileName = Path.GetFileNameWithoutExtension(file) + Path.GetExtension(file).Remove(0, 1).ToUpperInvariant();
                 content.AppendFormat("{0}: \"{1}\", ", fileName, "Content/" + dirName + "/" + Path.GetFileName(file));
             }
+        }
+
+        private static string GetDirName(string directory)
+        {
+            return directory.Replace(Path.GetDirectoryName(directory), "").Remove(0, 1);
         }
     }
 }

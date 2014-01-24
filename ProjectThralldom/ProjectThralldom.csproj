@@ -36,6 +36,8 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Code\Application.ts" />
+    <TypeScriptCompile Include="Code\CameraControllers\ICameraController.ts" />
+    <TypeScriptCompile Include="Code\CameraControllers\ThirdPersonLockCameraController.ts" />
     <TypeScriptCompile Include="Code\Character.ts" />
     <TypeScriptCompile Include="Code\GeometryUtils.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\Bulgarian.ts" />
