@@ -19,17 +19,25 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
+    <Content Include="Content\Models\Engineer\engineer.js" />
+    <Content Include="Content\Models\Engineer\engineer_head.jpg" />
+    <Content Include="Content\Models\Engineer\engineer_red.jpg" />
     <Content Include="Content\Models\Spartan\Ccloth.png" />
     <Content Include="Content\Models\Spartan\Cgold.png" />
     <Content Include="Content\Models\Spartan\Cnormal.png" />
     <Content Include="Content\Models\Spartan\Cskin.png" />
     <Content Include="Content\Models\Spartan\Csword.png" />
+    <Content Include="Content\Models\Spartan\spartanCopy.js" />
     <Content Include="Content\Models\Spartan\spartan.js" />
     <Content Include="Content\Textures\BlueGreenChecker.png" />
     <Content Include="Content\Textures\RedChecker.png" />
     <Content Include="default.htm" />
+    <Content Include="helvetiker_regular.typeface.js" />
+    <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Tests\TestingPage.html" />
-    <Content Include="web.config" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -43,12 +51,15 @@
   <ItemGroup>
     <TypeScriptCompile Include="Code\Application.ts" />
     <TypeScriptCompile Include="Code\CameraControllers\ICameraController.ts" />
+    <TypeScriptCompile Include="Code\CameraControllers\SmartCameraController.ts" />
     <TypeScriptCompile Include="Code\CameraControllers\ThirdPersonLockCameraController.ts" />
     <TypeScriptCompile Include="Code\Character.ts" />
     <TypeScriptCompile Include="Code\GeometryUtils.ts" />
+    <TypeScriptCompile Include="Code\IAmmo.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\Bulgarian.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\English.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\ILanguagePack.ts" />
+    <TypeScriptCompile Include="Code\LaserOfDeath.ts" />
     <TypeScriptCompile Include="Code\Main.ts" />
     <TypeScriptCompile Include="Code\Managers\ContentLibrary.ts" />
     <TypeScriptCompile Include="Code\Managers\ContentManager.ts" />
@@ -58,6 +69,7 @@
     <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />
     <TypeScriptCompile Include="Code\Utilities.ts" />
     <TypeScriptCompile Include="Scripts\typings\qunit\qunit.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\stats.js\stats.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\threejs\three.d.ts" />
     <TypeScriptCompile Include="Tests\Tests.ts" />
   </ItemGroup>
