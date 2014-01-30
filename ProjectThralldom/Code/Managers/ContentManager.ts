@@ -27,7 +27,7 @@ module Thralldom {
                 throw new Error("not supported");
             }
             else {
-                THREE.ImageUtils.loadTexture(path, 0, (texture) => this.onContentLoaded(path, texture));
+                THREE.ImageUtils.loadTexture(path, 0, (texture) => this.onContentLoaded(path, () => texture));
             }
         }
 
@@ -36,17 +36,57 @@ module Thralldom {
 
             var loader = new THREE.JSONLoader();
             var mesh: THREE.Object3D;
-            loader.load(ContentLibrary.Models.Spartan.spartanJS, (geometry, materials) => {
-                mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+            loader.load(path, (geometry, materials) => {
                 geometry.computeFaceNormals();
                 geometry.computeVertexNormals();
-                this.onContentLoaded(path, mesh);
+                var duplicate = () => new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+                this.onContentLoaded(path, duplicate);
+            });
+        }
+
+        public loadSkinnedModel(path: string): void {
+            this.loading++;
+
+            var loader = new THREE.JSONLoader();
+            var mesh: THREE.Object3D;
+
+            function ensureLoop(animation) {
+                for (var i = 0; i < animation.hierarchy.length; i++) {
+
+                    var bone = animation.hierarchy[i];
+
+                    var first = bone.keys[0];
+                    var last = bone.keys[bone.keys.length - 1];
+
+                    last.pos = first.pos;
+                    last.rot = first.rot;
+                    last.scl = first.scl;
+                }
+            }
+
+            loader.load(path, (geometry, materials) => {
+
+                ensureLoop(geometry.animation);
+                THREE.AnimationHandler.add(geometry.animation);
+
+                for (var i = 0; i < materials.length; i++) {
+
+                    var m = <any> materials[i];
+                    m.skinning = true;
+                    m.ambient.copy(m.color);
+
+                    m.wrapAround = true;
+                    m.perPixel = true;
+                }
+
+                var duplicate = () => new THREE.SkinnedMesh(geometry, new THREE.MeshFaceMaterial(materials));
+                this.onContentLoaded(path, duplicate);
             });
         }
 
         public getContent(path: string): any {
             if (this.loadedContent[path]) {
-                return this.loadedContent[path];
+                return this.loadedContent[path]();
             }
             else {
                 throw new Error("content not loaded");
