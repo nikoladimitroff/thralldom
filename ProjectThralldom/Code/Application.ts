@@ -4,15 +4,11 @@ module Thralldom {
         private updateInterval: number;
 
         // Three.js variables
-        private clock: THREE.Clock;
         private scene: THREE.Scene;
-        private camera: THREE.PerspectiveCamera;
+        private camera: THREE.Camera;
         private cameraController: CameraControllers.ThirdPersonLockCameraController;
         private renderer: THREE.WebGLRenderer;
         private container: HTMLElement;
-
-        // stats
-        private stats: Stats;
 
         private keybindings = {
             rotateLeft: InputManager.keyNameToKeyCode("A"),
@@ -25,9 +21,6 @@ module Thralldom {
 
         public hero: Character;
 
-        public npcs: Array<Character>;
-        public ammunitions: Array<IAmmo>;
-
         // Constants
         private cameraSpeed: number = 5;
 
@@ -39,28 +32,16 @@ module Thralldom {
         constructor(container: HTMLElement, updateInterval: number) {
             this.container = container;
             this.updateInterval = updateInterval;
-            this.input = new InputManager(container);
-            this.language = new Languages.English();
+            this.input = new InputManager();
+            this.language = new Languages.Bulgarian();
             this.content = new ContentManager();
-            this.clock = new THREE.Clock();
         }
 
         private init(): void {
 
-            this.clock.start();
-
-            this.stats = new Stats();
-            this.stats.setMode(StatsModes.Fps);
-            this.stats.domElement.style.position = 'absolute';
-            this.stats.domElement.style.left = '0px';
-            this.stats.domElement.style.bottom = '0px';
-            document.body.appendChild(this.stats.domElement);
-
-
             this.scene = new THREE.Scene();
             this.camera = new THREE.PerspectiveCamera(60, this.container.offsetWidth / this.container.offsetHeight, 1, 1000);
             this.renderer = new THREE.WebGLRenderer();
-
 
 
             this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
@@ -73,19 +54,6 @@ module Thralldom {
                 this.camera, this.hero.mesh, 70, new THREE.Vector3(0, 25, 0));
 
             this.scene.add(this.hero.mesh);
-
-            // npcs
-            this.npcs = new Array<Character>();
-            var npcsCount = 5;
-            for (var i = 0; i < npcsCount; i++) {
-                this.npcs.push(new Character(this.content));
-                var angle = i * 2 * Math.PI / npcsCount;
-                this.npcs[i].mesh.position.x = 10 * npcsCount * Math.cos(angle);
-                this.npcs[i].mesh.position.z = 10 * npcsCount * Math.sin(angle);
-                this.scene.add(this.npcs[i].mesh);
-            }
-            // ammo
-            this.ammunitions = new Array<IAmmo>();
 
             // Floor
             var texture = THREE.ImageUtils.loadTexture(ContentLibrary.Textures.RedCheckerPNG);
@@ -109,7 +77,7 @@ module Thralldom {
         }
 
         private loadContent(): void {
-            this.content.loadSkinnedModel(ContentLibrary.Models.Engineer.engineerJS);
+            this.content.loadModel(ContentLibrary.Models.Spartan.spartanJS);
             this.content.loadTexture(ContentLibrary.Textures.BlueGreenCheckerPNG);
             this.content.loadTexture(ContentLibrary.Textures.RedCheckerPNG);
             //this.content.loadTexture(ContentLibrary.Models.Spartan.CclothPSD);
@@ -126,10 +94,10 @@ module Thralldom {
                 this.hero.mesh.translateZ(1);
             }
             if (this.input.keyboard[this.keybindings.strafeLeft]) {
-                this.hero.mesh.translateX(1);
+                this.hero.mesh.translateX(-1);
             }
             if (this.input.keyboard[this.keybindings.strafeRight]) {
-                this.hero.mesh.translateX(-1);
+                this.hero.mesh.translateX(1);
             }
             if (this.input.keyboard[this.keybindings.moveBackward]) {
                 this.hero.mesh.translateZ(-1);
@@ -138,76 +106,30 @@ module Thralldom {
 
         private handleMouse() {
             var movement = new THREE.Vector3;
-            movement.y = (this.input.mouse.ndc.x - this.input.previousMouse.ndc.x);
-            movement.x = (this.input.mouse.ndc.y - this.input.previousMouse.ndc.y);
+            movement.y = (this.input.mouse.coordinates.x - this.input.previousMouse.coordinates.x);
+            movement.x = (this.input.mouse.coordinates.y - this.input.previousMouse.coordinates.y);
             movement.z = (this.input.mouse.scroll - this.input.previousMouse.scroll) / 120;
 
             this.cameraController.distance -= movement.z * this.cameraSpeed;
-
-            var scale = 10 * Math.PI;
-            this.camera.rotation.x += movement.x * scale;
-            this.camera.rotation.y += movement.y * scale;
-            console.log(movement);
-
-
-            // Attack below, should refactor
-            var projector = new THREE.Projector();
-            var mouse3d = new THREE.Vector3();
-            mouse3d.x = (this.input.mouse.ndc.x);
-            mouse3d.y = (this.input.mouse.ndc.y);
-
-
-            var caster = projector.pickingRay(mouse3d, this.camera);
-            for (var i = 0; i < this.npcs.length; i++) {
-                var intersections = caster.intersectObject(this.npcs[i].mesh);
-                if (intersections.length != 0) {
-                    this.hero.attack(this.npcs[i]);
-                    var startPoint = new THREE.Vector3();
-                    startPoint.copy(this.hero.mesh.position).y += 20;
-                    var endPoint = new THREE.Vector3();
-                    endPoint.copy(this.npcs[i].mesh.position).y += 20;
-                    var laser = new LaserOfDeath(startPoint, intersections[0].point);
-                    this.ammunitions.push(laser);
-                    this.scene.add(laser.mesh);
-                }
-            }
         }
 
-        private update(delta): void {
+        private update(): void {
             this.handleKeyboard();
             this.handleMouse();
 
             var node = document.getElementsByTagName("nav").item(0).getElementsByTagName("p").item(0);
             node.innerText = this.language.welcome + "\n" +  this.input.mouse.toString();
 
-            // Reverse loop so that we can remove elements from the array.
-            for (var i = this.npcs.length - 1; i > - 1; i--) {
-                if (this.npcs[i].health <= 0) {
-                    this.scene.remove(this.npcs[i].mesh);
-                    this.npcs.splice(i, 1);
-                }
-            }
-            for (var i = this.ammunitions.length - 1; i > -1; i--) {
-                var ammo = this.ammunitions[i];
-                if (!ammo.isNeeded()) {
-                    this.scene.remove(ammo.mesh);
-                    this.ammunitions.splice(i, 1);
-                }
-                ammo.update(delta);
-            }
 
 
-            THREE.AnimationHandler.update(0.9 * this.clock.getDelta());
             this.cameraController.update(this.updateInterval);
             this.input.swap();
 
-            setTimeout(() => this.update(this.updateInterval), this.updateInterval);
+            setTimeout(() => this.update(), this.updateInterval);
         }
 
-        private draw(delta: number) {
-            this.stats.begin();
+        private draw(deltaTime: number) {
             this.renderer.render(this.scene, this.camera);
-            this.stats.end();
 
             requestAnimationFrame((time) => this.draw(time));
         }
@@ -216,13 +138,8 @@ module Thralldom {
             this.loadContent();
             this.content.onLoaded = () => {
                 this.init();
-
-
-                window.addEventListener("resize", Utilities.GetOnResizeHandler(this.container, this.renderer, this.camera));
-
-                this.update(this.updateInterval);
+                this.update();
                 this.draw(0);
-
             }
         }
     }

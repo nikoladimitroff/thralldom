@@ -1,17 +1,5 @@
 module Thralldom {
     export class Utilities {
-        public static GetOnResizeHandler(domContainer: HTMLElement, renderer: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera): () => void {
-            return function () {
-                var width = domContainer.offsetWidth,
-                    height = domContainer.offsetHeight;
-                // notify the renderer of the size change
-                renderer.setSize(width, height)
-                // update the camera
-                camera.aspect = width / height;
-                camera.updateProjectionMatrix()
-            };
-        }
-
         public static formatString(format: string, ...args) {
             /// <summary>Replaces the format items in a specified String with the text equivalents of the values of   corresponding object instances. The invariant culture will be used to format dates and numbers.</summary>
             /// <param name="format" type="String">A format string.</param>
@@ -20,7 +8,7 @@ module Thralldom {
             return Utilities._toFormattedString(false, arguments);
         }
 
-        private static _toFormattedString = function String$_toFormattedString(useLocale, args) {
+    private static _toFormattedString = function String$_toFormattedString(useLocale, args) {
             var result = '';
             var format = args[0];
 

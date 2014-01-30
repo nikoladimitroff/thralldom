@@ -1,8 +1,6 @@
 module Thralldom {
     export class InputManager {
 
-        private container: HTMLElement;
-
         public mouse: MouseData;
         public previousMouse: MouseData;
         public keyboard: Array<boolean>;
@@ -12,13 +10,11 @@ module Thralldom {
         private keyPressListener: IDeferred<number>;
         private completeKeyPress: (number) => void;
 
-        constructor(container: HTMLElement) {
+        constructor() {
             this.keyboard = [];
             this.previousKeyboard = [];
             this.mouse = new MouseData();
             this.previousMouse = new MouseData();
-
-            this.container = container;
 
             this.init();
         }
@@ -63,12 +59,8 @@ module Thralldom {
             };
 
             window.onmousemove = (args) => {
-                var widthOver2 = this.container.offsetWidth / 2;
-                var height = this.container.offsetHeight;
-                var heightOverTwo = height / 2;
-                // Map x to [-1; 1] (left to right) and y to [1; -1] (top to bottom)
-                this.mouse.ndc.x = (args.x / widthOver2 - 1);
-                this.mouse.ndc.y = ((height - args.y) / heightOverTwo - 1);
+                this.mouse.coordinates.x = args.x;
+                this.mouse.coordinates.y = args.y;
             };
 
             window.onmousewheel = (args) => {
