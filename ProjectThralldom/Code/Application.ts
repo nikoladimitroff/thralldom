@@ -115,32 +115,34 @@ module Thralldom {
             //this.content.loadTexture(ContentLibrary.Models.Spartan.CclothPSD);
         }
 
-        private handleKeyboard() {
+        private handleKeyboard(delta: number) {
+            delta *= 10;
             if (this.input.keyboard[this.keybindings.rotateLeft]) {
-                this.hero.mesh.rotation.y += 0.1;
+                this.hero.mesh.rotation.y += 0.1 * delta;
             }
             if (this.input.keyboard[this.keybindings.rotateRight]) {
-                this.hero.mesh.rotation.y -= 0.1;
+                this.hero.mesh.rotation.y -= 0.1 * delta;
             }
             if (this.input.keyboard[this.keybindings.moveForward]) {
-                this.hero.mesh.translateZ(1);
+                this.hero.mesh.translateZ(1 * delta);
             }
             if (this.input.keyboard[this.keybindings.strafeLeft]) {
-                this.hero.mesh.translateX(1);
+                this.hero.mesh.translateX(1 * delta);
             }
             if (this.input.keyboard[this.keybindings.strafeRight]) {
-                this.hero.mesh.translateX(-1);
+                this.hero.mesh.translateX(-1 * delta);
             }
             if (this.input.keyboard[this.keybindings.moveBackward]) {
-                this.hero.mesh.translateZ(-1);
+                this.hero.mesh.translateZ(-1 * delta);
             }
         }
 
-        private handleMouse() {
+        private handleMouse(delta: number) {
+            delta *= 25;
             var movement = new THREE.Vector3;
-            movement.y = (this.input.mouse.ndc.x - this.input.previousMouse.ndc.x);
-            movement.x = (this.input.mouse.ndc.y - this.input.previousMouse.ndc.y);
-            movement.z = (this.input.mouse.scroll - this.input.previousMouse.scroll) / 120;
+            movement.y = (this.input.mouse.ndc.x - this.input.previousMouse.ndc.x) * delta;
+            movement.x = (this.input.mouse.ndc.y - this.input.previousMouse.ndc.y) * delta;
+            movement.z = (this.input.mouse.scroll - this.input.previousMouse.scroll) / 120 * delta;
 
             this.cameraController.distance -= movement.z * this.cameraSpeed;
 
@@ -153,8 +155,8 @@ module Thralldom {
             // Attack below, should refactor
             var projector = new THREE.Projector();
             var mouse3d = new THREE.Vector3();
-            mouse3d.x = (this.input.mouse.ndc.x);
-            mouse3d.y = (this.input.mouse.ndc.y);
+            mouse3d.x = this.input.mouse.ndc.x;
+            mouse3d.y = this.input.mouse.ndc.y;
 
 
             var caster = projector.pickingRay(mouse3d, this.camera);
@@ -163,9 +165,7 @@ module Thralldom {
                 if (intersections.length != 0) {
                     this.hero.attack(this.npcs[i]);
                     var startPoint = new THREE.Vector3();
-                    startPoint.copy(this.hero.mesh.position).y += 20;
-                    var endPoint = new THREE.Vector3();
-                    endPoint.copy(this.npcs[i].mesh.position).y += 20;
+                    startPoint.copy(this.hero.mesh.position).y = 10;
                     var laser = new LaserOfDeath(startPoint, intersections[0].point);
                     this.ammunitions.push(laser);
                     this.scene.add(laser.mesh);
@@ -173,9 +173,11 @@ module Thralldom {
             }
         }
 
-        private update(delta): void {
-            this.handleKeyboard();
-            this.handleMouse();
+        private update(): void {
+            var delta = this.clock.getDelta();
+
+            this.handleKeyboard(delta);
+            this.handleMouse(delta);
 
             var node = document.getElementsByTagName("nav").item(0).getElementsByTagName("p").item(0);
             node.innerText = this.language.welcome + "\n" +  this.input.mouse.toString();
@@ -197,32 +199,33 @@ module Thralldom {
             }
 
 
-            THREE.AnimationHandler.update(0.9 * this.clock.getDelta());
+            THREE.AnimationHandler.update(0.9 * delta);
             this.cameraController.update(this.updateInterval);
             this.input.swap();
 
-            setTimeout(() => this.update(this.updateInterval), this.updateInterval);
+            //setTimeout(() => this.update(this.updateInterval), this.updateInterval);
         }
 
-        private draw(delta: number) {
+        private draw() {
+            this.update();
             this.stats.begin();
             this.renderer.render(this.scene, this.camera);
             this.stats.end();
+        }
 
-            requestAnimationFrame((time) => this.draw(time));
+        private loop() {
+            this.update();
+            this.draw();
+
+            requestAnimationFrame(() => this.loop());
         }
 
         public run(): void {
             this.loadContent();
             this.content.onLoaded = () => {
                 this.init();
-
-
                 window.addEventListener("resize", Utilities.GetOnResizeHandler(this.container, this.renderer, this.camera));
-
-                this.update(this.updateInterval);
-                this.draw(0);
-
+                this.loop();
             }
         }
     }
