@@ -7,7 +7,7 @@ module Thralldom {
         private clock: THREE.Clock;
         private scene: THREE.Scene;
         private camera: THREE.PerspectiveCamera;
-        private cameraController: CameraControllers.ThirdPersonLockCameraController;
+        private cameraController: CameraControllers.ICameraController;
         private renderer: THREE.WebGLRenderer;
         private container: HTMLElement;
 
@@ -69,7 +69,7 @@ module Thralldom {
             // Scene (ugly one)
             this.hero = new Character(this.content);
             // TP Camera controller
-            this.cameraController = new CameraControllers.ThirdPersonLockCameraController(
+            this.cameraController = new CameraControllers.SkyrimCameraController(
                 this.camera, this.hero.mesh, 70, new THREE.Vector3(0, 25, 0));
 
             this.scene.add(this.hero.mesh);
@@ -116,40 +116,13 @@ module Thralldom {
         }
 
         private handleKeyboard(delta: number) {
-            delta *= 10;
-            if (this.input.keyboard[this.keybindings.rotateLeft]) {
-                this.hero.mesh.rotation.y += 0.1 * delta;
-            }
-            if (this.input.keyboard[this.keybindings.rotateRight]) {
-                this.hero.mesh.rotation.y -= 0.1 * delta;
-            }
-            if (this.input.keyboard[this.keybindings.moveForward]) {
-                this.hero.mesh.translateZ(1 * delta);
-            }
-            if (this.input.keyboard[this.keybindings.strafeLeft]) {
-                this.hero.mesh.translateX(1 * delta);
-            }
-            if (this.input.keyboard[this.keybindings.strafeRight]) {
-                this.hero.mesh.translateX(-1 * delta);
-            }
-            if (this.input.keyboard[this.keybindings.moveBackward]) {
-                this.hero.mesh.translateZ(-1 * delta);
-            }
+
+            this.cameraController.handleKeyboardHeroMovement(delta, this.input, this.hero, this.keybindings);
         }
 
         private handleMouse(delta: number) {
-            delta *= 25;
-            var movement = new THREE.Vector3;
-            movement.y = (this.input.mouse.ndc.x - this.input.previousMouse.ndc.x) * delta;
-            movement.x = (this.input.mouse.ndc.y - this.input.previousMouse.ndc.y) * delta;
-            movement.z = (this.input.mouse.scroll - this.input.previousMouse.scroll) / 120 * delta;
+            this.cameraController.handleMouseRotation(delta, this.input, this.cameraSpeed);
 
-            this.cameraController.distance -= movement.z * this.cameraSpeed;
-
-            var scale = 10 * Math.PI;
-            this.camera.rotation.x += movement.x * scale;
-            this.camera.rotation.y += movement.y * scale;
-            console.log(movement);
 
 
             // Attack below, should refactor
@@ -180,7 +153,7 @@ module Thralldom {
             this.handleMouse(delta);
 
             var node = document.getElementsByTagName("nav").item(0).getElementsByTagName("p").item(0);
-            node.innerText = this.language.welcome + "\n" +  this.input.mouse.toString();
+            node.innerText = this.language.welcome + "\n" +  this.input.mouse.toString() + "\n" + THREE.Math.radToDeg(this.cameraController.rotation) + " " + THREE.Math.radToDeg(this.hero.mesh.rotation.y);
 
             // Reverse loop so that we can remove elements from the array.
             for (var i = this.npcs.length - 1; i > - 1; i--) {
@@ -200,7 +173,6 @@ module Thralldom {
 
 
             THREE.AnimationHandler.update(0.9 * delta);
-            this.cameraController.update(this.updateInterval);
             this.input.swap();
 
             //setTimeout(() => this.update(this.updateInterval), this.updateInterval);

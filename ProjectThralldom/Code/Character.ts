@@ -16,12 +16,9 @@ module Thralldom {
         }
 
         constructor(content: ContentManager) {
-
-
             this.hp = 100;
             this.range = 40;
             this.damage = 10;
-
 
             this.mesh = content.getContent(ContentLibrary.Models.Engineer.engineerJS);
 
