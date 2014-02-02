@@ -3,18 +3,19 @@ module Thralldom {
         export class SkyrimCameraController implements ICameraController {
 
             public camera: THREE.Camera;
+            public cameraSpeed: number;
 
             public target: THREE.Object3D;
             public distance: number;
             public bias: THREE.Vector3;
             public rotation: number;
 
-
-            constructor(camera: THREE.Camera, target: THREE.Object3D, distance: number, bias: THREE.Vector3) {
+            constructor(camera: THREE.Camera, camSpeed: number, target: THREE.Object3D, distance: number, bias: THREE.Vector3) {
                 this.camera = camera;
                 this.target = target;
                 this.distance = distance;
                 this.bias = bias;
+                this.cameraSpeed = camSpeed;
                 this.rotation = 0;
 
             }
@@ -31,7 +32,7 @@ module Thralldom {
                 this.camera.lookAt(this.target.position);
             }
 
-            public handleMouseRotation(delta: number, input: InputManager, camSpeed: number): void {
+            public handleMouseRotation(delta: number, input: InputManager): void {
 
                 delta *= 25;
                 var movement = new THREE.Vector3;
@@ -39,8 +40,8 @@ module Thralldom {
                 movement.x = (input.mouse.ndc.y -  input.previousMouse.ndc.y) * delta;
                 movement.z = (input.mouse.scroll - input.previousMouse.scroll) / 120 * delta;
 
-                // TODO: replace magic numbers!
-                this.distance -= movement.z * camSpeed;
+                // TODO: replace magic numbers! 
+                this.distance -= movement.z * this.cameraSpeed;
                 this.rotation += movement.y * 10 * Math.PI;
                 this.bias.y += movement.x * 100;
 

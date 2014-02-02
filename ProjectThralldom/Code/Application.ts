@@ -7,7 +7,7 @@ module Thralldom {
         private clock: THREE.Clock;
         private scene: THREE.Scene;
         private camera: THREE.PerspectiveCamera;
-        private cameraController: CameraControllers.ICameraController;
+        private cameraController: CameraControllers.SkyrimCameraController;
         private renderer: THREE.WebGLRenderer;
         private container: HTMLElement;
 
@@ -15,10 +15,8 @@ module Thralldom {
         private stats: Stats;
 
         private keybindings = {
-            rotateLeft: InputManager.keyNameToKeyCode("A"),
-            rotateRight: InputManager.keyNameToKeyCode("D"),
-            strafeLeft: InputManager.keyNameToKeyCode("Q"),
-            strafeRight: InputManager.keyNameToKeyCode("E"),
+            strafeLeft: InputManager.keyNameToKeyCode("A"),
+            strafeRight: InputManager.keyNameToKeyCode("D"),
             moveForward: InputManager.keyNameToKeyCode("W"),
             moveBackward: InputManager.keyNameToKeyCode("S")
         };
@@ -29,7 +27,7 @@ module Thralldom {
         public ammunitions: Array<IAmmo>;
 
         // Constants
-        private cameraSpeed: number = 5;
+        private static cameraSpeed: number = 5;
 
         // Managers
         private input: InputManager;
@@ -56,26 +54,24 @@ module Thralldom {
             this.stats.domElement.style.bottom = '0px';
             document.body.appendChild(this.stats.domElement);
 
-
             this.scene = new THREE.Scene();
             this.camera = new THREE.PerspectiveCamera(60, this.container.offsetWidth / this.container.offsetHeight, 1, 1000);
             this.renderer = new THREE.WebGLRenderer();
-
-
 
             this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
             this.container.appendChild(this.renderer.domElement);
 
             // Scene (ugly one)
             this.hero = new Character(this.content);
-            // TP Camera controller
+            // Camera controller
             this.cameraController = new CameraControllers.SkyrimCameraController(
-                this.camera, this.hero.mesh, 70, new THREE.Vector3(0, 25, 0));
+                this.camera, Application.cameraSpeed, this.hero.mesh, 70, new THREE.Vector3(0, 25, 0));
 
             this.scene.add(this.hero.mesh);
 
             // npcs
             this.npcs = new Array<Character>();
+            // Place several npcs in a regular polygon centered at our hero.
             var npcsCount = 5;
             for (var i = 0; i < npcsCount; i++) {
                 this.npcs.push(new Character(this.content));
@@ -88,16 +84,10 @@ module Thralldom {
             this.ammunitions = new Array<IAmmo>();
 
             // Floor
-            var texture = THREE.ImageUtils.loadTexture(ContentLibrary.Textures.RedCheckerPNG);
-            var planeGeometry = new THREE.PlaneGeometry(300, 300);
-            var planeMaterial = new THREE.MeshPhongMaterial({ map: texture});
-            var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-            plane.rotation.x = -Math.PI / 2;
-            plane.receiveShadow = true;
-            this.scene.add(plane);
+            var terrain = new Thralldom.Terrain(this.content);
+            this.scene.add(terrain.mesh);
 
             // Lights
-
             var pointLight = new THREE.PointLight(0xffffff, 2, 1000);
             pointLight.position = new THREE.Vector3(0, 30, 30);
             this.scene.add(pointLight);
@@ -112,7 +102,6 @@ module Thralldom {
             this.content.loadSkinnedModel(ContentLibrary.Models.Engineer.engineerJS);
             this.content.loadTexture(ContentLibrary.Textures.BlueGreenCheckerPNG);
             this.content.loadTexture(ContentLibrary.Textures.RedCheckerPNG);
-            //this.content.loadTexture(ContentLibrary.Models.Spartan.CclothPSD);
         }
 
         private handleKeyboard(delta: number) {
@@ -121,9 +110,7 @@ module Thralldom {
         }
 
         private handleMouse(delta: number) {
-            this.cameraController.handleMouseRotation(delta, this.input, this.cameraSpeed);
-
-
+            this.cameraController.handleMouseRotation(delta, this.input);
 
             // Attack below, should refactor
             var projector = new THREE.Projector();
@@ -131,17 +118,15 @@ module Thralldom {
             mouse3d.x = this.input.mouse.ndc.x;
             mouse3d.y = this.input.mouse.ndc.y;
 
-
             var caster = projector.pickingRay(mouse3d, this.camera);
             for (var i = 0; i < this.npcs.length; i++) {
                 var intersections = caster.intersectObject(this.npcs[i].mesh);
                 if (intersections.length != 0) {
-                    this.hero.attack(this.npcs[i]);
-                    var startPoint = new THREE.Vector3();
-                    startPoint.copy(this.hero.mesh.position).y = 10;
-                    var laser = new LaserOfDeath(startPoint, intersections[0].point);
-                    this.ammunitions.push(laser);
-                    this.scene.add(laser.mesh);
+                    var ammo = this.hero.attack(this.npcs[i], intersections[0]);
+                    if (ammo) {
+                        this.ammunitions.push(ammo);
+                        this.scene.add(ammo.mesh);
+                    }
                 }
             }
         }
@@ -174,8 +159,6 @@ module Thralldom {
 
             THREE.AnimationHandler.update(0.9 * delta);
             this.input.swap();
-
-            //setTimeout(() => this.update(this.updateInterval), this.updateInterval);
         }
 
         private draw() {

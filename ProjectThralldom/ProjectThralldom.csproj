@@ -66,6 +66,7 @@
     <TypeScriptCompile Include="Code\Managers\InputManager.ts" />
     <TypeScriptCompile Include="Code\Managers\MouseData.ts" />
     <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />
+    <TypeScriptCompile Include="Code\Terrain.ts" />
     <TypeScriptCompile Include="Code\Utilities.ts" />
     <TypeScriptCompile Include="Scripts\typings\qunit\qunit.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\stats.js\stats.d.ts" />

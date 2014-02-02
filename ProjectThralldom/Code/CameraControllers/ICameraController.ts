@@ -9,7 +9,10 @@ module Thralldom {
 
 
         export interface ICameraController {
-            handleMouseRotation(delta: number, input: InputManager, camSpeed: number): void;
+            camera: THREE.Camera;
+            cameraSpeed: number;
+
+            handleMouseRotation(delta: number, input: InputManager): void;
             handleKeyboardHeroMovement(delta: number, input: InputManager, hero: Character, keybindings: IKeybindings): void;
         }
     }

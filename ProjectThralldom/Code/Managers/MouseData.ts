@@ -1,6 +1,15 @@
 module Thralldom {
+    /**
+      * Contains the current state of the mouse.
+      */
     export class MouseData {
+        /**
+          * Gets the normalized device coordinates of the mouse. X is in the range [-1, 1], Y is in the range [1, -1].
+          */
         public ndc: THREE.Vector2;
+        /**
+          * Gets the scroll level of the mouse.
+          */
         public scroll: number;
         public leftButton: Boolean;
         public middleButton: Boolean;
