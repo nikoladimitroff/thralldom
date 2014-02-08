@@ -2,6 +2,7 @@
 [Bb]in/
 [Oo]bj/
 
+
 # mstest test results
 TestResults
 
@@ -16,6 +17,11 @@ TestResults
 ## Javascript and javascript maps are usually not needed
 *.js
 *.js.map
+
+
+# Content & JS implementations
+!ProjectThralldom/Content/**
+!ProjectThralldom/Scripts/**
 
 # Build results
 [Dd]ebug/

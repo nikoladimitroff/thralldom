@@ -17,8 +17,8 @@ module Thralldom {
 
         constructor(content: ContentManager) {
             this.hp = 100;
-            this.range = 40;
-            this.damage = 10;
+            this.range = 100;
+            //this.damage = 10;
 
             this.mesh = content.getContent(ContentLibrary.Models.Engineer.engineerJS);
             var animation = new THREE.Animation(this.mesh, this.mesh.geometry.animation.name, THREE.AnimationHandler.LINEAR);
