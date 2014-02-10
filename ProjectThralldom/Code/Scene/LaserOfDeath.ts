@@ -1,9 +1,11 @@
 module Thralldom {
-    export class LaserOfDeath implements IAmmo {
+    export class LaserOfDeath extends Ammo {
         public mesh: THREE.Object3D;
         private isStillNeeded = true;
 
         constructor(startingPoint: THREE.Vector3, endPoint: THREE.Vector3) {
+            super();
+
             var geometry = new THREE.Geometry();
             geometry.vertices.push(startingPoint);
             geometry.vertices.push(endPoint);

@@ -84,6 +84,75 @@ module Thralldom {
             });
         }
 
+        public loadScene(path: string): void {
+            this.loading++;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", path, true);
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == 4) {
+                    var sceneDescription = eval("Object(" + xhr.responseText + ")");
+                    var scene = new Scene();
+                    scene.name = sceneDescription["name"];
+
+                    for (var i = 0; i < sceneDescription.dynamics.length; i++) {
+                        var object = sceneDescription.dynamics[i];
+                        switch (object["type"].toLowerCase()) {
+                            case "character":
+                                var character = new Character(this);
+                                character.loadFromDescription(object, this);
+                                scene.addDynamic(character);
+                                break;
+
+                            default:
+                                throw new Error("Invalid type!");
+                        };
+                    }
+
+                    this.onContentLoaded(path, () => scene);
+                }
+            }
+            xhr.send();
+        }
+
+        public loadQuest(path: string): void {
+            this.loading++;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", path, true);
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == 4) {
+                    var questDescription = eval("Object(" + xhr.responseText + ")");
+                    var quest = new Quest();
+                    quest.name = quest["name"];
+
+                    for (var i = 0; i < questDescription.objectives.length; i++) {
+                        var description = questDescription.objectives[i];
+                        var objective: Thralldom.Objectives.Objective;
+                        switch (description["type"].toLowerCase()) {
+                            case "reach":
+                                objective = new Thralldom.Objectives.ReachObjective();
+                                break;
+                            case "kill":
+                                objective = new Thralldom.Objectives.KillObjective();
+                                break;
+
+                            default:
+                                throw new Error("Invalid type!");
+                                break;
+                        };
+                        objective.loadFromDescription(description);
+                        quest.objectives.push(objective);
+                    }
+
+                    this.onContentLoaded(path, () => quest);
+                }
+            }
+            xhr.send();
+        }
+        
         public getContent(path: string): any {
             if (this.loadedContent[path]) {
                 return this.loadedContent[path]();

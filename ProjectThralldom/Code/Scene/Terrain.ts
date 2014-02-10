@@ -1,7 +1,9 @@
 module Thralldom {
-    export class Terrain {
+    export class Terrain implements ISelectableObject {
 
         public mesh: THREE.Mesh;
+        public id = "terrain";
+        public tags: Array<string> = [];
 
         constructor(content: ContentManager) {
             var texture = content.getContent(ContentLibrary.Textures.BlueGreenCheckerPNG);

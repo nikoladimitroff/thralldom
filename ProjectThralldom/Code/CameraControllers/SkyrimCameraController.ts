@@ -43,7 +43,7 @@ module Thralldom {
                 // TODO: replace magic numbers! 
                 this.distance -= movement.z * this.cameraSpeed;
                 this.rotation += movement.y * 10 * Math.PI;
-                this.bias.y += movement.x * 100;
+                this.bias.y += 0//movement.x * 100;
 
                 this.fixPosition();
             }

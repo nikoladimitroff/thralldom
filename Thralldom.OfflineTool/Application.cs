@@ -22,10 +22,11 @@ namespace Thralldom.OfflineTool
         static readonly string ModelsDirectory = @"\Models";
         static readonly string AnimationsLiteral = "\"animations\"";
         static readonly string AnimationLiteral = "\"animation\"";
-        static readonly string AnimationRegexPattern = AnimationsLiteral + ".*\n";
+        static readonly string AnimationRegexPattern = AnimationsLiteral + @"\s*:\s*\[[\s\S]*\]";
 
         static void Main(string[] args)
         {
+            //string defaultFolder = @"E:\Developer\ProjectThralldom\ProjectThralldom\Content";
 
             // Get the project folder and the ContentLib.ts file
             string folder = args[0],
@@ -60,7 +61,7 @@ namespace Thralldom.OfflineTool
                         }
                         else if (content[i] == '}')
                         {
-                            bracesCount--;
+                            bracesCount--; 
                         }
 
                         if (startBraceIndex != -1 && bracesCount == 0)
