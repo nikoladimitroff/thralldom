@@ -110,6 +110,21 @@ module Thralldom {
                         };
                     }
 
+                    for (var i = 0; i < sceneDescription.statics.length; i++) {
+                        var object = sceneDescription.statics[i];
+                        switch (object["type"].toLowerCase()) {
+                            case "environment":
+                                var environment = new Environment();
+                                environment.loadFromDescription(object, this);
+                                scene.addStatic(environment);
+                                break;
+
+                            default:
+                                throw new Error("Invalid type!");
+                        };
+                    }
+
+
                     this.onContentLoaded(path, () => scene);
                 }
             }

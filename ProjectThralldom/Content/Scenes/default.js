@@ -1,6 +1,14 @@
 ﻿{
     name: "level1",
     dynamics: [
+        {
+            type: "character",
+            tags: [],
+            id: "hero",
+            model: "Content/Models/Engineer/engineer.js",
+            pos: [0, 0, 0],
+            scale: 0.25,
+        },
 		{
 		    type: "character",
 		    tags: ["npc"],
@@ -37,7 +45,13 @@
 		    scale: 0.25,
 		},
     ],
-    statics: [
-
+    statics: [        
+		{
+		    type: "environment",
+		    tags: ["building"],
+		    model: "Content/Models/Buildings/church.js",
+		    pos: [0, 0, 60],
+		    scale: 25,
+		}
     ],
 }

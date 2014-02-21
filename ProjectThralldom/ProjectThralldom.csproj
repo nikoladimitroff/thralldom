@@ -25,6 +25,10 @@
     <Content Include="Content\Models\bore\UVMap.jpg" />
     <Content Include="Content\Models\bore\withoutUV.js" />
     <Content Include="Content\Models\bore\withUVs.js" />
+    <Content Include="Content\Models\Buildings\church.js" />
+    <Content Include="Content\Models\Buildings\church2.js" />
+    <Content Include="Content\Models\Buildings\palace.js" />
+    <Content Include="Content\Models\Buildings\tower.js" />
     <Content Include="Content\Models\Engineer\engineer.js" />
     <Content Include="Content\Models\Engineer\engineer_head.jpg" />
     <Content Include="Content\Models\Engineer\engineer_red.jpg" />
@@ -33,7 +37,6 @@
     <Content Include="Content\Models\Spartan\Cnormal.png" />
     <Content Include="Content\Models\Spartan\Cskin.png" />
     <Content Include="Content\Models\Spartan\Csword.png" />
-    <Content Include="Content\Models\Spartan\spartanCopy.js" />
     <Content Include="Content\Models\Spartan\spartan.js" />
     <Content Include="Content\Quests\default.js" />
     <Content Include="Content\Scenes\default.js" />
@@ -70,6 +73,7 @@
     <TypeScriptCompile Include="Code\LanguagePacks\Bulgarian.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\English.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\ILanguagePack.ts" />
+    <TypeScriptCompile Include="Code\Scene\Environment.ts" />
     <TypeScriptCompile Include="Code\Scene\ISelectableObject.ts" />
     <TypeScriptCompile Include="Code\Scene\LaserOfDeath.ts" />
     <TypeScriptCompile Include="Code\Main.ts" />

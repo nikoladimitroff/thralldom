@@ -12,8 +12,9 @@ module Thralldom {
             this.statics = new Array<ISelectableObject>();
         }
 
+
         /*
-         * Selects some of the objects in the scene. Use '.' to select dynamics, '~' to select statics and '#' to select tags
+         * Selects some of the objects in the scene. Use '.' to select tags, '~' to select statics and '#' to select dynanamics
         */
         public select(selector: string): Array<ISelectableObject>  {
             var first = selector.charAt(0);
@@ -105,16 +106,27 @@ module Thralldom {
             this.renderScene.add(object.mesh);
         }
 
-        public remove(object: ISelectableObject): void {
+        private tryRemove(object: ISelectableObject, collection: Array<ISelectableObject>): boolean {
+            var found = false;
             for (var i = 0; i < this.dynamics.length; i++) {
                 if (this.dynamics[i] == object) {
                     // Replace the i-th element with the last instead of splicing.
                     this.renderScene.remove(this.dynamics[i].mesh);
                     this.dynamics[i] = this.dynamics[this.dynamics.length - 1];
+                    found = true;
                     break;
                 }
             }
-            this.dynamics.pop();
+            if (found)
+                this.dynamics.pop();
+
+            return found;
+        }
+
+        public remove(object: ISelectableObject): void {
+            if (!this.tryRemove(object, this.dynamics)) {
+                this.tryRemove(object, this.statics);
+            }            
         }
 
         public update(delta: number): void {

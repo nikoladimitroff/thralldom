@@ -65,12 +65,11 @@ module Thralldom {
             this.container.appendChild(this.renderer.domElement);
 
             // Scene (ugly one)
-            this.hero = new Character(this.content);
+            this.hero = <Character> this.scene.select("#hero")[0];
             // Camera controller
             this.cameraController = new CameraControllers.SkyrimCameraController(
                 this.camera, Application.cameraSpeed, this.hero.mesh, 70, new THREE.Vector3(0, 25, 0));
 
-            this.scene.addDynamic(this.hero);
 
             // npcs
             this.npcs = <Array<Character>> this.scene.select(".npc");
@@ -99,6 +98,10 @@ module Thralldom {
             this.content.loadTexture(ContentLibrary.Textures.BlueGreenCheckerPNG);
             this.content.loadTexture(ContentLibrary.Textures.RedCheckerPNG);
             this.content.loadSkinnedModel(ContentLibrary.Models.bore.AnimJSJS);
+
+            this.content.loadModel(ContentLibrary.Models.Spartan.spartanJS);
+            this.content.loadModel(ContentLibrary.Models.Buildings.churchJS);
+
 
             // Quests
             this.content.loadQuest(ContentLibrary.Quests.defaultJS);
