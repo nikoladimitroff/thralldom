@@ -30,3 +30,26 @@ body {
    -ms-user-select: none;
    user-select: none;
 }
+
+nav {
+    color: white;
+}
+
+#crosshair {
+    background-image: url(Content/Textures/Crosshair.png);
+    background-position: center center;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    -webkit-background-size: contain;
+    background-size: contain;
+
+    background-repeat: no-repeat;
+    min-width: 4%;
+    min-height: 4%;
+    max-width: 4%;
+    max-height: 4%;
+    position: absolute;
+    top: 48%;
+    left: 48%;
+    z-index: 9999;
+}

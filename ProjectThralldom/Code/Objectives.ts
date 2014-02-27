@@ -17,13 +17,14 @@ module Thralldom {
 
             }
 
-            public toString(): string {
-                return "unnamed";
+            public toString(output: string = "empty"): string {
+                return output + (this.isComplete ? "&#x2714" : "");
             }
         }
 
         export class ReachObjective extends Objective {
 
+            private targetSelector: string;
             private target: THREE.Vector3;
             private radius: number;
 
@@ -31,21 +32,43 @@ module Thralldom {
                 if (!description.target) {
                     throw new Error("A reach objective must have a target!");
                 }
+                // If the target is a string and targets a tag we are in trouble, so raise exception
+                if (description.target instanceof String && (<string> description.target).startsWith(".")) {
+                    throw new TypeError("A reach objective's target must be either a vector or selector targeting an id, tags ARE NOT SUPPORTED");
+                }
                 super.loadFromDescription(description);
 
-                this.target = new THREE.Vector3(description.target[0], description.target[1], description.target[2]);
+                if (description.target instanceof Array) {
+                    this.target = new THREE.Vector3(description.target[0], description.target[1], description.target[2]);
+                }
+                else {
+                    this.targetSelector = description.target;
+                }
+
                 this.radius = description.radius || 0;
                 this.isComplete = false;
             }
 
             public update(frameInfo: FrameInfo) {
+                if (this.targetSelector && !this.target) {
+                    this.target = frameInfo.scene.select(this.targetSelector)[0].mesh.position;
+                }
                 if (frameInfo.hero.mesh.position.distanceToSquared(this.target) < this.radius * this.radius) {
                     this.isComplete = true;
                 }
             }
 
             public toString(): string {
-                return Utilities.formatString("Reach ({0}, {1}, {2}) ", this.target.x, this.target.y, this.target.z);
+                var output: string;
+
+                if (this.targetSelector) {
+                    output = Utilities.formatString("Reach {0}", this.targetSelector);
+                }
+                else {
+                    output = Utilities.formatString("Reach ({0}, {1}, {2})", this.target.x, this.target.y, this.target.z);
+                }
+
+                return super.toString(output);
             }
         }
 
@@ -77,7 +100,9 @@ module Thralldom {
             }
 
             public toString(): string {
-                return Utilities.formatString("Kill {0}. ({1}/{2})", this.targetSelector.substr(1), this.achievedKills, this.requiredKills);
+                var output = Utilities.formatString("Kill {0}. ({1}/{2})", this.targetSelector.substr(1), this.achievedKills, this.requiredKills);
+
+                return super.toString(output);
             }
         }
     }

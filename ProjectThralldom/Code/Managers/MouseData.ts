@@ -7,6 +7,7 @@ module Thralldom {
           * Gets the normalized device coordinates of the mouse. X is in the range [-1, 1], Y is in the range [1, -1].
           */
         public ndc: THREE.Vector2;
+        public relative: THREE.Vector2;
         /**
           * Gets the scroll level of the mouse.
           */
@@ -17,6 +18,7 @@ module Thralldom {
 
         constructor() {
             this.ndc = new THREE.Vector2();
+            this.relative = new THREE.Vector2();
             this.scroll = 0;
             this.leftButton = this.middleButton = this.rightButton = false;
         }
@@ -24,6 +26,9 @@ module Thralldom {
         public cloneFrom(data: MouseData): void {
             this.ndc.x = data.ndc.x;
             this.ndc.y = data.ndc.y;
+            this.relative.x = data.relative.x;
+            this.relative.y = data.relative.y;
+
             this.scroll = data.scroll;
             this.leftButton = data.leftButton;
             this.middleButton = data.middleButton;
@@ -31,8 +36,9 @@ module Thralldom {
         }
 
         public toString(): string {
-            return Utilities.formatString("X: {0}, Y: {1}, Scroll: {2}, Left: {3}, Middle: {4}, Right: {5}",
-                this.ndc.x.toFixed(3), this.ndc.y.toFixed(3), this.scroll, this.leftButton, this.middleButton, this.rightButton);
+            return Utilities.formatString("X: {0}, Y: {1}, Scroll: {2}, Left: {3}, Middle: {4}, Right: {5}\n Relative: ({6}, {7})",
+                this.ndc.x.toFixed(3), this.ndc.y.toFixed(3), this.scroll, this.leftButton, this.middleButton, this.rightButton,
+                this.relative.x.toFixed(3), this.relative.y.toFixed(3));
         }
 
     }

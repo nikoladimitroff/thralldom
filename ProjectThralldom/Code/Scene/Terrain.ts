@@ -6,7 +6,7 @@ module Thralldom {
         public tags: Array<string> = [];
 
         constructor(content: ContentManager) {
-            var texture = content.getContent(ContentLibrary.Textures.BlueGreenCheckerPNG);
+            var texture = content.getContent(ContentLibrary.Textures.DirtTextureJPG);
             var planeGeometry = new THREE.PlaneGeometry(300, 300);
             var planeMaterial = new THREE.MeshPhongMaterial({ map: texture });
             var plane = new THREE.Mesh(planeGeometry, planeMaterial);

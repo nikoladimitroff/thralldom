@@ -59,16 +59,20 @@ module Thralldom {
             this.scene = this.content.getContent(ContentLibrary.Scenes.defaultJS);
             this.quest = this.content.getContent(ContentLibrary.Quests.defaultJS);
             this.camera = new THREE.PerspectiveCamera(60, this.container.offsetWidth / this.container.offsetHeight, 1, 1000);
-            this.renderer = new THREE.WebGLRenderer();
+            this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
             this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
             this.container.appendChild(this.renderer.domElement);
 
-            // Scene (ugly one)
+            // Request pointer lock
+            if (Thralldom.InputManager.isMouseLockSupported())
+                this.input.requestPointerLock(document.body);
+
+            // Scene 
             this.hero = <Character> this.scene.select("#hero")[0];
             // Camera controller
             this.cameraController = new CameraControllers.SkyrimCameraController(
-                this.camera, Application.cameraSpeed, this.hero.mesh, 70, new THREE.Vector3(0, 25, 0));
+                this.camera, Application.cameraSpeed, this.hero, 70, new THREE.Vector3(0, 25, 0));
 
 
             // npcs
@@ -81,9 +85,13 @@ module Thralldom {
             var terrain = new Thralldom.Terrain(this.content);
             this.scene.addStatic(terrain);
 
+            // Skybox
+            var skybox = new Thralldom.Skybox();
+            this.scene.addStatic(skybox);
+
             // Lights
-            var pointLight = new THREE.PointLight(0xffffff, 2, 1000);
-            pointLight.position = new THREE.Vector3(0, 30, 30);
+            var pointLight = new THREE.PointLight(0xffffff, 2, 100);
+            pointLight.position = new THREE.Vector3(0, 100, 30);
             this.scene.renderScene.add(pointLight);
             var ambient = new THREE.AmbientLight(0xffffff);
             this.scene.renderScene.add(ambient);
@@ -95,12 +103,12 @@ module Thralldom {
 
         private loadContent(): void {
             this.content.loadSkinnedModel(ContentLibrary.Models.Engineer.engineerJS);
-            this.content.loadTexture(ContentLibrary.Textures.BlueGreenCheckerPNG);
-            this.content.loadTexture(ContentLibrary.Textures.RedCheckerPNG);
-            this.content.loadSkinnedModel(ContentLibrary.Models.bore.AnimJSJS);
+            this.content.loadTexture(ContentLibrary.Textures.BlackWhiteCheckerJPG);
+            this.content.loadTexture(ContentLibrary.Textures.DirtTextureJPG);
 
-            this.content.loadModel(ContentLibrary.Models.Spartan.spartanJS);
-            this.content.loadModel(ContentLibrary.Models.Buildings.churchJS);
+            //this.content.loadModel(ContentLibrary.Models.Spartan.spartanJS);
+            //this.content.loadModel(ContentLibrary.Models.Buildings.churchJS);
+            this.content.loadSkinnedModel(ContentLibrary.Models.Test.TestEightJS);
 
 
             // Quests
@@ -118,8 +126,8 @@ module Thralldom {
             // Attack below, should refactor
             var projector = new THREE.Projector();
             var mouse3d = new THREE.Vector3();
-            mouse3d.x = this.input.mouse.ndc.x;
-            mouse3d.y = this.input.mouse.ndc.y;
+            mouse3d.x = 0;
+            mouse3d.y = 0;
 
             var caster = projector.pickingRay(mouse3d, this.camera);
             for (var i = 0; i < this.npcs.length; i++) {
@@ -148,10 +156,10 @@ module Thralldom {
 
             node.innerText = this.language.welcome + "\n" +
                 this.input.mouse.toString() + "\n" +
-                Utilities.formatString("Current pos: ({0}, {1}, {2})", this.hero.mesh.position.x, this.hero.mesh.position.y, this.hero.mesh.position.z) + "\n" +
+                Utilities.formatString("Current pos: ({0}, {1}, {2})\n", this.hero.mesh.position.x, this.hero.mesh.position.y, this.hero.mesh.position.z) +
                 questText;
 
-            var frameInfo = new FrameInfo(this.hero, []);
+            var frameInfo = new FrameInfo(this.scene, this.hero, []);
             // Reverse loop so that we can remove elements from the array.
             for (var i = this.npcs.length - 1; i > - 1; i--) {
                 if (this.npcs[i].health <= 0) {
@@ -174,9 +182,13 @@ module Thralldom {
             this.quest.update(frameInfo);
 
             THREE.AnimationHandler.update(0.9 * delta);
+            if (!this.hero.keepPlaying) {
+                this.hero.animation.stop();
+            }
+            this.hero.keepPlaying = false;
             this.input.swap();
         }
-
+        
         private draw() {
             this.update();
             this.stats.begin();

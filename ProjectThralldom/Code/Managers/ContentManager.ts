@@ -68,7 +68,7 @@ module Thralldom {
 
                 ensureLoop(geometry.animation);
                 THREE.AnimationHandler.add(geometry.animation);
-
+                
                 for (var i = 0; i < materials.length; i++) {
 
                     var m = <any> materials[i];
@@ -92,6 +92,7 @@ module Thralldom {
 
             xhr.onreadystatechange = () => {
                 if (xhr.readyState == 4) {
+                    console.log("scene");
                     var sceneDescription = eval("Object(" + xhr.responseText + ")");
                     var scene = new Scene();
                     scene.name = sceneDescription["name"];
@@ -100,7 +101,7 @@ module Thralldom {
                         var object = sceneDescription.dynamics[i];
                         switch (object["type"].toLowerCase()) {
                             case "character":
-                                var character = new Character(this);
+                                var character = new Character();
                                 character.loadFromDescription(object, this);
                                 scene.addDynamic(character);
                                 break;
@@ -123,7 +124,6 @@ module Thralldom {
                                 throw new Error("Invalid type!");
                         };
                     }
-
 
                     this.onContentLoaded(path, () => scene);
                 }
@@ -167,10 +167,22 @@ module Thralldom {
             }
             xhr.send();
         }
+
+        private extractFileName(path: string): string {
+            return path.replace(/^.*[\\\/]/, '');
+        }
         
         public getContent(path: string): any {
             if (this.loadedContent[path]) {
                 return this.loadedContent[path]();
+            }
+            // Else see if the path is only a filename. If it is, try to find that file in another location
+            else if (path == this.extractFileName(path)) {
+                for (var index in this.loadedContent) {
+                    if (this.extractFileName(index) == path) {
+                        return this.loadedContent[index]();
+                    }
+                }
             }
             else {
                 throw new Error("content not loaded");

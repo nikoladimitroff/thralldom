@@ -22,6 +22,7 @@ TestResults
 # Content & JS implementations
 !ProjectThralldom/Content/**
 !ProjectThralldom/Scripts/**
+!Thralldom.Editor/**
 
 # Build results
 [Dd]ebug/

@@ -33,7 +33,7 @@ namespace Thralldom.OfflineTool
                 destination = args[1];
 
             CreateContentLibrary(folder, destination);
-            FixModelFilesAnimation(folder);
+            //FixModelFilesAnimation(folder);
         }
 
         private static void FixModelFilesAnimation(string folder)
@@ -113,6 +113,7 @@ namespace Thralldom.OfflineTool
             foreach (var file in Directory.EnumerateFiles(dir))
             {
                 string fileName = Path.GetFileNameWithoutExtension(file) + Path.GetExtension(file).Remove(0, 1).ToUpperInvariant();
+                fileName = fileName.Replace("_", "");
                 content.AppendFormat("{0}: \"{1}\", ", fileName, "Content/" + dirName + "/" + Path.GetFileName(file));
             }
         }

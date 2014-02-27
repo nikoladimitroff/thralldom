@@ -62,23 +62,48 @@ module Thralldom {
                 };
             };
 
-            window.onmousemove = (args) => {
+            document.addEventListener("mousemove",(args) => {
                 var widthOver2 = this.container.offsetWidth / 2;
                 var height = this.container.offsetHeight;
                 var heightOverTwo = height / 2;
                 // Map x to [-1; 1] (left to right) and y to [1; -1] (top to bottom)
                 this.mouse.ndc.x = (args.x / widthOver2 - 1);
                 this.mouse.ndc.y = ((height - args.y) / heightOverTwo - 1);
-            };
+
+                this.mouse.relative.x = args["movementX"] ||
+                    args["mozMovementX"] ||
+                    args["webkitMovementX"] ||
+                    0,
+
+                this.mouse.relative.y = args["movementY"] ||
+                        args["mozMovementY"] ||
+                        args["webkitMovementY"] ||
+                        0;
+            }, false);
+
 
             window.onmousewheel = (args) => {
                 this.mouse.scroll += args.wheelDelta;
             };
         }
 
+        public requestPointerLock(domElement: HTMLElement) {
+            domElement.addEventListener("click", () => {
+                var element = <any> domElement;
+                console.log(element);
+                element.requestPointerLock = element.requestPointerLock ||
+                element.mozRequestPointerLock ||
+                element.webkitRequestPointerLock;
+                // Ask the browser to lock the pointer
+                element.requestPointerLock();
+            }, false);
+        }
+
         public swap(): void {
             this.previousKeyboard = Array.apply(Array, this.keyboard);
             this.previousMouse.cloneFrom(this.mouse);
+            this.mouse.relative.x = 0;
+            this.mouse.relative.y = 0;
 
         }
 
@@ -97,6 +122,14 @@ module Thralldom {
         }
 
         // Statics 
+        public static isMouseLockSupported(): boolean {
+            var hasPointerLock = 'pointerLockElement' in document ||
+                'mozPointerLockElement' in document ||
+                'webkitPointerLockElement' in document;
+
+            return hasPointerLock;
+        }
+
         public static keyCodeToKeyName(keyCode: number): string {
             return InputManager.keyCodeToName[keyCode];
         }
@@ -183,6 +216,7 @@ module Thralldom {
 
             return nonLetters;
         }
+
         private static keyCodeToName = InputManager.generateKeyCodeToNameMapping();
         // A small hack to shorten coding. Use Array.reduce to create an object that maps each key name to its keycode
         private static keyNameToCode = JSON.parse(InputManager.generateKeyCodeToNameMapping().reduce((previous, current, index, array) => {

@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C8EDC26A-B884-4C48-9716-B586C5F73494}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Thralldom.Editor</RootNamespace>
+    <AssemblyName>Thralldom.Editor</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="build\three.js" />
+    <Content Include="build\three.min.js" />
+    <Content Include="css\dark.css" />
+    <Content Include="css\light.css" />
+    <Content Include="css\types.css" />
+    <Content Include="examples\fonts\droid\droid_sans_bold.typeface.js" />
+    <Content Include="examples\fonts\droid\droid_sans_mono_regular.typeface.js" />
+    <Content Include="examples\fonts\droid\droid_sans_regular.typeface.js" />
+    <Content Include="examples\fonts\droid\droid_serif_bold.typeface.js" />
+    <Content Include="examples\fonts\droid\droid_serif_regular.typeface.js" />
+    <Content Include="examples\fonts\droid\README.txt" />
+    <Content Include="examples\fonts\gentilis_bold.typeface.js" />
+    <Content Include="examples\fonts\gentilis_regular.typeface.js" />
+    <Content Include="examples\fonts\helvetiker_bold.typeface.js" />
+    <Content Include="examples\fonts\helvetiker_regular.typeface.js" />
+    <Content Include="examples\fonts\optimer_bold.typeface.js" />
+    <Content Include="examples\fonts\optimer_regular.typeface.js" />
+    <Content Include="examples\js\AudioObject.js" />
+    <Content Include="examples\js\BufferGeometryUtils.js" />
+    <Content Include="examples\js\Car.js" />
+    <Content Include="examples\js\Cloth.js" />
+    <Content Include="examples\js\controls\EditorControls.js" />
+    <Content Include="examples\js\controls\FirstPersonControls.js" />
+    <Content Include="examples\js\controls\FlyControls.js" />
+    <Content Include="examples\js\controls\OculusControls.js" />
+    <Content Include="examples\js\controls\OrbitControls.js" />
+    <Content Include="examples\js\controls\PathControls.js" />
+    <Content Include="examples\js\controls\PointerLockControls.js" />
+    <Content Include="examples\js\controls\TrackballControls.js" />
+    <Content Include="examples\js\controls\TransformControls.js" />
+    <Content Include="examples\js\core\TypedGeometry.js" />
+    <Content Include="examples\js\crossfade\gui.js" />
+    <Content Include="examples\js\crossfade\scenes.js" />
+    <Content Include="examples\js\crossfade\transition.js" />
+    <Content Include="examples\js\CurveExtras.js" />
+    <Content Include="examples\js\curves\NURBSCurve.js" />
+    <Content Include="examples\js\curves\NURBSSurface.js" />
+    <Content Include="examples\js\curves\NURBSUtils.js" />
+    <Content Include="examples\js\Detector.js" />
+    <Content Include="examples\js\effects\AnaglyphEffect.js" />
+    <Content Include="examples\js\effects\AsciiEffect.js" />
+    <Content Include="examples\js\effects\CrosseyedEffect.js" />
+    <Content Include="examples\js\effects\OculusRiftEffect.js" />
+    <Content Include="examples\js\effects\ParallaxBarrierEffect.js" />
+    <Content Include="examples\js\exporters\BufferGeometryExporter.js" />
+    <Content Include="examples\js\exporters\Geometry2Exporter.js" />
+    <Content Include="examples\js\exporters\GeometryExporter.js" />
+    <Content Include="examples\js\exporters\HTMLExporter.js" />
+    <Content Include="examples\js\exporters\MaterialExporter.js" />
+    <Content Include="examples\js\exporters\ObjectExporter.js" />
+    <Content Include="examples\js\exporters\OBJExporter.js" />
+    <Content Include="examples\js\exporters\SceneExporter.js" />
+    <Content Include="examples\js\exporters\STLExporter.js" />
+    <Content Include="examples\js\geometries\ConvexGeometry.js" />
+    <Content Include="examples\js\ImprovedNoise.js" />
+    <Content Include="examples\js\libs\dat.gui.min.js" />
+    <Content Include="examples\js\libs\stats.min.js" />
+    <Content Include="examples\js\libs\system.min.js" />
+    <Content Include="examples\js\libs\tween.min.js" />
+    <Content Include="examples\js\loaders\AssimpJSONLoader.js" />
+    <Content Include="examples\js\loaders\BabylonLoader.js" />
+    <Content Include="examples\js\loaders\BinaryLoader.js" />
+    <Content Include="examples\js\loaders\ColladaLoader.js" />
+    <Content Include="examples\js\loaders\ctm\ctm.js" />
+    <Content Include="examples\js\loaders\ctm\CTMLoader.js" />
+    <Content Include="examples\js\loaders\ctm\CTMWorker.js" />
+    <Content Include="examples\js\loaders\ctm\license\js-lzma.txt" />
+    <Content Include="examples\js\loaders\ctm\license\js-openctm.txt" />
+    <Content Include="examples\js\loaders\ctm\license\OpenCTM.txt" />
+    <Content Include="examples\js\loaders\ctm\lzma.js" />
+    <Content Include="examples\js\loaders\gltf\glTF-parser.js" />
+    <Content Include="examples\js\loaders\gltf\glTFAnimation.js" />
+    <Content Include="examples\js\loaders\gltf\glTFLoader.js" />
+    <Content Include="examples\js\loaders\gltf\glTFLoaderUtils.js" />
+    <Content Include="examples\js\loaders\MTLLoader.js" />
+    <Content Include="examples\js\loaders\OBJLoader.js" />
+    <Content Include="examples\js\loaders\OBJLoader2.js" />
+    <Content Include="examples\js\loaders\OBJMTLLoader.js" />
+    <Content Include="examples\js\loaders\PDBLoader.js" />
+    <Content Include="examples\js\loaders\PLYLoader.js" />
+    <Content Include="examples\js\loaders\STLLoader.js" />
+    <Content Include="examples\js\loaders\UTF8Loader.js" />
+    <Content Include="examples\js\loaders\VRMLLoader.js" />
+    <Content Include="examples\js\loaders\VTKLoader.js" />
+    <Content Include="examples\js\MarchingCubes.js" />
+    <Content Include="examples\js\math\ColorConverter.js" />
+    <Content Include="examples\js\MD2Character.js" />
+    <Content Include="examples\js\MD2CharacterComplex.js" />
+    <Content Include="examples\js\Mirror.js" />
+    <Content Include="examples\js\modifiers\ExplodeModifier.js" />
+    <Content Include="examples\js\modifiers\SubdivisionModifier.js" />
+    <Content Include="examples\js\modifiers\TessellateModifier.js" />
+    <Content Include="examples\js\Octree.js" />
+    <Content Include="examples\js\ParametricGeometries.js" />
+    <Content Include="examples\js\postprocessing\BloomPass.js" />
+    <Content Include="examples\js\postprocessing\BokehPass.js" />
+    <Content Include="examples\js\postprocessing\DotScreenPass.js" />
+    <Content Include="examples\js\postprocessing\EffectComposer.js" />
+    <Content Include="examples\js\postprocessing\FilmPass.js" />
+    <Content Include="examples\js\postprocessing\MaskPass.js" />
+    <Content Include="examples\js\postprocessing\RenderPass.js" />
+    <Content Include="examples\js\postprocessing\SavePass.js" />
+    <Content Include="examples\js\postprocessing\ShaderPass.js" />
+    <Content Include="examples\js\postprocessing\TexturePass.js" />
+    <Content Include="examples\js\PRNG.js" />
+    <Content Include="examples\js\renderers\CSS2DRenderer.js" />
+    <Content Include="examples\js\renderers\CSS3DRenderer.js" />
+    <Content Include="examples\js\renderers\SoftwareRenderer.js" />
+    <Content Include="examples\js\renderers\SVGRenderer.js" />
+    <Content Include="examples\js\renderers\WebGLDeferredRenderer.js" />
+    <Content Include="examples\js\renderers\WebGLRenderer3.js" />
+    <Content Include="examples\js\ShaderDeferred.js" />
+    <Content Include="examples\js\ShaderGodRays.js" />
+    <Content Include="examples\js\ShaderSkin.js" />
+    <Content Include="examples\js\shaders\BasicShader.js" />
+    <Content Include="examples\js\shaders\BleachBypassShader.js" />
+    <Content Include="examples\js\shaders\BlendShader.js" />
+    <Content Include="examples\js\shaders\BokehShader.js" />
+    <Content Include="examples\js\shaders\BokehShader2.js" />
+    <Content Include="examples\js\shaders\BrightnessContrastShader.js" />
+    <Content Include="examples\js\shaders\ColorCorrectionShader.js" />
+    <Content Include="examples\js\shaders\ColorifyShader.js" />
+    <Content Include="examples\js\shaders\ConvolutionShader.js" />
+    <Content Include="examples\js\shaders\CopyShader.js" />
+    <Content Include="examples\js\shaders\DOFMipMapShader.js" />
+    <Content Include="examples\js\shaders\DotScreenShader.js" />
+    <Content Include="examples\js\shaders\EdgeShader.js" />
+    <Content Include="examples\js\shaders\EdgeShader2.js" />
+    <Content Include="examples\js\shaders\FilmShader.js" />
+    <Content Include="examples\js\shaders\FocusShader.js" />
+    <Content Include="examples\js\shaders\FresnelShader.js" />
+    <Content Include="examples\js\shaders\FXAAShader.js" />
+    <Content Include="examples\js\shaders\HorizontalBlurShader.js" />
+    <Content Include="examples\js\shaders\HorizontalTiltShiftShader.js" />
+    <Content Include="examples\js\shaders\HueSaturationShader.js" />
+    <Content Include="examples\js\shaders\KaleidoShader.js" />
+    <Content Include="examples\js\shaders\LuminosityShader.js" />
+    <Content Include="examples\js\shaders\MirrorShader.js" />
+    <Content Include="examples\js\shaders\NormalMapShader.js" />
+    <Content Include="examples\js\shaders\RGBShiftShader.js" />
+    <Content Include="examples\js\shaders\SepiaShader.js" />
+    <Content Include="examples\js\shaders\SSAOShader.js" />
+    <Content Include="examples\js\shaders\TriangleBlurShader.js" />
+    <Content Include="examples\js\shaders\UnpackDepthRGBAShader.js" />
+    <Content Include="examples\js\shaders\VerticalBlurShader.js" />
+    <Content Include="examples\js\shaders\VerticalTiltShiftShader.js" />
+    <Content Include="examples\js\shaders\VignetteShader.js" />
+    <Content Include="examples\js\ShaderTerrain.js" />
+    <Content Include="examples\js\ShaderToon.js" />
+    <Content Include="examples\js\SimplexNoise.js" />
+    <Content Include="examples\js\SimulatorRenderer.js" />
+    <Content Include="examples\js\Sparks.js" />
+    <Content Include="examples\js\TypedArrayUtils.js" />
+    <Content Include="examples\js\UCSCharacter.js" />
+    <Content Include="examples\js\UVsUtils.js" />
+    <Content Include="examples\js\WaterShader.js" />
+    <Content Include="examples\scenes\test_scene.js" />
+    <Content Include="index.html" />
+    <Content Include="js\Config.js" />
+    <Content Include="js\Editor.js" />
+    <Content Include="js\libs\signals.min.js" />
+    <Content Include="js\libs\ui.js" />
+    <Content Include="js\libs\ui.three.js" />
+    <Content Include="js\Loader.js" />
+    <Content Include="js\Menubar.Add.js" />
+    <Content Include="js\Menubar.Edit.js" />
+    <Content Include="js\Menubar.File.js" />
+    <Content Include="js\Menubar.Help.js" />
+    <Content Include="js\Menubar.js" />
+    <Content Include="js\Menubar.View.js" />
+    <Content Include="js\Sidebar.Animation.js" />
+    <Content Include="js\Sidebar.Geometry.BoxGeometry.js" />
+    <Content Include="js\Sidebar.Geometry.CircleGeometry.js" />
+    <Content Include="js\Sidebar.Geometry.CylinderGeometry.js" />
+    <Content Include="js\Sidebar.Geometry.IcosahedronGeometry.js" />
+    <Content Include="js\Sidebar.Geometry.js" />
+    <Content Include="js\Sidebar.Geometry.PlaneGeometry.js" />
+    <Content Include="js\Sidebar.Geometry.SphereGeometry.js" />
+    <Content Include="js\Sidebar.Geometry.TorusGeometry.js" />
+    <Content Include="js\Sidebar.Geometry.TorusKnotGeometry.js" />
+    <Content Include="js\Sidebar.js" />
+    <Content Include="js\Sidebar.Material.js" />
+    <Content Include="js\Sidebar.Object3D.js" />
+    <Content Include="js\Sidebar.Renderer.js" />
+    <Content Include="js\Sidebar.Scene.js" />
+    <Content Include="js\Storage.js" />
+    <Content Include="js\ThralldomSceneTracker.js" />
+    <Content Include="js\Toolbar.js" />
+    <Content Include="js\Viewport.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="examples\files\inconsolata.woff" />
+    <Content Include="examples\fonts\droid\NOTICE" />
+    <Content Include="examples\fonts\LICENSE" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>4393</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:4393/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

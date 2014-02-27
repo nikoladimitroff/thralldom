@@ -6,13 +6,15 @@
     <link rel="stylesheet" href="app.css" type="text/css" />
 </head>
 <body class="unselectable">
-    <div id="webGL" class="maximized"></div>
+    <main id="webGL" class="maximized"></main>
     <nav id="ui" class="maximized">
         <p></p>
     </nav>
 
+    <div id="crosshair"></div>
+
     <!-- External libs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r61/three.min.js"></script>
+    <script src="http://threejs.org/build/three.min.js"></script>
     <script src="Scripts/implementations/stats.min.js"></script>
     <!-- Fonts -->
     <script src="Content/Fonts/Helvetiker.js"></script>
@@ -43,6 +45,7 @@
     <script src="Code/Quest.js"></script>
     <script src="Code/FrameInfo.js"></script>
     <script src="Code/Scene/Terrain.js"></script>
+    <script src="Code/Scene/Skybox.js"></script>
     <script src="Code/Scene/Environment.js"></script>
     <script src="Code/Scene/DynamicObject.js"></script>
     <script src="Code/Scene/Character.js"></script>
