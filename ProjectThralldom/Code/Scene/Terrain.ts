@@ -6,8 +6,10 @@ module Thralldom {
         public tags: Array<string> = [];
 
         constructor(content: ContentManager) {
-            var texture = content.getContent(ContentLibrary.Textures.DirtTextureJPG);
-            var planeGeometry = new THREE.PlaneGeometry(300, 300);
+            var texture = <THREE.Texture>content.getContent(ContentLibrary.Textures.DirtTextureJPG);
+            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(2, 2);
+            var planeGeometry = new THREE.PlaneGeometry(2000, 2000);
             var planeMaterial = new THREE.MeshPhongMaterial({ map: texture });
             var plane = new THREE.Mesh(planeGeometry, planeMaterial);
             plane.rotation.x = -Math.PI / 2;

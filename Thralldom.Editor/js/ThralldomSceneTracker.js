@@ -10,8 +10,16 @@ Thralldom.Scene = function (editor) {
         if (object.geometry) {
             enviroment.push(object);
         }
+    });
 
-        console.log(object);
+    editor.signals.objectRemoved.add(function (object) {
+        if (object.geometry) {
+            var i = enviroment.indexOf(object);
+            if (i != -1) {
+                enviroment[i] = enviroment[enviroment.length - 1];
+                enviroment.pop();
+            }
+        }
     });
 
     function printObjectInfo(value) {
@@ -20,7 +28,8 @@ Thralldom.Scene = function (editor) {
 
     function exportScene() {
         var isValid = true;
-        var output = JSON.stringify(enviroment.map(function (value, index) {
+
+        function exportObject(value, index) {
             if (value.scale.x != value.scale.y || value.scale.x != value.scale.z || value.scale.y != value.scale.z) {
                 alert("ERROR: " + printObjectInfo(value) + "Different scaling weights per axis");
                 isValid = false;
@@ -36,12 +45,15 @@ Thralldom.Scene = function (editor) {
             return {
                 type: "environment",
                 pos: [value.position.x, value.position.y, value.position.z],
+                rot: [value.rotation.x, value.rotation.y, value.rotation.z],
                 scale: value.scale.x,
                 model: value.name,
                 id: value.userData.id,
                 tags: value.userData.tags,
             }
-        }));
+        }
+
+        var output = JSON.stringify(enviroment.map(exportObject));
 
         if (!isValid)
             return;

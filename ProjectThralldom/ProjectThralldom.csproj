@@ -20,7 +20,9 @@
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
     <Content Include="Content\Models\bore\AnimJS.js" />
+    <Content Include="Content\Models\bore\house_one.js" />
     <Content Include="Content\Models\bore\LastFile4.jpg" />
+    <Content Include="Content\Models\bore\Lightmap.png" />
     <Content Include="Content\Models\bore\untitled3.js" />
     <Content Include="Content\Models\bore\UVMap.jpg" />
     <Content Include="Content\Models\bore\withoutUV.js" />

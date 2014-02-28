@@ -2,7 +2,7 @@ module Thralldom {
     export module CameraControllers {
         export class SkyrimCameraController implements ICameraController {
 
-            public camera: THREE.Camera;
+            public camera: THREE.PerspectiveCamera;
             public cameraSpeed: number;
 
             public hero: ISelectableObject;
@@ -12,8 +12,8 @@ module Thralldom {
             public pitch: number;
 
 
-            constructor(camera: THREE.Camera, camSpeed: number, hero: ISelectableObject, distance: number, bias: THREE.Vector3) {
-                this.camera = camera;
+            constructor(aspectRatio: number, camSpeed: number, hero: ISelectableObject, distance: number, bias: THREE.Vector3) {
+                this.camera = new THREE.PerspectiveCamera(60, aspectRatio, 1, 10000);
                 this.hero = hero;
                 this.distance = distance;
                 this.bias = bias;
@@ -45,11 +45,6 @@ module Thralldom {
                 cameraToCharacter.add(this.hero.mesh.position).y += midY;
                 this.camera.position.copy(cameraToCharacter);
 
-                var center = new THREE.Vector3(0, 0, 0);
-                var projector = new THREE.Projector();
-                var raycaster = projector.pickingRay(center, this.camera);
-
-
                 var target = new THREE.Vector3();
                 target.add(this.hero.mesh.position);
                 // The camera should look a little bit over him (2.25 looks good)
@@ -80,7 +75,7 @@ module Thralldom {
                 delta *= 10;
                 
                 if (input.keyboard[keybindings.moveForward]) {
-                    hero.mesh.translateZ(1 * delta);
+                    hero.mesh.translateZ(2 * delta);
                     if (!this.previousKeepPlaying) {
                         hero.animation.play();
                     }

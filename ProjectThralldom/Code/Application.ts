@@ -5,7 +5,6 @@ module Thralldom {
 
         // Three.js variables
         private clock: THREE.Clock;
-        private camera: THREE.PerspectiveCamera;
         private cameraController: CameraControllers.SkyrimCameraController;
         private renderer: THREE.WebGLRenderer;
         private container: HTMLElement;
@@ -58,7 +57,6 @@ module Thralldom {
 
             this.scene = this.content.getContent(ContentLibrary.Scenes.defaultJS);
             this.quest = this.content.getContent(ContentLibrary.Quests.defaultJS);
-            this.camera = new THREE.PerspectiveCamera(60, this.container.offsetWidth / this.container.offsetHeight, 1, 1000);
             this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
             this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
@@ -72,7 +70,11 @@ module Thralldom {
             this.hero = <Character> this.scene.select("#hero")[0];
             // Camera controller
             this.cameraController = new CameraControllers.SkyrimCameraController(
-                this.camera, Application.cameraSpeed, this.hero, 70, new THREE.Vector3(0, 25, 0));
+                this.container.offsetWidth / this.container.offsetHeight,
+                Application.cameraSpeed,
+                this.hero,
+                70,
+                new THREE.Vector3(0, 25, 0));
 
 
             // npcs
@@ -110,6 +112,8 @@ module Thralldom {
             //this.content.loadModel(ContentLibrary.Models.Buildings.churchJS);
             this.content.loadSkinnedModel(ContentLibrary.Models.Test.TestEightJS);
 
+            this.content.loadModel(ContentLibrary.Models.bore.houseoneJS);
+
 
             // Quests
             this.content.loadQuest(ContentLibrary.Quests.defaultJS);
@@ -129,7 +133,7 @@ module Thralldom {
             mouse3d.x = 0;
             mouse3d.y = 0;
 
-            var caster = projector.pickingRay(mouse3d, this.camera);
+            var caster = projector.pickingRay(mouse3d, this.cameraController.camera);
             for (var i = 0; i < this.npcs.length; i++) {
                 var intersections = caster.intersectObject(this.npcs[i].mesh);
                 if (intersections.length != 0) {
@@ -192,7 +196,7 @@ module Thralldom {
         private draw() {
             this.update();
             this.stats.begin();
-            this.renderer.render(this.scene.renderScene, this.camera);
+            this.renderer.render(this.scene.renderScene, this.cameraController.camera);
             this.stats.end();
         }
 
@@ -211,7 +215,7 @@ module Thralldom {
                 // Load the scene
                 this.content.onLoaded = () => {
                     this.init();
-                    window.addEventListener("resize", Utilities.GetOnResizeHandler(this.container, this.renderer, this.camera));
+                    window.addEventListener("resize", Utilities.GetOnResizeHandler(this.container, this.renderer, this.cameraController.camera));
                     this.loop();
                 }
             }
