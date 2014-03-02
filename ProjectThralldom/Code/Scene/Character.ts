@@ -52,7 +52,7 @@ module Thralldom {
                 this.mesh.scale.set(scale, scale, scale);
             }
 
-            this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 100);
+            this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 1000);
             
         }
 

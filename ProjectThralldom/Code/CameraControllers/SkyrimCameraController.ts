@@ -91,6 +91,8 @@ module Thralldom {
                     var forward = new THREE.Vector3(0, 0, 1);
                     forward.transformDirection(hero.mesh.matrix).multiplyScalar(2 * delta);
                     hero.rigidBody.position.vadd(forward, hero.rigidBody.position);
+                    //hero.rigidBody.velocity.vadd(forward, hero.rigidBody.velocity);
+
 
                     this.skybox.mesh.position.add(forward);
                     if (!this.previousKeepPlaying) {

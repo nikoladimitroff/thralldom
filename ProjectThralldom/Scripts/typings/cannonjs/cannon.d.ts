@@ -64,6 +64,7 @@ declare module CANNON {
         constructor(mass: number, shape: Shape, material: Material);
         position: Vec3;
         quaternion: Quaternion;
+        velocity: Vec3;
         id: number;
 
         // CUSTOM

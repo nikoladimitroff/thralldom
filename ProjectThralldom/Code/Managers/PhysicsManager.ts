@@ -7,10 +7,10 @@ var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
     1, // friction coefficient
     0  // restitution
     );
-physicsContactMaterial.contactEquationStiffness = 1e6;
-physicsContactMaterial.contactEquationRegularizationTime = 10;
-physicsContactMaterial.frictionEquationStiffness = 1e6;
-physicsContactMaterial.frictionEquationRegularizationTime = 10;
+physicsContactMaterial.contactEquationStiffness = 1e10;
+physicsContactMaterial.contactEquationRegularizationTime = 20;
+physicsContactMaterial.frictionEquationStiffness = 1e10;
+physicsContactMaterial.frictionEquationRegularizationTime = 20;
 
 //physicsContactMaterial.contactEquationRegularizationTime = 9999;
 module Thralldom {
@@ -23,7 +23,7 @@ module Thralldom {
 
         constructor() {
             this.world = new CANNON.World();
-            this.world.gravity.set(0, -10, 0);
+            this.world.gravity.set(0, -40, 0);
             this.world.broadphase = new CANNON.NaiveBroadphase();
 
             this.world.quatNormalizeSkip = 0;
@@ -31,11 +31,11 @@ module Thralldom {
 
             var solver = new CANNON.GSSolver();
 
-            this.world.defaultContactMaterial.contactEquationStiffness = 1e9;
-            this.world.defaultContactMaterial.contactEquationRegularizationTime = 4;
+            //this.world.defaultContactMaterial.contactEquationStiffness = 1e9;
+            //this.world.defaultContactMaterial.contactEquationRegularizationTime = 4;
 
-            solver.iterations = 7;
-            solver.tolerance = 0.01;
+            solver.iterations = 10;
+            solver.tolerance = 0;
             var split = true;
             if (split)
                 this.world.solver = new CANNON.SplitSolver(solver);
