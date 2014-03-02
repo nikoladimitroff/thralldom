@@ -10,9 +10,9 @@ module Thralldom {
             public bias: THREE.Vector3;
             public yaw: number;
             public pitch: number;
+            public skybox: Skybox;
 
-
-            constructor(aspectRatio: number, camSpeed: number, hero: ISelectableObject, distance: number, bias: THREE.Vector3) {
+            constructor(aspectRatio: number, camSpeed: number, hero: ISelectableObject, distance: number, bias: THREE.Vector3, skybox: Skybox) {
                 this.camera = new THREE.PerspectiveCamera(60, aspectRatio, 1, 10000);
                 this.hero = hero;
                 this.distance = distance;
@@ -20,6 +20,9 @@ module Thralldom {
                 this.cameraSpeed = camSpeed;
                 this.yaw = 0;
                 this.pitch = Math.PI / 2;
+
+
+                this.skybox = skybox;
 
                 this.camera.position.y = 20;
 
@@ -65,20 +68,36 @@ module Thralldom {
                 this.yaw += movement.y * 10 * Math.PI;
                 this.pitch = THREE.Math.clamp(this.pitch + movement.x * 10 * Math.PI, THREE.Math.degToRad(75), THREE.Math.degToRad(150));
                 this.hero.mesh.rotation.y = this.yaw;
+
+                this.hero.rigidBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), this.yaw);
                 this.bias.y += 0//movement.x * 100;
 
                 this.fixPosition();
             }
 
             private previousKeepPlaying: boolean;
+            private previousHandler = {
+                translate: 0,
+                hero: null,
+            };
             public handleKeyboardHeroMovement(delta: number, input: InputManager, hero: Character, keybindings: IKeybindings): void {
                 delta *= 10;
                 
                 if (input.keyboard[keybindings.moveForward]) {
-                    hero.mesh.translateZ(2 * delta);
+                    //hero.mesh.translateZ(2 * delta);
+                    //var vel = (<any> hero.rigidBody).velocity;
+                    //vel.z += 2 * delta;
+                    
+                    var forward = new THREE.Vector3(0, 0, 1);
+                    forward.transformDirection(hero.mesh.matrix).multiplyScalar(2 * delta);
+                    hero.rigidBody.position.vadd(forward, hero.rigidBody.position);
+
+                    this.skybox.mesh.position.add(forward);
                     if (!this.previousKeepPlaying) {
                         hero.animation.play();
                     }
+                    this.previousHandler.translate = 2 * delta;
+                    this.previousHandler.hero = hero;
                     hero.keepPlaying = true;
                 }
                 if (input.keyboard[keybindings.strafeLeft]) {
@@ -93,6 +112,10 @@ module Thralldom {
                 }
 
                 this.previousKeepPlaying = hero.keepPlaying;
+            }
+
+            public undoKeyboardHeroMovement(): void {
+               // this.previousHandler.hero.rigidBody.velocity.z -= this.previousHandler.translate;
             }
         }
     }

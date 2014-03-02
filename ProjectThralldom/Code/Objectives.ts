@@ -18,7 +18,7 @@ module Thralldom {
             }
 
             public toString(output: string = "empty"): string {
-                return output + (this.isComplete ? "&#x2714" : "");
+                return output + (this.isComplete ? "✔" : "");
             }
         }
 

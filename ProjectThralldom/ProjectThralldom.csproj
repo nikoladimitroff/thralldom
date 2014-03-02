@@ -19,14 +19,12 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
-    <Content Include="Content\Models\bore\AnimJS.js" />
     <Content Include="Content\Models\bore\house_one.js" />
-    <Content Include="Content\Models\bore\LastFile4.jpg" />
+    <Content Include="Content\Models\bore\house_two.js" />
     <Content Include="Content\Models\bore\Lightmap.png" />
-    <Content Include="Content\Models\bore\untitled3.js" />
+    <Content Include="Content\Models\bore\rooftxt.jpg" />
     <Content Include="Content\Models\bore\UVMap.jpg" />
-    <Content Include="Content\Models\bore\withoutUV.js" />
-    <Content Include="Content\Models\bore\withUVs.js" />
+    <Content Include="Content\Models\bore\walls.jpg" />
     <Content Include="Content\Models\Engineer\engineer.js" />
     <Content Include="Content\Models\Engineer\engineer_head.jpg" />
     <Content Include="Content\Models\Engineer\engineer_red.jpg" />
@@ -50,6 +48,8 @@
     <Content Include="Content\Textures\BlackWhiteChecker.jpg" />
     <Content Include="Content\Textures\BlueGreenChecker.png" />
     <Content Include="Content\Textures\Crosshair.png" />
+    <Content Include="Content\Textures\grass.jpg" />
+    <Content Include="Content\Textures\grass2.jpg" />
     <Content Include="Content\Textures\RedChecker.png" />
     <Content Include="Content\Textures\DirtTexture.jpg" />
     <Content Include="Content\Textures\Skybox\negX.png" />
@@ -60,7 +60,10 @@
     <Content Include="Content\Textures\Skybox\posZ.png" />
     <Content Include="default.htm" />
     <Content Include="Content\Fonts\Helvetiker.js" />
+    <Content Include="Scripts\implementations\cannon.js" />
+    <Content Include="Scripts\implementations\cannon.min.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
+    <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Tests\TestingPage.html" />
     <Content Include="web.config">
       <SubType>Designer</SubType>
@@ -80,6 +83,7 @@
     <TypeScriptCompile Include="Code\CameraControllers\ICameraController.ts" />
     <TypeScriptCompile Include="Code\CameraControllers\SkyrimCameraController.ts" />
     <TypeScriptCompile Include="Code\FrameInfo.ts" />
+    <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
     <TypeScriptCompile Include="Code\Objectives.ts" />
     <TypeScriptCompile Include="Code\Quest.ts" />
     <TypeScriptCompile Include="Code\Scene\Character.ts" />
@@ -103,6 +107,7 @@
     <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />
     <TypeScriptCompile Include="Code\Scene\Terrain.ts" />
     <TypeScriptCompile Include="Code\Utilities.ts" />
+    <TypeScriptCompile Include="Scripts\typings\cannonjs\cannon.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\qunit\qunit.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\stats.js\stats.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\threejs\three.d.ts" />

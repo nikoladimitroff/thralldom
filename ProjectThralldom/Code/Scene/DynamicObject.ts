@@ -2,7 +2,8 @@ module Thralldom {
     export class DynamicObject implements ISelectableObject {
         public id: string;
         public tags: Array<string>;
-        public mesh: THREE.Object3D;
+        public mesh: THREE.Mesh;
+        public rigidBody: CANNON.RigidBody;
 
         constructor() {
             this.id = null;

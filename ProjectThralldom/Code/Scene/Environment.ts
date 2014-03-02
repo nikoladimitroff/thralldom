@@ -3,7 +3,8 @@ module Thralldom {
 
         public id: string;
         public tags: Array<string>;
-        public mesh: THREE.Object3D;
+        public mesh: THREE.Mesh;
+        public rigidBody: CANNON.RigidBody;
 
         constructor() {
 
@@ -25,6 +26,7 @@ module Thralldom {
 
             if (description.pos) {
                 this.mesh.position.set(description.pos[0], description.pos[1], description.pos[2]);
+                //this.mesh.position.copy(<THREE.Vector3>this.rigidBody.position);
             }
             if (description.rot) {
                 var rot = description.rot;
@@ -34,6 +36,8 @@ module Thralldom {
                 var scale = description.scale;
                 this.mesh.scale.set(scale, scale, scale);
             }
+
+            this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 0);
         }
     }
 } 

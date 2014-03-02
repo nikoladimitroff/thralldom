@@ -3,7 +3,7 @@ module Thralldom {
         public static MaxViewAngle = Math.PI / 3;
 
 
-        public get mesh(): THREE.Object3D {
+        public get mesh(): THREE.Mesh {
             return this.skinnedMesh;
         }
 
@@ -51,6 +51,9 @@ module Thralldom {
                 var scale = description.scale;
                 this.mesh.scale.set(scale, scale, scale);
             }
+
+            this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 100);
+            
         }
 
         public attack(enemy: Character, hitPoint: THREE.Intersection): Ammo {

@@ -3,8 +3,8 @@ module Thralldom {
 
         public id: string;
         public tags: Array<string>;
-        public mesh: THREE.Object3D;
-
+        public mesh: THREE.Mesh;
+        public rigidBody: CANNON.RigidBody;
 
 
         private static urls = [
@@ -35,6 +35,8 @@ module Thralldom {
             // create skybox mesh
             var skybox = new THREE.Mesh(new THREE.CubeGeometry(1000, 1000, 1000), skyBoxMaterial);
             this.mesh = skybox;
+            var box = new CANNON.Box(new CANNON.Vec3(500, 500, 500));
+            this.rigidBody = new CANNON.RigidBody(0, box);
         }
 
         public update(delta: number) {
