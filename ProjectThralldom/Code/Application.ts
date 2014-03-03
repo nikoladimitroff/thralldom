@@ -71,20 +71,8 @@ module Thralldom {
 
             // Scene 
 
-            // Skybox
-            var skybox = new Thralldom.Skybox();
-            this.scene.addNeutral(skybox);
-
-            // Floor
-            var terrain = new Thralldom.Terrain(this.content);
-            this.scene.addStatic(terrain);
 
             this.hero = <Character> this.scene.select("#hero")[0];
-            this.hero.rigidBody.addEventListener("collide", (e: CANNON.CollisionArgs) => {
-                if (e.with != terrain.rigidBody) {
-                    this.cameraController.undoKeyboardHeroMovement();
-                }
-            });
             // Camera controller
             this.cameraController = new CameraControllers.SkyrimCameraController(
                 this.container.offsetWidth / this.container.offsetHeight,
@@ -92,7 +80,7 @@ module Thralldom {
                 this.hero,
                 70,
                 new THREE.Vector3(0, 25, 0),
-                skybox);
+                <Skybox>this.scene.select("~skybox")[0]);
 
 
             // npcs
@@ -117,8 +105,7 @@ module Thralldom {
             this.content.loadSkinnedModel(ContentLibrary.Models.Engineer.engineerJS);
             this.content.loadTexture(ContentLibrary.Textures.BlackWhiteCheckerJPG);
             this.content.loadTexture(ContentLibrary.Textures.DirtTextureJPG);
-            this.content.loadTexture(ContentLibrary.Textures.grassJPG);
-            this.content.loadTexture(ContentLibrary.Textures.grass2JPG);
+            this.content.loadTexture(ContentLibrary.Textures.GrassJPG);
 
             //this.content.loadModel(ContentLibrary.Models.Spartan.spartanJS);
             //this.content.loadModel(ContentLibrary.Models.Buildings.churchJS);

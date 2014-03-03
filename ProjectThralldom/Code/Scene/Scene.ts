@@ -101,23 +101,22 @@ module Thralldom {
         /*
          * Adds a static object to the scene. Note that this method does NOT check whether the id of the object already exists. May cause problems later.
         */
-        public addStatic(object: any): void {
+        public addStatic(object: ISelectableObject): void {
             this.statics.push(object);
-            //if (!(object instanceof Terrain))
-                this.renderScene.add(object.mesh);
-            this.physicsSim.world.add(object.rigidBody);
-            object.rigidBody.tag = object.tags[0];
+            this.renderScene.add(object.mesh);
+
+
+            if (!(object instanceof Skybox))
+                this.physicsSim.world.add(object.rigidBody);
         }
 
         /*
          * Adds a dynamic object to the scene. Note that this method does NOT check whether the id of the object already exists. May cause problems later.
         */
-        public addDynamic(object: any): void {
+        public addDynamic(object: DynamicObject): void {
             this.dynamics.push(object);
             this.renderScene.add(object.mesh);
             this.physicsSim.world.add(object.rigidBody);
-            object.rigidBody.tag = object.tags[0];
-            var rigid = <CANNON.RigidBody> object.rigidBody;
        }
 
         public addNeutral(object: ISelectableObject): void {
@@ -150,12 +149,6 @@ module Thralldom {
         public update(delta: number): void {
             for (var i = 0; i < this.dynamics.length; i++) {
                 this.dynamics[i].update(delta);
-
-                //var pos: CANNON.Vector = this.dynamics[i].mesh.position;
-                //var quat: CANNON.Quaternion = this.dynamics[i].mesh.quaternion;
-
-                //this.dynamics[i].rigidBody.position.set(pos.x, pos.y, pos.z);
-                //this.dynamics[i].rigidBody.quaternion.set(quat.x, quat.y, quat.z, quat.w);
             }
 
 

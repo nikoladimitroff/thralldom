@@ -2,11 +2,16 @@ module Thralldom {
     export class LoadableObject implements ISelectableObject {
         public id: string;
         public tags: Array<string>;
-        public mesh: THREE.Object3D;
+        public mesh: THREE.Mesh;
+        public rigidBody: CANNON.RigidBody;
 
         constructor() {
             this.id = null;
             this.tags = [];
+        }
+
+        public update(delta: number): void {
+
         }
 
         public loadFromDescription(description: any, content: ContentManager): void {
@@ -15,18 +20,6 @@ module Thralldom {
             }
             if (description.id) {
                 this.id = description.id;
-            }
-
-            if (description.model) {
-                this.mesh = content.getContent(description["model"]);
-            }
-
-            if (description.pos) {
-                this.mesh.position.set(description.pos[0], description.pos[1], description.pos[2]);
-            }
-            if (description.scale) {
-                var scale = description.scale;
-                this.mesh.scale.set(scale, scale, scale);
             }
         }
     }

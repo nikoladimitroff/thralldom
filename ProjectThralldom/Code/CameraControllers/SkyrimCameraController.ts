@@ -12,6 +12,9 @@ module Thralldom {
             public pitch: number;
             public skybox: Skybox;
 
+            private static rotationSpeed: number = 10 * Math.PI;
+            private static movementSpeed: number = 20;
+
             constructor(aspectRatio: number, camSpeed: number, hero: ISelectableObject, distance: number, bias: THREE.Vector3, skybox: Skybox) {
                 this.camera = new THREE.PerspectiveCamera(60, aspectRatio, 1, 10000);
                 this.hero = hero;
@@ -23,6 +26,7 @@ module Thralldom {
 
 
                 this.skybox = skybox;
+                this.skybox.mesh.position = hero.mesh.position;
 
                 this.camera.position.y = 20;
 
@@ -57,16 +61,16 @@ module Thralldom {
 
             public handleMouseRotation(delta: number, input: InputManager): void {
 
-                delta *= 0.01;
                 var movement = new THREE.Vector3;
                 movement.y = (input.mouse.relative.x) * delta;
                 movement.x = (input.mouse.relative.y) * delta;
                 movement.z = (input.mouse.scroll - input.previousMouse.scroll) / 120;
+                var speed = delta * SkyrimCameraController.rotationSpeed;
 
                 // TODO: replace magic numbers! 
                 this.distance -= movement.z * this.cameraSpeed;
-                this.yaw += movement.y * 10 * Math.PI;
-                this.pitch = THREE.Math.clamp(this.pitch + movement.x * 10 * Math.PI, THREE.Math.degToRad(75), THREE.Math.degToRad(150));
+                this.yaw += movement.y * speed;
+                this.pitch = THREE.Math.clamp(this.pitch + movement.x * speed, THREE.Math.degToRad(75), THREE.Math.degToRad(150));
                 this.hero.mesh.rotation.y = this.yaw;
 
                 this.hero.rigidBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), this.yaw);
@@ -76,30 +80,17 @@ module Thralldom {
             }
 
             private previousKeepPlaying: boolean;
-            private previousHandler = {
-                translate: 0,
-                hero: null,
-            };
             public handleKeyboardHeroMovement(delta: number, input: InputManager, hero: Character, keybindings: IKeybindings): void {
-                delta *= 10;
-                
-                if (input.keyboard[keybindings.moveForward]) {
-                    //hero.mesh.translateZ(2 * delta);
-                    //var vel = (<any> hero.rigidBody).velocity;
-                    //vel.z += 2 * delta;
-                    
+                //hero.rigidBody.velocity.set(0, 0, 0);
+                if (input.keyboard[keybindings.moveForward]) {                    
                     var forward = new THREE.Vector3(0, 0, 1);
-                    forward.transformDirection(hero.mesh.matrix).multiplyScalar(2 * delta);
-                    hero.rigidBody.position.vadd(forward, hero.rigidBody.position);
-                    //hero.rigidBody.velocity.vadd(forward, hero.rigidBody.velocity);
+                    forward.transformDirection(hero.mesh.matrix).multiplyScalar(SkyrimCameraController.movementSpeed * delta * 1e2);
+                    //hero.rigidBody.position.vadd(forward, hero.rigidBody.position);
+                    hero.rigidBody.velocity.set(forward.x, 0, forward.z);
 
-
-                    this.skybox.mesh.position.add(forward);
                     if (!this.previousKeepPlaying) {
                         hero.animation.play();
                     }
-                    this.previousHandler.translate = 2 * delta;
-                    this.previousHandler.hero = hero;
                     hero.keepPlaying = true;
                 }
                 if (input.keyboard[keybindings.strafeLeft]) {
@@ -109,15 +100,11 @@ module Thralldom {
                    // hero.mesh.translateX(-1 * delta);
                 }
                 if (input.keyboard[keybindings.moveBackward]) {
-                    hero.mesh.translateZ(-1 * delta);
+
                     hero.keepPlaying = true;
                 }
 
                 this.previousKeepPlaying = hero.keepPlaying;
-            }
-
-            public undoKeyboardHeroMovement(): void {
-               // this.previousHandler.hero.rigidBody.velocity.z -= this.previousHandler.translate;
             }
         }
     }

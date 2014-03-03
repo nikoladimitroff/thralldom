@@ -48,16 +48,15 @@
     <Content Include="Content\Textures\BlackWhiteChecker.jpg" />
     <Content Include="Content\Textures\BlueGreenChecker.png" />
     <Content Include="Content\Textures\Crosshair.png" />
-    <Content Include="Content\Textures\grass.jpg" />
-    <Content Include="Content\Textures\grass2.jpg" />
+    <Content Include="Content\Textures\Grass.jpg" />
     <Content Include="Content\Textures\RedChecker.png" />
     <Content Include="Content\Textures\DirtTexture.jpg" />
     <Content Include="Content\Textures\Skybox\negX.png" />
     <Content Include="Content\Textures\Skybox\negY.png" />
-    <Content Include="Content\Textures\Skybox\negZ.png" />
+    <Content Include="Content\Textures\Skybox\posZ.png" />
     <Content Include="Content\Textures\Skybox\posX.png" />
     <Content Include="Content\Textures\Skybox\posY.png" />
-    <Content Include="Content\Textures\Skybox\posZ.png" />
+    <Content Include="Content\Textures\Skybox\negZ.png" />
     <Content Include="default.htm" />
     <Content Include="Content\Fonts\Helvetiker.js" />
     <Content Include="Scripts\implementations\cannon.js" />
@@ -102,6 +101,7 @@
     <TypeScriptCompile Include="Code\Managers\IDeferred.ts" />
     <TypeScriptCompile Include="Code\Managers\InputManager.ts" />
     <TypeScriptCompile Include="Code\Managers\MouseData.ts" />
+    <TypeScriptCompile Include="Code\Scene\LoadableObject.ts" />
     <TypeScriptCompile Include="Code\Scene\Scene.ts" />
     <TypeScriptCompile Include="Code\Scene\Skybox.ts" />
     <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />

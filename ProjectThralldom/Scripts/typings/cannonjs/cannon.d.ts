@@ -122,5 +122,6 @@ declare module CANNON {
         set(x: number, y: number, z: number, w: number): Quaternion;
         copy(quat: Quaternion): void;
         setFromAxisAngle(vec: Vec3, angle: number): void;
+        setFromVectors(u: Vec3, v: Vec3): void; 
     }
 }

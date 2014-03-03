@@ -1,23 +1,15 @@
 module Thralldom {
-    export class Skybox implements ISelectableObject {
+    export class Skybox extends LoadableObject {
 
-        public id: string;
-        public tags: Array<string>;
-        public mesh: THREE.Mesh;
-        public rigidBody: CANNON.RigidBody;
+        public loadFromDescription(description: any, content: ContentManager): void {
+            super.loadFromDescription(description, content);
+
+            if (!description.textures || !(description.textures instanceof Array) || description.textures.length != 6) {
+                throw new Error("You must provide precisely 6 pictures in the textures property of the skybox!");
+            }
 
 
-        private static urls = [
-            ContentLibrary.Textures.Skybox.posXPNG,
-            ContentLibrary.Textures.Skybox.negXPNG,
-            ContentLibrary.Textures.Skybox.posYPNG,
-            ContentLibrary.Textures.Skybox.negYPNG,
-            ContentLibrary.Textures.Skybox.negZPNG,
-            ContentLibrary.Textures.Skybox.posZPNG,
-        ];
-
-        constructor() {
-            var cubemap = THREE.ImageUtils.loadTextureCube(Skybox.urls); // load textures
+            var cubemap = THREE.ImageUtils.loadTextureCube(description.textures); // load textures
             cubemap.format = THREE.RGBFormat;
 
             var shader = THREE.ShaderLib['cube']; // init cube shader from built-in lib
@@ -32,15 +24,12 @@ module Thralldom {
                 side: THREE.BackSide
             });
 
+            var size = description.size || 1000;
             // create skybox mesh
-            var skybox = new THREE.Mesh(new THREE.CubeGeometry(1000, 1000, 1000), skyBoxMaterial);
+            var skybox = new THREE.Mesh(new THREE.CubeGeometry(size, size, size), skyBoxMaterial);
             this.mesh = skybox;
-            var box = new CANNON.Box(new CANNON.Vec3(500, 500, 500));
+            var box = new CANNON.Box(new CANNON.Vec3(size / 2, size / 2, size / 2));
             this.rigidBody = new CANNON.RigidBody(0, box);
-        }
-
-        public update(delta: number) {
-
         }
     }
 } 
