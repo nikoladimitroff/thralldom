@@ -9,7 +9,7 @@ module Thralldom {
             var texture = <THREE.Texture>content.getContent(ContentLibrary.Textures.DirtTextureJPG);
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.repeat.set(2, 2);
-            var planeGeometry = new THREE.PlaneGeometry(2000, 2000);
+            var planeGeometry = new THREE.PlaneGeometry(10, 10);
             var planeMaterial = new THREE.MeshPhongMaterial({ map: texture });
             var plane = new THREE.Mesh(planeGeometry, planeMaterial);
             plane.rotation.x = -Math.PI / 2;

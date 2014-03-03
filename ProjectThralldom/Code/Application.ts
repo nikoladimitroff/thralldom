@@ -108,11 +108,13 @@ module Thralldom {
             this.content.loadTexture(ContentLibrary.Textures.BlackWhiteCheckerJPG);
             this.content.loadTexture(ContentLibrary.Textures.DirtTextureJPG);
 
-            //this.content.loadModel(ContentLibrary.Models.Spartan.spartanJS);
-            //this.content.loadModel(ContentLibrary.Models.Buildings.churchJS);
             this.content.loadSkinnedModel(ContentLibrary.Models.Test.TestEightJS);
 
-            this.content.loadModel(ContentLibrary.Models.bore.houseoneJS);
+            this.content.loadModel(ContentLibrary.Models.bore.objectHouse1JS);
+            this.content.loadModel(ContentLibrary.Models.bore.objectMarketJS);
+            this.content.loadModel(ContentLibrary.Models.bore.objectTerrainJS);
+            this.content.loadModel(ContentLibrary.Models.bore.barrelsoneJS);
+            this.content.loadModel(ContentLibrary.Models.bore.barrelstwoJS);
 
 
             // Quests

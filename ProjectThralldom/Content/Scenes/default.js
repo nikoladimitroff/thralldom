@@ -10,5 +10,14 @@
             scale: 5,
         },
     ],
-    statics: [{"type":"environment","pos":[-393.82,0,51.73],"rot":[0,0,0],"scale":3.5,"model":"house_one.js"},{"type":"environment","pos":[-331.03553178261245,0,-195.20226269285726],"rot":[0,-1.5577188540185378,0],"scale":3.5,"model":"house_one.js"},{"type":"environment","pos":[90.60330488167114,0,-117.5361272228449],"rot":[3.141592653589793,0.03779037061426142,3.141592653589793],"scale":3.5,"model":"house_one.js"},{"type":"environment","pos":[90.60330488167114,0,120.77182926800373],"rot":[3.141592653589793,0.03779037061426142,3.141592653589793],"scale":3.5,"model":"house_one.js"},{"type":"environment","pos":[-258.4222199467363,0,208.32359567890623],"rot":[3.141592653589793,-1.568557492105053,3.141592653589793],"scale":3.5,"model":"house_one.js"}],
+    statics: [
+        {"type":"environment","pos":[100,0,-130],"rot":[0,130,0],"scale":3.5,"model":"objectHouse1.js"},
+        {"type":"environment","pos":[0,0,-250],"rot":[0,90,0],"scale":3.5,"model":"objectHouse1.js"},
+        {"type":"environment","pos":[-140,0,-10],"rot":[0,40,0],"scale":3.5,"model":"objectHouse1.js"},
+        {"type":"environment","pos":[300,0,100],"rot":[0,70,0],"scale":3.5,"model":"objectHouse1.js"},
+        {"type":"environment","pos":[-30,0,200],"rot":[0,70,0],"scale":89.0,"model":"objectMarket.js"},
+        {"type":"environment","pos":[0,0,0],"rot":[0,0,0],"scale":2500,"model":"objectTerrain.js"},
+        {"type":"environment","pos":[0,0,50],"rot":[0,0,0],"scale":100,"model":"barrels_one.js"},
+        {"type":"environment","pos":[0,0,0],"rot":[0,0,0],"scale":100,"model":"barrels_two.js"}
+    ],
 }
