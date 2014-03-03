@@ -2,14 +2,16 @@
     name: "level1",
     settings: {
         debugDraw: true,
+        cameraAngularSpeed: 10 * Math.PI,
+        cameraMovementSpeed: 2 * 1e+6,
     },
     physics: {
         friction: 1,
         restitution: 0,
         contactStiffness: 1e10,
-        contactRegularizationTime: 20,
+        contactRegularizationTime: 3,
         frictionStiffness: 1e10,
-        frictionRegularizationTime: 20,
+        frictionRegularizationTime: 3,
         gravity: -20,
     },
     terrain: {
@@ -36,15 +38,15 @@
             model: "TestEight.js",
             pos: [0, 0, 0],
             scale: 5,
-        },/*
+        },
         {
             type: "character",
             tags: [],
             id: "",
             model: "TestEight.js",
-            pos: [10, 0, 0],
+            pos: [30, 0, 0],
             scale: 5,
-        },*/
+        },
     ],
     statics: [
         

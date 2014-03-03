@@ -61,6 +61,7 @@
     <Content Include="Content\Fonts\Helvetiker.js" />
     <Content Include="Scripts\implementations\cannon.js" />
     <Content Include="Scripts\implementations\cannon.min.js" />
+    <Content Include="Scripts\implementations\jquery.documentReady.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Tests\TestingPage.html" />
@@ -107,10 +108,11 @@
     <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />
     <TypeScriptCompile Include="Code\Scene\Terrain.ts" />
     <TypeScriptCompile Include="Code\Utilities.ts" />
-    <TypeScriptCompile Include="Scripts\typings\cannonjs\cannon.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\qunit\qunit.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\stats.js\stats.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\threejs\three.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\cannon.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery.documentReady.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\qunit.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\stats.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\three.d.ts" />
     <TypeScriptCompile Include="Tests\Tests.ts" />
   </ItemGroup>
   <ItemGroup />

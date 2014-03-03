@@ -152,14 +152,15 @@ module Thralldom {
             }
 
 
-            this.physicsSim.world.step(delta);
+            this.physicsSim.world.step(delta / 1000);
             for (var i = 0; i < this.dynamics.length; i++) {
                 var pos = this.dynamics[i].rigidBody.position;
                 var centerToMesh = this.dynamics[i].rigidBody.centerToMesh;
                 var quat = this.dynamics[i].rigidBody.quaternion;
-                //pos.y = 0;
+
                 this.dynamics[i].mesh.position.set(pos.x + centerToMesh.x, pos.y + centerToMesh.y, pos.z + centerToMesh.z);
-                this.dynamics[i].mesh.quaternion.set(quat.x, quat.y, quat.z, quat.w);
+                // WARNING: DONT SET THE QUATERNION FROM THE SIM
+                //this.dynamics[i].mesh.quaternion.set(quat.x, quat.y, quat.z, quat.w);
             }
 
 

@@ -1,7 +1,3 @@
-/// <reference path="../../scripts/typings/cannonjs/cannon.d.ts" />
-
-
-//physicsContactMaterial.contactEquationRegularizationTime = 9999;
 module Thralldom {
     export class PhysicsManager {
         

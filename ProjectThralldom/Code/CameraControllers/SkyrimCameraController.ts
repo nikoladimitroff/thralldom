@@ -12,8 +12,8 @@ module Thralldom {
             public pitch: number;
             public skybox: Skybox;
 
-            private static rotationSpeed: number = 10 * Math.PI;
-            private static movementSpeed: number = 20;
+            public static angularSpeed: number;
+            public static movementSpeed: number;
 
             constructor(aspectRatio: number, camSpeed: number, hero: ISelectableObject, distance: number, bias: THREE.Vector3, skybox: Skybox) {
                 this.camera = new THREE.PerspectiveCamera(60, aspectRatio, 1, 10000);
@@ -65,11 +65,11 @@ module Thralldom {
                 movement.y = (input.mouse.relative.x) * delta;
                 movement.x = (input.mouse.relative.y) * delta;
                 movement.z = (input.mouse.scroll - input.previousMouse.scroll) / 120;
-                var speed = delta * SkyrimCameraController.rotationSpeed;
+                var speed = delta * SkyrimCameraController.angularSpeed;
 
                 // TODO: replace magic numbers! 
                 this.distance -= movement.z * this.cameraSpeed;
-                this.yaw += movement.y * speed;
+                this.yaw -= movement.y * speed;
                 this.pitch = THREE.Math.clamp(this.pitch + movement.x * speed, THREE.Math.degToRad(75), THREE.Math.degToRad(150));
                 this.hero.mesh.rotation.y = this.yaw;
 
@@ -81,12 +81,11 @@ module Thralldom {
 
             private previousKeepPlaying: boolean;
             public handleKeyboardHeroMovement(delta: number, input: InputManager, hero: Character, keybindings: IKeybindings): void {
-                //hero.rigidBody.velocity.set(0, 0, 0);
+                hero.rigidBody.velocity.set(0, 0, 0);
                 if (input.keyboard[keybindings.moveForward]) {                    
                     var forward = new THREE.Vector3(0, 0, 1);
-                    forward.transformDirection(hero.mesh.matrix).multiplyScalar(SkyrimCameraController.movementSpeed * delta * 1e2);
-                    //hero.rigidBody.position.vadd(forward, hero.rigidBody.position);
-                    hero.rigidBody.velocity.set(forward.x, 0, forward.z);
+                    forward.transformDirection(hero.mesh.matrix).multiplyScalar(SkyrimCameraController.movementSpeed * delta);
+                    hero.rigidBody.velocity.set(forward.x, forward.y, forward.z);
 
                     if (!this.previousKeepPlaying) {
                         hero.animation.play();

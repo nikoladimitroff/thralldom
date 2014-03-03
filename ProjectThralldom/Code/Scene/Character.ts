@@ -52,7 +52,7 @@ module Thralldom {
                 this.mesh.scale.set(scale, scale, scale);
             }
 
-            this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 1000);
+            this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 10);
             
         }
 
@@ -79,26 +79,18 @@ module Thralldom {
 
         public update(delta: number): void {
             if (this.id != "hero") { 
-                var radiusSquared = 100;
+                var radiusSquared = 900;
                 var dvar = 1e-6;
-                //var equation = (x: number, y: number) => x * x + y * y - radiusSquared;
-                var equation = (x, y) => Math.sqrt(radiusSquared) * Math.sin(x) - y;
+                var equation = (x: number, y: number) => x * x + y * y - radiusSquared;
                 var derivative = (x: number, y: number) => new THREE.Vector2(equation(x, y) - equation(x + dvar, y), equation(x, y) - equation(x, y + dvar));
                 var tangent = (x: number, y: number) => {
                     var df = derivative(x, y);
                     return new THREE.Vector2(-df.y, df.x);
                 };
 
-                if ((equation(this.rigidBody.position.x, this.rigidBody.position.z) < 1e-3)) {
-                    this.rigidBody.position.set(Math.sqrt(radiusSquared), 0, 0);
-                }
-
-                //this.mesh.rotation.y = 0;
-                //var quat = this.mesh.quaternion;
                 var normal = derivative(this.rigidBody.position.x, this.rigidBody.position.z);
-                this.rigidBody.quaternion.setFromVectors(new CANNON.Vec3(0, 0, 1), new CANNON.Vec3(normal.x, 0, normal.y));
-                //this.rigidBody.position.x += delta * 1e1;
-                var velocity = tangent(this.rigidBody.position.x, this.rigidBody.position.z).multiplyScalar(1e7 * delta);
+                var velocity = tangent(this.rigidBody.position.x, this.rigidBody.position.z).multiplyScalar(1e10 * delta);
+                this.rigidBody.quaternion.setFromVectors(new CANNON.Vec3(0, 0, 1), new CANNON.Vec3(velocity.x, 0, velocity.y));
                 this.rigidBody.velocity.set(velocity.x, 0, velocity.y);
 
             }

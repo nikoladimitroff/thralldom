@@ -151,11 +151,13 @@ module Thralldom {
         private parseScene(path, sceneDescription: any): void {
             // Physics first!
             this.parsePhysics(sceneDescription.physics);
-            PhysicsManager.attachDebuggingVisuals = sceneDescription.settings.debugDraw;
+            var settings = sceneDescription.settings;
+            PhysicsManager.attachDebuggingVisuals = settings.debugDraw || false;
+            Thralldom.CameraControllers.SkyrimCameraController.angularSpeed = settings.cameraAngularSpeed || 10 * Math.PI;
+            Thralldom.CameraControllers.SkyrimCameraController.movementSpeed = settings.cameraMovementSpeed || 2 * 1e+6;
 
             var scene = new Scene();
             scene.name = sceneDescription["name"];
-
 
             this.parseCollection(sceneDescription.dynamics, ContentManager.dynamicTypes, scene.addDynamic.bind(scene));
             this.parseCollection(sceneDescription.statics, ContentManager.staticTypes, scene.addStatic.bind(scene));
