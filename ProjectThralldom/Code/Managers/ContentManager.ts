@@ -6,6 +6,19 @@ module Thralldom {
         private loaded: number = 0;
         private loading: number = 0;
 
+        private static dynamicTypes = {
+            "character": Character,
+        }; 
+        private static staticTypes = {
+            "environment": Environment,
+            "skybox": Skybox,
+            "terrain": Terrain,
+        }
+        private static objectiveTypes = {
+            "reach": Thralldom.Objectives.ReachObjective,
+            "kill": Thralldom.Objectives.KillObjective,
+        }
+
 
         private onContentLoaded(path: string, object: any) {
             this.loaded++;
@@ -84,6 +97,79 @@ module Thralldom {
             });
         }
 
+        private parsePhysics(physicsDescription: any): void {
+
+            physicsDescription.friction = physicsDescription.friction || 1;
+            physicsDescription.restitution = physicsDescription.restitution || 0;
+            physicsDescription.gravity = physicsDescription.gravity || -9.82;
+            physicsDescription.contactStiffness = physicsDescription.contactStifness || 1e10;
+            physicsDescription.contactRegularizationTime = physicsDescription.contactRegularizationTime || 20;
+            physicsDescription.frictionStiffness = physicsDescription.frictionStiffness || 1e10;
+            physicsDescription.frictionRegularizationTime = physicsDescription.frictionRegularizationTime || 20;
+
+            var physicsMaterial = new CANNON.Material("defaultMaterial");
+            var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
+                physicsMaterial,
+                physicsDescription.friction, // friction coefficient
+                physicsDescription.restitution  // restitution
+                );
+            physicsContactMaterial.contactEquationStiffness = physicsDescription.contactStiffness;
+            physicsContactMaterial.contactEquationRegularizationTime = physicsDescription.contactRegularizationTime;
+            physicsContactMaterial.frictionEquationStiffness = physicsDescription.frictionStiffness;
+            physicsContactMaterial.frictionEquationRegularizationTime = physicsDescription.frictionRegularizationTime;
+
+
+            PhysicsManager.material = physicsMaterial;
+            PhysicsManager.contactMaterial = physicsContactMaterial;
+            PhysicsManager.gravityAcceleration = physicsDescription.gravity;
+        }
+
+        private parseCollection(collectionDescription: Array<any>, typeMapping: any, callback: (instance) => void) {
+            for (var i = 0; i < collectionDescription.length; i++) {
+                var object = collectionDescription[i];
+                var type = typeMapping[object.type.toLowerCase()];
+                if (type) {
+                    var instance = new type();
+                    instance.loadFromDescription(object, this);
+                    callback(instance)
+                }
+                else {
+                    throw new Error("Invalid type!");
+                }
+            }
+        }
+
+        private tryAddSingletonDescription(array: Array<any>, sceneDescription: any, type: string) {
+
+            if (sceneDescription[type]) {
+                sceneDescription[type].type = type;
+                sceneDescription[type].id = type;
+                array.push(sceneDescription[type]);
+            }
+        }
+
+        private parseScene(path, sceneDescription: any): void {
+            // Physics first!
+            this.parsePhysics(sceneDescription.physics);
+            var settings = sceneDescription.settings;
+            PhysicsManager.attachDebuggingVisuals = settings.debugDraw || false;
+            Thralldom.CameraControllers.SkyrimCameraController.angularSpeed = settings.cameraAngularSpeed || 10 * Math.PI;
+            Thralldom.CameraControllers.SkyrimCameraController.movementSpeed = settings.cameraMovementSpeed || 2 * 1e+6;
+
+            var scene = new Scene();
+            scene.name = sceneDescription["name"];
+
+            this.parseCollection(sceneDescription.dynamics, ContentManager.dynamicTypes, scene.addDynamic.bind(scene));
+            this.parseCollection(sceneDescription.statics, ContentManager.staticTypes, scene.addStatic.bind(scene));
+
+            var singletons = [];
+            this.tryAddSingletonDescription(singletons, sceneDescription, "skybox");
+            this.tryAddSingletonDescription(singletons, sceneDescription, "terrain");
+            this.parseCollection(singletons, ContentManager.staticTypes, scene.addStatic.bind(scene));
+
+            this.onContentLoaded(path, () => scene);
+        }
+
         public loadScene(path: string): void {
             this.loading++;
 
@@ -92,42 +178,10 @@ module Thralldom {
 
             xhr.onreadystatechange = () => {
                 if (xhr.readyState == 4) {
-                    console.log("scene");
                     var sceneDescription = eval("Object(" + xhr.responseText + ")");
-                    var scene = new Scene();
-                    scene.name = sceneDescription["name"];
-
-                    for (var i = 0; i < sceneDescription.dynamics.length; i++) {
-                        var object = sceneDescription.dynamics[i];
-                        switch (object["type"].toLowerCase()) {
-                            case "character":
-                                var character = new Character();
-                                character.loadFromDescription(object, this);
-                                scene.addDynamic(character);
-                                break;
-
-                            default:
-                                throw new Error("Invalid type!");
-                        };
-                    }
-
-                    for (var i = 0; i < sceneDescription.statics.length; i++) {
-                        var object = sceneDescription.statics[i];
-                        switch (object["type"].toLowerCase()) {
-                            case "environment":
-                                var environment = new Environment();
-                                environment.loadFromDescription(object, this);
-                                scene.addStatic(environment);
-                                break;
-
-                            default:
-                                throw new Error("Invalid type!");
-                        };
-                    }
-
-                    this.onContentLoaded(path, () => scene);
+                    this.parseScene(path, sceneDescription);
                 }
-            }
+            };
             xhr.send();
         }
 
@@ -142,25 +196,7 @@ module Thralldom {
                     var questDescription = eval("Object(" + xhr.responseText + ")");
                     var quest = new Quest();
                     quest.name = quest["name"];
-
-                    for (var i = 0; i < questDescription.objectives.length; i++) {
-                        var description = questDescription.objectives[i];
-                        var objective: Thralldom.Objectives.Objective;
-                        switch (description["type"].toLowerCase()) {
-                            case "reach":
-                                objective = new Thralldom.Objectives.ReachObjective();
-                                break;
-                            case "kill":
-                                objective = new Thralldom.Objectives.KillObjective();
-                                break;
-
-                            default:
-                                throw new Error("Invalid type!");
-                                break;
-                        };
-                        objective.loadFromDescription(description);
-                        quest.objectives.push(objective);
-                    }
+                    this.parseCollection(questDescription.objectives, ContentManager.objectiveTypes, quest.objectives.push.bind(quest.objectives));
 
                     this.onContentLoaded(path, () => quest);
                 }

@@ -1,5 +1,35 @@
 ﻿{
     name: "level1",
+    settings: {
+        debugDraw: true,
+        cameraAngularSpeed: 10 * Math.PI,
+        cameraMovementSpeed: 2 * 1e+6,
+    },
+    physics: {
+        friction: 1,
+        restitution: 0,
+        contactStiffness: 1e10,
+        contactRegularizationTime: 3,
+        frictionStiffness: 1e10,
+        frictionRegularizationTime: 3,
+        gravity: -20,
+    },
+    terrain: {
+        size: 2000,
+        texture: "Grass.jpg",
+        repeatTexture: true,
+    },
+    skybox: {
+        size: 2000,
+        textures: [
+                "Content/Textures/Skybox/posX.png", 
+                "Content/Textures/Skybox/negX.png", 
+                "Content/Textures/Skybox/posY.png", 
+                "Content/Textures/Skybox/negY.png", 
+                "Content/Textures/Skybox/posZ.png",
+                "Content/Textures/Skybox/negZ.png", 
+        ],
+    },
     dynamics: [
         {
             type: "character",
@@ -7,6 +37,14 @@
             id: "hero",
             model: "TestEight.js",
             pos: [0, 0, 0],
+            scale: 5,
+        },
+        {
+            type: "character",
+            tags: [],
+            id: "",
+            model: "TestEight.js",
+            pos: [30, 0, 0],
             scale: 5,
         },
     ],

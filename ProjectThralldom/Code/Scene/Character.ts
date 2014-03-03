@@ -3,7 +3,7 @@ module Thralldom {
         public static MaxViewAngle = Math.PI / 3;
 
 
-        public get mesh(): THREE.Object3D {
+        public get mesh(): THREE.Mesh {
             return this.skinnedMesh;
         }
 
@@ -51,6 +51,9 @@ module Thralldom {
                 var scale = description.scale;
                 this.mesh.scale.set(scale, scale, scale);
             }
+
+            this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 10);
+            
         }
 
         public attack(enemy: Character, hitPoint: THREE.Intersection): Ammo {
@@ -72,6 +75,26 @@ module Thralldom {
             return laser;
 
             return undefined;
+        }
+
+        public update(delta: number): void {
+            if (this.id != "hero") { 
+                var radiusSquared = 900;
+                var dvar = 1e-6;
+                var equation = (x: number, y: number) => x * x + y * y - radiusSquared;
+                var derivative = (x: number, y: number) => new THREE.Vector2(equation(x, y) - equation(x + dvar, y), equation(x, y) - equation(x, y + dvar));
+                var tangent = (x: number, y: number) => {
+                    var df = derivative(x, y);
+                    return new THREE.Vector2(-df.y, df.x);
+                };
+
+                var normal = derivative(this.rigidBody.position.x, this.rigidBody.position.z);
+                var velocity = tangent(this.rigidBody.position.x, this.rigidBody.position.z).multiplyScalar(1e10 * delta);
+                this.rigidBody.quaternion.setFromVectors(new CANNON.Vec3(0, 0, 1), new CANNON.Vec3(velocity.x, 0, velocity.y));
+                this.rigidBody.velocity.set(velocity.x, 0, velocity.y);
+
+            }
+
         }
     }
 } 

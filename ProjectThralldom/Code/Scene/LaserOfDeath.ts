@@ -1,6 +1,5 @@
 module Thralldom {
     export class LaserOfDeath extends Ammo {
-        public mesh: THREE.Object3D;
         private isStillNeeded = true;
 
         constructor(startingPoint: THREE.Vector3, endPoint: THREE.Vector3) {
@@ -11,7 +10,8 @@ module Thralldom {
             geometry.vertices.push(endPoint);
             var material = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 100 });
 
-            this.mesh = new THREE.Line(geometry, material);
+            throw new Error("not implemented");
+            //this.mesh = new THREE.Line(geometry, material);
 
         }
 

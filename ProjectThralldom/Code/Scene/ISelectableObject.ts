@@ -2,6 +2,7 @@ module Thralldom {
     export interface ISelectableObject {
         id: string;
         tags: Array<string>;
-        mesh: THREE.Object3D;
+        mesh: THREE.Mesh;
+        rigidBody: CANNON.RigidBody;
     }
 }

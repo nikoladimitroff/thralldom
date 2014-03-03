@@ -25,10 +25,12 @@ module Thralldom {
         public ammunitions: Array<Ammo>;
 
         public scene: Thralldom.Scene;
+        public static scene: THREE.Scene;
         public quest: Thralldom.Quest;
 
         // Constants
         private static cameraSpeed: number = 5;
+        private delta: number;
 
         // Managers
         private input: InputManager;
@@ -56,6 +58,7 @@ module Thralldom {
             document.body.appendChild(this.stats.domElement);
 
             this.scene = this.content.getContent(ContentLibrary.Scenes.defaultJS);
+            Application.scene = this.scene.renderScene;
             this.quest = this.content.getContent(ContentLibrary.Quests.defaultJS);
             this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
@@ -67,6 +70,8 @@ module Thralldom {
                 this.input.requestPointerLock(document.body);
 
             // Scene 
+
+
             this.hero = <Character> this.scene.select("#hero")[0];
             // Camera controller
             this.cameraController = new CameraControllers.SkyrimCameraController(
@@ -74,7 +79,8 @@ module Thralldom {
                 Application.cameraSpeed,
                 this.hero,
                 70,
-                new THREE.Vector3(0, 25, 0));
+                new THREE.Vector3(0, 25, 0),
+                <Skybox>this.scene.select("~skybox")[0]);
 
 
             // npcs
@@ -82,14 +88,6 @@ module Thralldom {
 
             // ammo
             this.ammunitions = new Array<Ammo>();
-
-            // Floor
-            var terrain = new Thralldom.Terrain(this.content);
-            this.scene.addStatic(terrain);
-
-            // Skybox
-            var skybox = new Thralldom.Skybox();
-            this.scene.addStatic(skybox);
 
             // Lights
             var pointLight = new THREE.PointLight(0xffffff, 2, 100);
@@ -100,21 +98,26 @@ module Thralldom {
 
             // Axes
             var axes = new THREE.AxisHelper(1000);
-            this.scene.renderScene.add(axes);
+          //  this.scene.renderScene.add(axes);
         }
 
         private loadContent(): void {
             this.content.loadSkinnedModel(ContentLibrary.Models.Engineer.engineerJS);
             this.content.loadTexture(ContentLibrary.Textures.BlackWhiteCheckerJPG);
             this.content.loadTexture(ContentLibrary.Textures.DirtTextureJPG);
+            this.content.loadTexture(ContentLibrary.Textures.GrassJPG);
 
             this.content.loadSkinnedModel(ContentLibrary.Models.Test.TestEightJS);
+
 
             this.content.loadModel(ContentLibrary.Models.bore.objectHouse1JS);
             this.content.loadModel(ContentLibrary.Models.bore.objectMarketJS);
             this.content.loadModel(ContentLibrary.Models.bore.objectTerrainJS);
             this.content.loadModel(ContentLibrary.Models.bore.barrelsoneJS);
             this.content.loadModel(ContentLibrary.Models.bore.barrelstwoJS);
+
+            this.content.loadModel(ContentLibrary.Models.bore.houseoneJS);
+            this.content.loadModel(ContentLibrary.Models.bore.housetwoJS);
 
 
             // Quests
@@ -150,6 +153,7 @@ module Thralldom {
 
         private update(): void {
             var delta = this.clock.getDelta();
+            this.delta = delta;
 
             this.handleKeyboard(delta);
             this.handleMouse(delta);
@@ -161,8 +165,8 @@ module Thralldom {
                 "Your current quest:\n" + this.quest.toString();
 
             node.innerText = this.language.welcome + "\n" +
-                this.input.mouse.toString() + "\n" +
-                Utilities.formatString("Current pos: ({0}, {1}, {2})\n", this.hero.mesh.position.x, this.hero.mesh.position.y, this.hero.mesh.position.z) +
+              //  this.input.mouse.toString() + "\n" +
+                Utilities.formatString("Current pos: ({0}, {1}, {2})\n", this.hero.mesh.position.x.toFixed(5), this.hero.mesh.position.y.toFixed(5), this.hero.mesh.position.z.toFixed(5)) +
                 questText;
 
             var frameInfo = new FrameInfo(this.scene, this.hero, []);

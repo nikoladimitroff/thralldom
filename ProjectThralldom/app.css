@@ -52,4 +52,6 @@ nav {
     top: 48%;
     left: 48%;
     z-index: 9999;
+
+    display: none;
 }
