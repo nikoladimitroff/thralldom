@@ -209,6 +209,9 @@ module Thralldom {
                 nonLetters[i + 0x41] = String.fromCharCode(i + 0x41);
             }
 
+            // Space 
+            nonLetters[0x20] = "Space";
+
             // Numbers
             for (var i = 0; i < 10; i++) {
                 nonLetters[i + 0x30] = String.fromCharCode(i + 0x30);

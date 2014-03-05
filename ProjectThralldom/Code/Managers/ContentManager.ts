@@ -106,6 +106,7 @@ module Thralldom {
             physicsDescription.contactRegularizationTime = physicsDescription.contactRegularizationTime || 20;
             physicsDescription.frictionStiffness = physicsDescription.frictionStiffness || 1e10;
             physicsDescription.frictionRegularizationTime = physicsDescription.frictionRegularizationTime || 20;
+            physicsDescription.linearDamping = physicsDescription.linearDamping || 0.3;
 
             var physicsMaterial = new CANNON.Material("defaultMaterial");
             var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
@@ -113,6 +114,7 @@ module Thralldom {
                 physicsDescription.friction, // friction coefficient
                 physicsDescription.restitution  // restitution
                 );
+
             physicsContactMaterial.contactEquationStiffness = physicsDescription.contactStiffness;
             physicsContactMaterial.contactEquationRegularizationTime = physicsDescription.contactRegularizationTime;
             physicsContactMaterial.frictionEquationStiffness = physicsDescription.frictionStiffness;
@@ -122,9 +124,10 @@ module Thralldom {
             PhysicsManager.material = physicsMaterial;
             PhysicsManager.contactMaterial = physicsContactMaterial;
             PhysicsManager.gravityAcceleration = physicsDescription.gravity;
+            PhysicsManager.linearDamping = physicsDescription.linearDamping;
         }
 
-        private parseCollection(collectionDescription: Array<any>, typeMapping: any, callback: (instance) => void) {
+        private parseCollection(collectionDescription: Array<any>, typeMapping: any, callback: (instance: ILoadable) => void): void {
             for (var i = 0; i < collectionDescription.length; i++) {
                 var object = collectionDescription[i];
                 var type = typeMapping[object.type.toLowerCase()];
@@ -139,8 +142,7 @@ module Thralldom {
             }
         }
 
-        private tryAddSingletonDescription(array: Array<any>, sceneDescription: any, type: string) {
-
+        private tryAddSingletonDescription(array: Array<any>, sceneDescription: any, type: string): void {
             if (sceneDescription[type]) {
                 sceneDescription[type].type = type;
                 sceneDescription[type].id = type;

@@ -8,21 +8,29 @@ module Thralldom {
         constructor() {
             this.objectives = [];
             this.name = "";
-            this.currentGroup = 0;
+            this.currentGroup = -1;
         }
 
         public getActiveObjectives(): Array<Objectives.Objective> {
             return this.objectives.filter((x) => x.group == this.currentGroup);
         }  
 
-        public update(frameInfo: FrameInfo): void {
+        public update(frameInfo: FrameInfo, scene: Scene): void {
             for (var i = 0; i < this.objectives.length; i++) {
                 this.objectives[i].update(frameInfo);
             }
 
             // If all objectives in the current group are complete, increment the current group
-            if (this.getActiveObjectives().every((x) => x.isComplete)) {
+            var active: Array<Objectives.Objective> = this.getActiveObjectives();
+            if (active.every((x) => x.isComplete)) {
                 this.currentGroup++;
+                for (var i = 0; i < active.length; i++) {
+                    scene.remove(active[i]);
+                }
+                var next = this.getActiveObjectives();
+                for (var i = 0; i < next.length; i++) {
+                    scene.addDrawable(next[i]);
+                }
             }
         }
 

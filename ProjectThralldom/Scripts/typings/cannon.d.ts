@@ -53,6 +53,14 @@ declare module CANNON {
         constructor(halfExtents: Vec3);
     }
 
+    export class Sphere extends Shape {
+        constructor(radius: number);
+    }
+
+    export class Cylinder extends Shape {
+        constructor(radiusTop: number, radiusBottom: number, height: number, numSegments);
+    }
+
     export class Body extends EventTarget {
         world: World;
         preStep: Function;
@@ -65,6 +73,7 @@ declare module CANNON {
         position: Vec3;
         quaternion: Quaternion;
         velocity: Vec3;
+        linearDamping: number;
         id: number;
 
         // CUSTOM
@@ -111,6 +120,7 @@ declare module CANNON {
         copy(vector: Vector): Vec3;
         vadd(vector: Vector, target: Vec3): Vec3;
         vsub(vector: Vector, target: Vec3): Vec3;
+        normalize(): number;
     }
 
     export class Quaternion {

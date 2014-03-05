@@ -5,6 +5,7 @@ module Thralldom {
             moveBackward: number;
             strafeRight: number;
             strafeLeft: number;
+            jump: number;
         }
 
 
@@ -13,7 +14,7 @@ module Thralldom {
             cameraSpeed: number;
 
             handleMouseRotation(delta: number, input: InputManager): void;
-            handleKeyboardHeroMovement(delta: number, input: InputManager, hero: Character, keybindings: IKeybindings): void;
+            handleKeyboardHeroMovement(delta: number, input: InputManager, keybindings: IKeybindings): void;
         }
     }
 } 

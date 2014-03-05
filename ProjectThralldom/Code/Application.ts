@@ -16,7 +16,8 @@ module Thralldom {
             strafeLeft: InputManager.keyNameToKeyCode("A"),
             strafeRight: InputManager.keyNameToKeyCode("D"),
             moveForward: InputManager.keyNameToKeyCode("W"),
-            moveBackward: InputManager.keyNameToKeyCode("S")
+            moveBackward: InputManager.keyNameToKeyCode("S"),
+            jump: InputManager.keyNameToKeyCode("Space"),
         };
 
         public hero: Character;
@@ -30,7 +31,6 @@ module Thralldom {
 
         // Constants
         private static cameraSpeed: number = 5;
-        private delta: number;
 
         // Managers
         private input: InputManager;
@@ -98,7 +98,8 @@ module Thralldom {
 
             // Axes
             var axes = new THREE.AxisHelper(1000);
-          //  this.scene.renderScene.add(axes);
+            //  this.scene.renderScene.add(axes);
+
         }
 
         private loadContent(): void {
@@ -121,7 +122,7 @@ module Thralldom {
 
         private handleKeyboard(delta: number) {
 
-            this.cameraController.handleKeyboardHeroMovement(delta, this.input, this.hero, this.keybindings);
+            this.cameraController.handleKeyboardHeroMovement(delta, this.input, this.keybindings);
         }
 
         private handleMouse(delta: number) {
@@ -134,24 +135,24 @@ module Thralldom {
             mouse3d.y = 0;
 
             var caster = projector.pickingRay(mouse3d, this.cameraController.camera);
-            for (var i = 0; i < this.npcs.length; i++) {
-                var intersections = caster.intersectObject(this.npcs[i].mesh);
-                if (intersections.length != 0) {
-                    var ammo = this.hero.attack(this.npcs[i], intersections[0]);
-                    if (ammo) {
-                        this.ammunitions.push(ammo);
-                        this.scene.addDynamic(ammo);
-                    }
-                }
-            }
+            //for (var i = 0; i < this.npcs.length; i++) {
+            //    var intersections = caster.intersectObject(this.npcs[i].mesh);
+            //    if (intersections.length != 0) {
+            //        var ammo = this.hero.attack(this.npcs[i], intersections[0]);
+            //        if (ammo) {
+            //            this.ammunitions.push(ammo);
+            //            this.scene.addDynamic(ammo);
+            //        }
+            //    }
+            //}
         }
 
         private update(): void {
             var delta = this.clock.getDelta();
-            this.delta = delta;
 
             this.handleKeyboard(delta);
             this.handleMouse(delta);
+
 
             var node = document.getElementsByTagName("nav").item(0).getElementsByTagName("p").item(0);
             var questComplete = this.quest.getActiveObjectives().length == 0;
@@ -160,7 +161,7 @@ module Thralldom {
                 "Your current quest:\n" + this.quest.toString();
 
             node.innerText = this.language.welcome + "\n" +
-              //  this.input.mouse.toString() + "\n" +
+                Utilities.formatString("Velocity: {0}\n", this.hero.rigidBody.velocity.y.toFixed(7)) +
                 Utilities.formatString("Current pos: ({0}, {1}, {2})\n", this.hero.mesh.position.x.toFixed(5), this.hero.mesh.position.y.toFixed(5), this.hero.mesh.position.z.toFixed(5)) +
                 questText;
 
@@ -184,7 +185,7 @@ module Thralldom {
             }
 
             this.scene.update(delta);
-            this.quest.update(frameInfo);
+            this.quest.update(frameInfo, this.scene);
 
             THREE.AnimationHandler.update(0.9 * delta);
             if (!this.hero.keepPlaying) {

@@ -3,8 +3,7 @@ module Thralldom {
 
         public name: string;
         public dynamics: Array<DynamicObject>;
-        public statics: Array<ISelectableObject>;
-        public neutral: Array<ISelectableObject>;
+        public statics: Array<LoadableObject>;
 
         public renderScene: THREE.Scene;
 
@@ -14,8 +13,7 @@ module Thralldom {
         constructor() {
             this.renderScene = new THREE.Scene();
             this.dynamics = new Array<DynamicObject>();
-            this.statics = new Array<ISelectableObject>();
-            this.neutral = new Array<ISelectableObject>();
+            this.statics = new Array<LoadableObject>();
 
             this.physicsSim = new PhysicsManager();
         }
@@ -24,7 +22,7 @@ module Thralldom {
         /*
          * Selects some of the objects in the scene. Use '.' to select tags, '~' to select statics and '#' to select dynanamics
         */
-        public select(selector: string): Array<ISelectableObject>  {
+        public select(selector: string): Array<LoadableObject>  {
             var first = selector.charAt(0);
             var text = selector.substr(1);
 
@@ -69,7 +67,7 @@ module Thralldom {
         /*
          * Returns the number of objects that the specified selector matches
         */
-        public static match(selector: string, objects: Array<ISelectableObject>): number {
+        public static match(selector: string, objects: Array<LoadableObject>): number {
             var count = 0;
 
             var first = selector.charAt(0);
@@ -101,7 +99,7 @@ module Thralldom {
         /*
          * Adds a static object to the scene. Note that this method does NOT check whether the id of the object already exists. May cause problems later.
         */
-        public addStatic(object: ISelectableObject): void {
+        public addStatic(object: LoadableObject): void {
             this.statics.push(object);
             this.renderScene.add(object.mesh);
 
@@ -119,11 +117,11 @@ module Thralldom {
             this.physicsSim.world.add(object.rigidBody);
        }
 
-        public addNeutral(object: ISelectableObject): void {
+        public addDrawable(object: IDrawable): void {
             this.renderScene.add(object.mesh);
         }
 
-        private tryRemove(object: ISelectableObject, collection: Array<ISelectableObject>): boolean {
+        private tryRemove(object: ISelectableObject, collection: Array<LoadableObject>): boolean {
             var found = false;
             for (var i = 0; i < collection.length; i++) {
                 if (collection[i] == object) {
@@ -140,19 +138,27 @@ module Thralldom {
             return found;
         }
 
-        public remove(object: ISelectableObject): boolean {
-            return this.tryRemove(object, this.dynamics) ||
-                this.tryRemove(object, this.statics) ||
-                this.tryRemove(object, this.neutral);    
-        }
+        public remove(object: ISelectableObject): boolean;
+        public remove(object: IDrawable): boolean;
 
+        public remove(object: any): boolean {
+            if (object.id)
+                return this.tryRemove(object, this.dynamics) ||
+                       this.tryRemove(object, this.statics);
+            else if (object.mesh) {
+                this.renderScene.remove(object.mesh);
+            }
+            else {
+                throw new Error("invalid");
+            }
+        }
         public update(delta: number): void {
             for (var i = 0; i < this.dynamics.length; i++) {
                 this.dynamics[i].update(delta);
             }
 
 
-            this.physicsSim.world.step(delta / 1000);
+            this.physicsSim.world.step(1/60);
             for (var i = 0; i < this.dynamics.length; i++) {
                 var pos = this.dynamics[i].rigidBody.position;
                 var centerToMesh = this.dynamics[i].rigidBody.centerToMesh;
@@ -160,7 +166,7 @@ module Thralldom {
 
                 this.dynamics[i].mesh.position.set(pos.x + centerToMesh.x, pos.y + centerToMesh.y, pos.z + centerToMesh.z);
                 // WARNING: DONT SET THE QUATERNION FROM THE SIM
-                //this.dynamics[i].mesh.quaternion.set(quat.x, quat.y, quat.z, quat.w);
+                this.dynamics[i].mesh.quaternion.set(quat.x, quat.y, quat.z, quat.w);
             }
 
 

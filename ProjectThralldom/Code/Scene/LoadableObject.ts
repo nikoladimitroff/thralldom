@@ -1,5 +1,5 @@
 module Thralldom {
-    export class LoadableObject implements ISelectableObject {
+    export class LoadableObject implements ISelectableObject, IDrawable, ICollidable, ILoadable {
         public id: string;
         public tags: Array<string>;
         public mesh: THREE.Mesh;

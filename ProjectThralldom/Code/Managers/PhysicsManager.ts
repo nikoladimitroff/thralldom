@@ -8,6 +8,7 @@ module Thralldom {
         public static contactMaterial: CANNON.ContactMaterial;
         public static gravityAcceleration: number;
         public static attachDebuggingVisuals: boolean;
+        public static linearDamping: number;
 
         constructor() {
             this.world = new CANNON.World();
@@ -20,7 +21,7 @@ module Thralldom {
             var solver = new CANNON.GSSolver
 
             solver.iterations = 10;
-            solver.tolerance = 0;
+            solver.tolerance = 0.1;
             var split = true;
             if (split)
                 this.world.solver = new CANNON.SplitSolver(solver);
@@ -37,31 +38,45 @@ module Thralldom {
             var box = mesh.geometry.boundingBox;
             var halfExtents = new THREE.Vector3();
             halfExtents.subVectors(box.max, box.min).multiplyScalar(mesh.scale.x / 2);
-            var boxShape = new CANNON.Box(new CANNON.Vec3(halfExtents.x, halfExtents.y, halfExtents.z));
-            var rigidBody = new CANNON.RigidBody(mass, boxShape, PhysicsManager.material);
+            var shape: CANNON.Shape;
+            if (mass != 0) {
+                // Use a sphere for dynamic objects
+                shape = new CANNON.Sphere(Math.max(halfExtents.x, halfExtents.y, halfExtents.z));
+
+            }
+            else {
+                 shape = new CANNON.Box(new CANNON.Vec3(halfExtents.x, halfExtents.y, halfExtents.z));
+            }
+            var rigidBody = new CANNON.RigidBody(mass, shape, PhysicsManager.material);
+            rigidBody.linearDamping = PhysicsManager.linearDamping;
             var pos = mesh.position;
             var quat = mesh.quaternion;
-            if (mass != 0) {
-                mesh.rotation.x = 0;
-                mesh.rotation.y = 0;
-                mesh.rotation.z = 0;
-                quat = mesh.quaternion;
-            }
             rigidBody.quaternion.set(quat.x, quat.y, quat.z, quat.w);
             rigidBody.position.set(pos.x, pos.y + halfExtents.y, pos.z);
             rigidBody.centerToMesh = new THREE.Vector3(0, -halfExtents.y, 0);
 
+
             if (PhysicsManager.attachDebuggingVisuals) {
 
                 setTimeout(function () {
-                    halfExtents.multiplyScalar(2 / mesh.scale.x);
-                    var cube = new THREE.CubeGeometry(halfExtents.x, halfExtents.y, halfExtents.z);
-                    var cubeMesh = new THREE.Mesh(cube, new THREE.MeshLambertMaterial({ color: 0xFF0000, transparent: true, opacity: 0.5, wireframe: true }));
-                    cubeMesh.position.set(0, 0, 0);
+                    halfExtents.divideScalar(mesh.scale.x);
+                    var drawableMesh: THREE.Mesh;
+                    if (mass != 0) {
+                        var sphereGeom = new THREE.SphereGeometry(Math.max(halfExtents.x, halfExtents.y, halfExtents.z));
+                        drawableMesh = new THREE.Mesh(sphereGeom, new THREE.MeshLambertMaterial({ wireframe: true }));
+                    }
+                    else {
+                        // Multiply by two to get the full width/height/depth
+                        halfExtents.multiplyScalar(2);
+                        var cube = new THREE.CubeGeometry(halfExtents.x, halfExtents.y, halfExtents.z);
+                        drawableMesh = new THREE.Mesh(cube, new THREE.MeshLambertMaterial({ wireframe: true }));
+                        halfExtents.divideScalar(2);
+                    }
+                    drawableMesh.position.set(0, 0, 0);
 
-                    cubeMesh.position.y = halfExtents.y / 2;
-                    cubeMesh.quaternion.set(0, 0, 0, 1);
-                    mesh.add(cubeMesh);
+                    drawableMesh.position.y = halfExtents.y;
+                    drawableMesh.quaternion.set(0, 0, 0, 1);
+                    mesh.add(drawableMesh);
 
                 }, 1000);
             }

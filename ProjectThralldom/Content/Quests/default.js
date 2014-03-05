@@ -3,8 +3,8 @@
     objectives: [
         {
             type: "reach",
-            target: [0, 0, 10],
-            radius: 2
+            target: [0, 0, 20],
+            radius: 5
         },
         {
             type: "kill",

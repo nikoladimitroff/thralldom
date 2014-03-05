@@ -1,6 +1,17 @@
 module Thralldom {
+
+    export enum CharacterStates {
+        Idle,
+        Walking,
+        Sprinting,
+        Jumping,
+        Shooting,
+        Dying
+    }
+
     export class Character extends DynamicObject {
         public static MaxViewAngle = Math.PI / 3;
+        public static CharacterJumpVelocity = 30;
 
 
         public get mesh(): THREE.Mesh {
@@ -23,12 +34,49 @@ module Thralldom {
             this.hp = value;
         }
 
+        public states: StateMachine;
+
         constructor() {
             super();
 
             this.hp = 100;
             this.range = 100;
             this.damage = 1;
+
+            this.initStateMachine();
+        }
+
+        private initStateMachine(): void {
+            var transitions = new Array<Array<number>>();
+            transitions[CharacterStates.Idle] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Shooting, CharacterStates.Sprinting, CharacterStates.Walking];
+            transitions[CharacterStates.Walking] = [CharacterStates.Dying, CharacterStates.Idle, CharacterStates.Jumping, CharacterStates.Shooting, CharacterStates.Sprinting];
+            transitions[CharacterStates.Sprinting] = [CharacterStates.Dying, CharacterStates.Idle, CharacterStates.Jumping, CharacterStates.Walking];
+            transitions[CharacterStates.Shooting] = [CharacterStates.Dying, CharacterStates.Idle];
+            transitions[CharacterStates.Dying] = [];
+            transitions[CharacterStates.Jumping] = [CharacterStates.Dying];
+
+            var callbacks = new Array<(previous: number) => void>();
+            var dummy = (previous: number) => { };
+            for (var i = 0; i < transitions.length; i++) {
+                callbacks[i] = dummy;
+            }
+            callbacks[CharacterStates.Jumping] = (previous: number) => {
+                this.rigidBody.velocity.y = Character.CharacterJumpVelocity;               
+
+            };
+
+            var extras = new Array<(nextState: number) => boolean>();
+            for (var i = 0; i < transitions.length; i++) {
+                extras[i] = (state) => {
+                    if (state == CharacterStates.Jumping) {
+                        return GeometryUtils.almostZero(this.rigidBody.velocity.y);
+                    }
+                    return false;
+                };
+            }
+            extras[CharacterStates.Jumping] = (state: number) => GeometryUtils.almostZero(this.rigidBody.velocity.y);
+
+            this.states = new StateMachine(transitions, extras, callbacks);
         }
 
         public loadFromDescription(description: any, content: ContentManager): void {
@@ -52,7 +100,7 @@ module Thralldom {
                 this.mesh.scale.set(scale, scale, scale);
             }
 
-            this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 10);
+            this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 70);
             
         }
 
@@ -79,7 +127,7 @@ module Thralldom {
 
         public update(delta: number): void {
             if (this.id != "hero") { 
-                var radiusSquared = 900;
+                var radiusSquared = this.mesh.position.lengthSq();
                 var dvar = 1e-6;
                 var equation = (x: number, y: number) => x * x + y * y - radiusSquared;
                 var derivative = (x: number, y: number) => new THREE.Vector2(equation(x, y) - equation(x + dvar, y), equation(x, y) - equation(x, y + dvar));
@@ -89,10 +137,21 @@ module Thralldom {
                 };
 
                 var normal = derivative(this.rigidBody.position.x, this.rigidBody.position.z);
-                var velocity = tangent(this.rigidBody.position.x, this.rigidBody.position.z).multiplyScalar(1e10 * delta);
-                this.rigidBody.quaternion.setFromVectors(new CANNON.Vec3(0, 0, 1), new CANNON.Vec3(velocity.x, 0, velocity.y));
-                this.rigidBody.velocity.set(velocity.x, 0, velocity.y);
+                var velocity =
+                    tangent(this.rigidBody.position.x, this.rigidBody.position.z)
+                    .multiplyScalar(1e7 * delta);
 
+                var normalizedVelocity = new THREE.Vector3(velocity.x, 0, velocity.y);
+                normalizedVelocity.normalize();
+
+                var normVel = new CANNON.Vec3(normalizedVelocity.x, 0, normalizedVelocity.z);
+                var quat = new CANNON.Quaternion();
+                var asd = new THREE.Quaternion();
+                quat.setFromVectors(new CANNON.Vec3(0, 0, 1), normVel);
+                this.rigidBody.quaternion.set(quat.x, quat.y, quat.z, quat.w);
+
+                this.rigidBody.velocity.x = velocity.x;
+                this.rigidBody.velocity.z = velocity.y;
             }
 
         }
