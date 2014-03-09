@@ -34,7 +34,7 @@ module Thralldom {
             this.hp = value;
         }
 
-        public states: StateMachine;
+        public stateMachine: StateMachine;
 
         constructor() {
             super();
@@ -42,41 +42,6 @@ module Thralldom {
             this.hp = 100;
             this.range = 100;
             this.damage = 1;
-
-            this.initStateMachine();
-        }
-
-        private initStateMachine(): void {
-            var transitions = new Array<Array<number>>();
-            transitions[CharacterStates.Idle] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Shooting, CharacterStates.Sprinting, CharacterStates.Walking];
-            transitions[CharacterStates.Walking] = [CharacterStates.Dying, CharacterStates.Idle, CharacterStates.Jumping, CharacterStates.Shooting, CharacterStates.Sprinting];
-            transitions[CharacterStates.Sprinting] = [CharacterStates.Dying, CharacterStates.Idle, CharacterStates.Jumping, CharacterStates.Walking];
-            transitions[CharacterStates.Shooting] = [CharacterStates.Dying, CharacterStates.Idle];
-            transitions[CharacterStates.Dying] = [];
-            transitions[CharacterStates.Jumping] = [CharacterStates.Dying];
-
-            var callbacks = new Array<(previous: number) => void>();
-            var dummy = (previous: number) => { };
-            for (var i = 0; i < transitions.length; i++) {
-                callbacks[i] = dummy;
-            }
-            callbacks[CharacterStates.Jumping] = (previous: number) => {
-                this.rigidBody.velocity.y = Character.CharacterJumpVelocity;               
-
-            };
-
-            var extras = new Array<(nextState: number) => boolean>();
-            for (var i = 0; i < transitions.length; i++) {
-                extras[i] = (state) => {
-                    if (state == CharacterStates.Jumping) {
-                        return GeometryUtils.almostZero(this.rigidBody.velocity.y);
-                    }
-                    return false;
-                };
-            }
-            extras[CharacterStates.Jumping] = (state: number) => GeometryUtils.almostZero(this.rigidBody.velocity.y);
-
-            this.states = new StateMachine(transitions, extras, callbacks);
         }
 
         public loadFromDescription(description: any, content: ContentManager): void {
@@ -101,6 +66,8 @@ module Thralldom {
             }
 
             this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 70);
+
+            this.stateMachine = StateMachineUtils.getCharacterStateMachine(this);
             
         }
 
@@ -153,7 +120,6 @@ module Thralldom {
                 this.rigidBody.velocity.x = velocity.x;
                 this.rigidBody.velocity.z = velocity.y;
             }
-
         }
     }
 } 

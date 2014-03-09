@@ -80,7 +80,7 @@ module Thralldom {
         }
 
         public static almostZero(value: number): boolean {
-            return Math.abs(value) <= 1e-2;
+            return Math.abs(value) <= 1e-6;
         }
     }
 }

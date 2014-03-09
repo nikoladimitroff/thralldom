@@ -82,12 +82,12 @@ module Thralldom {
             public handleKeyboardHeroMovement(delta: number, input: InputManager, keybindings: IKeybindings): void {
                 var hero = this.hero;
 
-                if (hero.states.current != CharacterStates.Jumping) {
+                if (hero.stateMachine.current != CharacterStates.Jumping) {
                     hero.rigidBody.velocity.x = 0;
                     hero.rigidBody.velocity.z = 0;
                 }
 
-                if (input.keyboard[keybindings.moveForward] && hero.states.requestTransitionTo(CharacterStates.Walking)) {      
+                if (input.keyboard[keybindings.moveForward] && hero.stateMachine.requestTransitionTo(CharacterStates.Walking)) {      
 
                                   
                     var forward = new THREE.Vector3(0, 0, 1);
@@ -96,9 +96,9 @@ module Thralldom {
                     hero.rigidBody.velocity.x = forward.x;
                     hero.rigidBody.velocity.z = forward.z;
 
-                    if (!this.previousKeepPlaying) {
-                        hero.animation.play();
-                    }
+                    //if (!this.previousKeepPlaying) {
+                    //    hero.animation.play();
+                    //}
                     hero.keepPlaying = true;
                 }
                 if (input.keyboard[keybindings.strafeLeft]) {
@@ -112,9 +112,9 @@ module Thralldom {
                     hero.keepPlaying = true;
                 }
                 if (input.keyboard[keybindings.jump]) {
-                    hero.states.requestTransitionTo(CharacterStates.Jumping);
+                    hero.stateMachine.requestTransitionTo(CharacterStates.Jumping);
                 }
-                hero.states.requestTransitionTo(CharacterStates.Idle);
+                hero.stateMachine.requestTransitionTo(CharacterStates.Idle);
 
                 this.previousKeepPlaying = hero.keepPlaying;
             }

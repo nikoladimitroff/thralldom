@@ -114,6 +114,7 @@ module Thralldom {
 
             this.content.loadModel(ContentLibrary.Models.bore.houseoneJS);
             this.content.loadModel(ContentLibrary.Models.bore.housetwoJS);
+            this.content.loadModel(ContentLibrary.Models.bore.objectTerrainJS);
 
 
             // Quests
@@ -188,10 +189,6 @@ module Thralldom {
             this.quest.update(frameInfo, this.scene);
 
             THREE.AnimationHandler.update(0.9 * delta);
-            if (!this.hero.keepPlaying) {
-                this.hero.animation.stop();
-            }
-            this.hero.keepPlaying = false;
             this.input.swap();
         }
         

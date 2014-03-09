@@ -45,7 +45,8 @@ module Thralldom {
 
             }
             else {
-                 shape = new CANNON.Box(new CANNON.Vec3(halfExtents.x, halfExtents.y, halfExtents.z));
+                shape = new CANNON.Box(new CANNON.Vec3(halfExtents.x, halfExtents.y, halfExtents.z));
+                console.log(halfExtents);
             }
             var rigidBody = new CANNON.RigidBody(mass, shape, PhysicsManager.material);
             rigidBody.linearDamping = PhysicsManager.linearDamping;

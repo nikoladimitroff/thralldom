@@ -61,6 +61,11 @@ declare module CANNON {
         constructor(radiusTop: number, radiusBottom: number, height: number, numSegments);
     }
 
+    export class Compound extends Shape {
+        constructor();
+        addChild(shape: Shape, offset: Vec3, orientation: Quaternion): void;
+    }
+
     export class Body extends EventTarget {
         world: World;
         preStep: Function;
@@ -111,6 +116,7 @@ declare module CANNON {
     }
 
     export class Vec3 implements Vector {
+        constructor();
         constructor(x: number, y: number, z: number);
         x: number;
         y: number;
@@ -121,6 +127,7 @@ declare module CANNON {
         vadd(vector: Vector, target: Vec3): Vec3;
         vsub(vector: Vector, target: Vec3): Vec3;
         normalize(): number;
+        dot(vec: CANNON.Vec3): number;
     }
 
     export class Quaternion {

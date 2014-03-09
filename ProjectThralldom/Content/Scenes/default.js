@@ -34,7 +34,7 @@
     dynamics: [
         {
             type: "character",
-            tags: ["npc"],
+            tags: [],
             id: "hero",
             model: "TestEight.js",
             pos: [0, 20, 0],

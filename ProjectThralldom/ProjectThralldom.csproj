@@ -73,7 +73,9 @@
     <Content Include="default.htm" />
     <Content Include="Content\Fonts\Helvetiker.js" />
     <Content Include="Scripts\implementations\cannon.js" />
-    <Content Include="Scripts\implementations\cannon.min.js" />
+    <Content Include="Scripts\implementations\cannon.min.js">
+      <DependentUpon>cannon.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\three.min.js" />
@@ -84,6 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="Scripts\implementations\cannon.min.js.map">
+      <DependentUpon>cannon.min.js</DependentUpon>
+    </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -121,7 +126,9 @@
     <TypeScriptCompile Include="Code\Scene\LoadableObject.ts" />
     <TypeScriptCompile Include="Code\Scene\Scene.ts" />
     <TypeScriptCompile Include="Code\Scene\Skybox.ts" />
-    <TypeScriptCompile Include="Code\StateMachine.ts" />
+    <TypeScriptCompile Include="Code\StateMachine\State.ts" />
+    <TypeScriptCompile Include="Code\StateMachine\StateMachine.ts" />
+    <TypeScriptCompile Include="Code\StateMachine\StateMachineUtils.ts" />
     <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />
     <TypeScriptCompile Include="Code\Scene\Terrain.ts" />
     <TypeScriptCompile Include="Code\Utilities.ts" />
