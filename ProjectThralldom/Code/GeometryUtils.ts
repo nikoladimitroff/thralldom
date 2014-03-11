@@ -81,14 +81,6 @@ module Thralldom {
             return node;
         }
 
-        public static convertThreeToAmmoGeometry(mesh: THREE.Mesh): Array<Ammo.btVector3> {
-            var vertices: Array<Ammo.btVector3>;
-
-            vertices = mesh.geometry.vertices.map((vertex) => new Ammo.btVector3(vertex.x, vertex.y, vertex.z));
-
-            return vertices;
-        }
-
         /*
             Normalize any value in the cycling range from start to end
         */

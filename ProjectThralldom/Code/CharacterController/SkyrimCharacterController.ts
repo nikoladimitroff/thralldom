@@ -1,6 +1,6 @@
 module Thralldom {
-    export module CameraControllers {
-        export class SkyrimCameraController implements ICameraController {
+    export module CharacterControllers {
+        export class SkyrimCharacterController implements ICharacterController {
 
             public camera: THREE.PerspectiveCamera;
             public cameraSpeed: number;
@@ -26,7 +26,6 @@ module Thralldom {
 
 
                 this.skybox = skybox;
-                this.skybox.mesh.position = hero.mesh.position;
 
                 this.camera.position.y = 20;
 
@@ -65,7 +64,7 @@ module Thralldom {
                 movement.y = (input.mouse.relative.x) * delta;
                 movement.x = (input.mouse.relative.y) * delta;
                 movement.z = (input.mouse.scroll - input.previousMouse.scroll) / 120;
-                var speed = delta * SkyrimCameraController.angularSpeed;
+                var speed = delta * SkyrimCharacterController.angularSpeed;
 
                 // TODO: replace magic numbers! 
                 this.distance -= movement.z * this.cameraSpeed;
@@ -97,8 +96,9 @@ module Thralldom {
             private previousKeepPlaying: boolean;
             public handleKeyboardHeroMovement(delta: number, input: InputManager, keybindings: IKeybindings): void {
                 var hero = this.hero;
-                //hero.rigidBody.activate();
-                if (hero.stateMachine.current != CharacterStates.Jumping) {
+
+                if (hero.stateMachine.current != CharacterStates.Jumping &&
+                    hero.stateMachine.current != CharacterStates.Falling) {
                     var velocity = hero.rigidBody.getLinearVelocity();
                     velocity.setX(0);
                     velocity.setZ(0);
@@ -108,7 +108,7 @@ module Thralldom {
                 if (input.keyboard[keybindings.moveForward] && hero.stateMachine.requestTransitionTo(CharacterStates.Walking)) {      
                                   
                     var forward = new THREE.Vector3(0, 0, 1);
-                    forward.transformDirection(hero.mesh.matrix).multiplyScalar(SkyrimCameraController.movementSpeed * delta);
+                    forward.transformDirection(hero.mesh.matrix).multiplyScalar(SkyrimCharacterController.movementSpeed * delta);
 
                     var velocity = hero.rigidBody.getLinearVelocity();
                     velocity.setX(forward.x);
@@ -128,6 +128,7 @@ module Thralldom {
                     hero.stateMachine.requestTransitionTo(CharacterStates.Jumping);
                 }
                 hero.stateMachine.requestTransitionTo(CharacterStates.Idle);
+                hero.stateMachine.requestTransitionTo(CharacterStates.Falling);
             }
         }
     }

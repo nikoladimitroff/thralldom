@@ -5,7 +5,7 @@ module Thralldom {
 
         // Three.js variables
         private clock: THREE.Clock;
-        private cameraController: CameraControllers.SkyrimCameraController;
+        private cameraController: CharacterControllers.ICharacterController;
         private renderer: THREE.WebGLRenderer;
         private container: HTMLElement;
 
@@ -74,7 +74,7 @@ module Thralldom {
 
             this.hero = <Character> this.scene.select("#hero")[0];
             // Camera controller
-            this.cameraController = new CameraControllers.SkyrimCameraController(
+            this.cameraController = new CharacterControllers.SkyrimCharacterController(
                 this.container.offsetWidth / this.container.offsetHeight,
                 Application.cameraSpeed,
                 this.hero,
@@ -168,7 +168,7 @@ module Thralldom {
             Utilities.formatString("Velocity: {0}\n", Utilities.formatVector(this.hero.rigidBody.getLinearVelocity(), 7)) +
             Utilities.formatString("Current pos: {0}\n", Utilities.formatVector(this.hero.mesh.position, 5)) +
             Utilities.formatString("Rigid body pos: {0}\n", Utilities.formatVector(transform.getOrigin(), 5)) +
-            Utilities.formatString("Delta: {0}\n", delta.toFixed(5)) + 
+            Utilities.formatString("State: {0}\n", StateMachineUtils.translateState(this.hero.stateMachine.current)) + 
                 questText;
 
             var frameInfo = new FrameInfo(this.scene, this.hero, []);

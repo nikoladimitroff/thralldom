@@ -125,7 +125,7 @@ declare module Ammo {
         getLinearVelocity(): btVector3;
         setAngularVelocity(vec: btVector3): void;
         getAngularVelocity(): btVector3;
-        setLinearDamping(damping: number): void;
+        setDamping(linearDamping: number, angularDamping: number): void;
         getLinearDamping(): number;
 
         setFlags(flags: number): void;

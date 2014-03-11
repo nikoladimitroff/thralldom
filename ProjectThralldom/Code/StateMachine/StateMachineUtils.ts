@@ -1,6 +1,10 @@
 module Thralldom {
     export class StateMachineUtils {
 
+        private static FallingGravityMultiplier = 0.6;
+        private static StopFallingVelocityTreshold = 1;
+        private static JumpingErrorMargin = 1;
+
         private static dummyEventHandler = (state: number, object: DynamicObject) => { };
         private static dummyPredicate = (object: DynamicObject) => false;
 
@@ -22,71 +26,71 @@ module Thralldom {
                 hero.animation.pause();
             }
 
-            var walkingInterupt = (hero: Character) => hero.animation.currentTime != walking.data.lastTime;
+            var walkingInterupt = (hero: Character) => {
+                var velocity = hero.rigidBody.getLinearVelocity();
+                return GeometryUtils.almostZero(velocity.x()) && GeometryUtils.almostZero(velocity.z());
+                };
 
             walking = new State(CharacterStates.Walking, walkingEntry, walkingExit, walkingInterupt);
 
             return walking;
         }
 
-        private static getJumpingState(character: Character): State {
+        private static getJumpingState(): State {
             var jumping: State;
 
             var jumpingEntry = (previous: number, object: DynamicObject) => {
                 jumping.data.beforeJumpY = object.mesh.position.y;
-
-                var scale = 3;
-                var velocity = object.rigidBody.getLinearVelocity();
-                velocity.setX(velocity.x() / scale);
-                velocity.setZ(velocity.z() / scale);
-                object.rigidBody.setLinearVelocity(velocity);
-
                 object.rigidBody.applyCentralImpulse(new Ammo.btVector3(0, Character.CharacterJumpImpulseY, 0));
 
             }
 
-            //// Shamelesly stole the following event handler from cannonjs examples
-            //var contactNormal = new Ammo.btVector3(); // Normal in the contact, pointing *out* of whatever the player touched
-            //var upAxis = new Ammo.btVector3(0, 1, 0);
-            //character.rigidBody.addEventListener("collide", function (e) {
-            //    var contact = e.contact;
-
-            //    // contact.bi and contact.bj are the colliding bodies, and contact.ni is the collision normal.
-            //    // We do not yet know which one is which! Let's check.
-            //    if (contact.bi.id == character.rigidBody.id)  // bi is the player body, flip the contact normal
-            //        contact.ni.negate(contactNormal);
-            //    else
-            //        contact.ni.copy(contactNormal); // bi is something else. Keep the normal as it is
-
-            //    // If contactNormal.dot(upAxis) is between 0 and 1, we know that the contact normal is somewhat in the up direction.
-            //    if (contactNormal.dot(upAxis) > 0.5) // Use a "good" threshold value between 0 and 1 here!
-            //        jumping.data.canJump = true;
-            //});
-
-            var errorMargin = 1;
             var jumpingInterupt = (object: DynamicObject): boolean =>
-                object.rigidBody.getLinearVelocity().y() < 0 && Math.abs(object.mesh.position.y - jumping.data.beforeJumpY) < errorMargin;
+                object.rigidBody.getLinearVelocity().y() < 0 &&
+                Math.abs(object.mesh.position.y - jumping.data.beforeJumpY) < StateMachineUtils.JumpingErrorMargin;
 
             jumping = new State(CharacterStates.Jumping, jumpingEntry, StateMachineUtils.dummyEventHandler, jumpingInterupt);
 
             return jumping;
+        }
 
+        private static getFallingState(): State {
+            var falling: State;
+
+            var fallingInterupt = (object: DynamicObject): boolean => {
+                var velocityY = object.rigidBody.getLinearVelocity().y();
+                // Negative velocity that is close to zero (less than -1)
+                return velocityY < 0 && -velocityY < StateMachineUtils.StopFallingVelocityTreshold;
+            };
+
+            var fallingEntranceCondition = (object: DynamicObject): boolean => {
+                var velocityY = object.rigidBody.getLinearVelocity().y();
+                // Negative velocity bigger than gravity * gravityMultiplier (0.6 looks ok)
+                return velocityY < 0 && velocityY < PhysicsManager.gravityAcceleration * StateMachineUtils.FallingGravityMultiplier;
+            }
+
+            falling = new State(CharacterStates.Falling,
+                StateMachineUtils.dummyEventHandler,
+                StateMachineUtils.dummyEventHandler,
+                fallingInterupt,
+                fallingEntranceCondition);
+
+            return falling;
         }
 
         public static getCharacterStateMachine(character: Character): StateMachine {
             var transitions = new Array<Array<number>>();
-            transitions[CharacterStates.Idle] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Shooting, CharacterStates.Sprinting, CharacterStates.Walking];
-            transitions[CharacterStates.Walking] = [CharacterStates.Dying, CharacterStates.Walking, CharacterStates.Jumping, CharacterStates.Shooting, CharacterStates.Sprinting];
-            transitions[CharacterStates.Sprinting] = [CharacterStates.Dying, CharacterStates.Idle, CharacterStates.Jumping, CharacterStates.Walking];
+            transitions[CharacterStates.Idle] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Shooting, CharacterStates.Sprinting, CharacterStates.Walking];
+            transitions[CharacterStates.Walking] = [CharacterStates.Dying, CharacterStates.Walking, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Shooting, CharacterStates.Sprinting];
+            transitions[CharacterStates.Sprinting] = [CharacterStates.Dying, CharacterStates.Idle, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Walking];
             transitions[CharacterStates.Shooting] = [CharacterStates.Dying, CharacterStates.Idle];
             transitions[CharacterStates.Dying] = [];
             transitions[CharacterStates.Jumping] = [CharacterStates.Dying];
+            transitions[CharacterStates.Falling] = [CharacterStates.Dying];
 
             var sprinting = StateMachineUtils.getDummyState(CharacterStates.Sprinting);
             var shooting = StateMachineUtils.getDummyState(CharacterStates.Shooting);
             var dying = StateMachineUtils.getDummyState(CharacterStates.Dying);
-
-
 
             var idleEntry = (previous: number, hero: Character): void => {
                 hero.animation.stop();
@@ -94,12 +98,17 @@ module Thralldom {
 
             var idle = new State(CharacterStates.Idle, idleEntry, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyPredicate);
             var walking = StateMachineUtils.getWalkingState();
-            var jumping = StateMachineUtils.getJumpingState(character);
+            var jumping = StateMachineUtils.getJumpingState();
+            var falling = StateMachineUtils.getFallingState();
             
-            var states = [idle, sprinting, shooting, dying, jumping, walking].sort((x, y) => x.index - y.index);
+            var states = [idle, sprinting, shooting, dying, jumping, falling, walking].sort((x, y) => x.index - y.index);
 
             return new StateMachine(states, transitions, character);
 
+        }
+
+        public static translateState(index: number): string {
+            return CharacterStates[index] || "No such state!";
         }
     }
 }

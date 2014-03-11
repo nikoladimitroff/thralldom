@@ -98,8 +98,8 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Code\Application.ts" />
-    <TypeScriptCompile Include="Code\CameraControllers\ICameraController.ts" />
-    <TypeScriptCompile Include="Code\CameraControllers\SkyrimCameraController.ts" />
+    <TypeScriptCompile Include="Code\CharacterController\ICharacterController.ts" />
+    <TypeScriptCompile Include="Code\CharacterController\SkyrimCharacterController.ts" />
     <TypeScriptCompile Include="Code\FrameInfo.ts" />
     <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
     <TypeScriptCompile Include="Code\Objectives.ts" />

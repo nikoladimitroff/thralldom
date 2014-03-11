@@ -5,13 +5,15 @@ module Thralldom {
         Walking,
         Sprinting,
         Jumping,
+        Falling,
         Shooting,
         Dying
     }
 
     export class Character extends DynamicObject {
         public static MaxViewAngle = Math.PI / 3;
-        public static CharacterJumpImpulseY = 300;
+        public static CharacterJumpImpulseY = 1000;
+        public static Mass = 70;
 
 
         public get mesh(): THREE.Mesh {
@@ -64,7 +66,7 @@ module Thralldom {
                 this.mesh.scale.set(scale, scale, scale);
             }
 
-            this.rigidBody = PhysicsManager.computeRigidBodyFromMesh(this.mesh, 70);
+            this.rigidBody = PhysicsManager.computeCapsuleBody(this.mesh, Character.Mass);
 
             this.stateMachine = StateMachineUtils.getCharacterStateMachine(this);
             

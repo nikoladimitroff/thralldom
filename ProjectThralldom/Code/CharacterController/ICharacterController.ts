@@ -1,5 +1,5 @@
 module Thralldom {
-    export module CameraControllers {
+    export module CharacterControllers {
         export interface IKeybindings {
             moveForward: number;
             moveBackward: number;
@@ -9,8 +9,8 @@ module Thralldom {
         }
 
 
-        export interface ICameraController {
-            camera: THREE.Camera;
+        export interface ICharacterController {
+            camera: THREE.PerspectiveCamera;
             cameraSpeed: number;
 
             handleMouseRotation(delta: number, input: InputManager): void;

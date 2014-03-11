@@ -140,8 +140,9 @@ module Thralldom {
             this.parsePhysics(sceneDescription.physics);
             var settings = sceneDescription.settings;
             PhysicsManager.attachDebuggingVisuals = settings.debugDraw || false;
-            Thralldom.CameraControllers.SkyrimCameraController.angularSpeed = settings.cameraAngularSpeed || 10 * Math.PI;
-            Thralldom.CameraControllers.SkyrimCameraController.movementSpeed = settings.cameraMovementSpeed || 2 * 1e+6;
+
+            Thralldom.CharacterControllers.SkyrimCharacterController.angularSpeed = settings.cameraAngularSpeed || 10 * Math.PI;
+            Thralldom.CharacterControllers.SkyrimCharacterController.movementSpeed = settings.cameraMovementSpeed || 2 * 1e+6;
 
             var scene = new Scene();
             scene.name = sceneDescription["name"];

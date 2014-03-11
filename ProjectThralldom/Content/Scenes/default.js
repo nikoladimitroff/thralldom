@@ -8,20 +8,19 @@
     physics: {
         friction: 1,
         restitution: 0,
-        contactStiffness: 1e9,
-        contactRegularizationTime: 4,
-        frictionStiffness: 1,
-        frictionRegularizationTime: 1,
         linearDamping: 0.5,
+        angularDamping: 1,
         gravity: -9.8,
     },
     terrain: {
-        size: 2000,
+        scale: 2000,
         texture: "Grass.jpg",
         repeatTexture: true,
+        // If a model is provided, the texture above is ignored
+        model: "objectTerrain.js",
     },
     skybox: {
-        size: 2000,
+        scale: 2000,
         textures: [
                 "Content/Textures/Skybox/posX.png", 
                 "Content/Textures/Skybox/negX.png", 
@@ -37,7 +36,7 @@
             tags: [],
             id: "hero",
             model: "TestEight.js",
-            pos: [0, 20, 0],
+            pos: [-864, 192, 128],
             scale: 5,
         },
         {
