@@ -36,7 +36,7 @@
             tags: [],
             id: "hero",
             model: "TestEight.js",
-            pos: [-864, 192, 128],
+            pos: [0, 0, 0],
             scale: 5,
         },
         {
