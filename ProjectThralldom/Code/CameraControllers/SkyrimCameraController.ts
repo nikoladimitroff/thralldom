@@ -69,10 +69,26 @@ module Thralldom {
 
                 // TODO: replace magic numbers! 
                 this.distance -= movement.z * this.cameraSpeed;
-                this.yaw -= movement.y * speed;
+                var turnSpeed = movement.y * speed; 
+                this.yaw -= turnSpeed
                 this.pitch = THREE.Math.clamp(this.pitch + movement.x * speed, THREE.Math.degToRad(75), THREE.Math.degToRad(150));
 
-                this.hero.rigidBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), this.yaw);
+                //var transform = this.hero.rigidBody.getCenterOfMassTransform();
+
+                //var quat = new Ammo.btQuaternion();
+                //quat.setEuler(this.yaw * 10, 0, 0);
+
+                //transform.setRotation(quat);
+
+                //this.hero.rigidBody.setCenterOfMassTransform(transform);
+
+                //this.hero.rigidBody.setAngularVelocity(new Ammo.btVector3(0, -movement.y * speed, 0));
+
+                //this.hero.rigidBody.activate();
+                //this.hero.rigidBody.applyTorqueImpulse(new Ammo.btVector3(0, -turnSpeed * 1000, 0));
+
+                this.hero.mesh.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this.yaw);
+
                 this.bias.y += 0//movement.x * 100;
 
                 this.fixPosition();
@@ -81,25 +97,23 @@ module Thralldom {
             private previousKeepPlaying: boolean;
             public handleKeyboardHeroMovement(delta: number, input: InputManager, keybindings: IKeybindings): void {
                 var hero = this.hero;
-
+                //hero.rigidBody.activate();
                 if (hero.stateMachine.current != CharacterStates.Jumping) {
-                    hero.rigidBody.velocity.x = 0;
-                    hero.rigidBody.velocity.z = 0;
+                    var velocity = hero.rigidBody.getLinearVelocity();
+                    velocity.setX(0);
+                    velocity.setZ(0);
+                    hero.rigidBody.setLinearVelocity(velocity);
                 }
 
                 if (input.keyboard[keybindings.moveForward] && hero.stateMachine.requestTransitionTo(CharacterStates.Walking)) {      
-
                                   
                     var forward = new THREE.Vector3(0, 0, 1);
                     forward.transformDirection(hero.mesh.matrix).multiplyScalar(SkyrimCameraController.movementSpeed * delta);
 
-                    hero.rigidBody.velocity.x = forward.x;
-                    hero.rigidBody.velocity.z = forward.z;
-
-                    //if (!this.previousKeepPlaying) {
-                    //    hero.animation.play();
-                    //}
-                    hero.keepPlaying = true;
+                    var velocity = hero.rigidBody.getLinearVelocity();
+                    velocity.setX(forward.x);
+                    velocity.setZ(forward.z);
+                    hero.rigidBody.setLinearVelocity(velocity);
                 }
                 if (input.keyboard[keybindings.strafeLeft]) {
                     // hero.mesh.translateX(1 * delta);
@@ -109,14 +123,11 @@ module Thralldom {
                 }
                 if (input.keyboard[keybindings.moveBackward]) {
 
-                    hero.keepPlaying = true;
                 }
                 if (input.keyboard[keybindings.jump]) {
                     hero.stateMachine.requestTransitionTo(CharacterStates.Jumping);
                 }
                 hero.stateMachine.requestTransitionTo(CharacterStates.Idle);
-
-                this.previousKeepPlaying = hero.keepPlaying;
             }
         }
     }

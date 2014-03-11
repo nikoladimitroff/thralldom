@@ -102,29 +102,14 @@ module Thralldom {
             physicsDescription.friction = physicsDescription.friction || 1;
             physicsDescription.restitution = physicsDescription.restitution || 0;
             physicsDescription.gravity = physicsDescription.gravity || -9.82;
-            physicsDescription.contactStiffness = physicsDescription.contactStifness || 1e10;
-            physicsDescription.contactRegularizationTime = physicsDescription.contactRegularizationTime || 20;
-            physicsDescription.frictionStiffness = physicsDescription.frictionStiffness || 1e10;
-            physicsDescription.frictionRegularizationTime = physicsDescription.frictionRegularizationTime || 20;
-            physicsDescription.linearDamping = physicsDescription.linearDamping || 0.3;
-
-            var physicsMaterial = new CANNON.Material("defaultMaterial");
-            var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
-                physicsMaterial,
-                physicsDescription.friction, // friction coefficient
-                physicsDescription.restitution  // restitution
-                );
-
-            physicsContactMaterial.contactEquationStiffness = physicsDescription.contactStiffness;
-            physicsContactMaterial.contactEquationRegularizationTime = physicsDescription.contactRegularizationTime;
-            physicsContactMaterial.frictionEquationStiffness = physicsDescription.frictionStiffness;
-            physicsContactMaterial.frictionEquationRegularizationTime = physicsDescription.frictionRegularizationTime;
+            physicsDescription.linearDamping = physicsDescription.linearDamping || 0;
+            physicsDescription.angularDamping = physicsDescription.angularDamping || 0;
 
 
-            PhysicsManager.material = physicsMaterial;
-            PhysicsManager.contactMaterial = physicsContactMaterial;
             PhysicsManager.gravityAcceleration = physicsDescription.gravity;
             PhysicsManager.linearDamping = physicsDescription.linearDamping;
+            PhysicsManager.angularDamping = physicsDescription.angularDamping;
+
         }
 
         private parseCollection(collectionDescription: Array<any>, typeMapping: any, callback: (instance: ILoadable) => void): void {

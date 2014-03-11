@@ -1,5 +1,5 @@
 module Thralldom {
-    export class LaserOfDeath extends Ammo {
+    export class LaserOfDeath extends Ammunition {
         private isStillNeeded = true;
 
         constructor(startingPoint: THREE.Vector3, endPoint: THREE.Vector3) {

@@ -33,29 +33,39 @@ module Thralldom {
             var jumping: State;
 
             var jumpingEntry = (previous: number, object: DynamicObject) => {
-                jumping.data.canJump = false;
-                object.rigidBody.velocity.y = Character.CharacterJumpVelocity;
+                jumping.data.beforeJumpY = object.mesh.position.y;
+
+                var scale = 3;
+                var velocity = object.rigidBody.getLinearVelocity();
+                velocity.setX(velocity.x() / scale);
+                velocity.setZ(velocity.z() / scale);
+                object.rigidBody.setLinearVelocity(velocity);
+
+                object.rigidBody.applyCentralImpulse(new Ammo.btVector3(0, Character.CharacterJumpImpulseY, 0));
+
             }
-            
-            // Shamelesly stole the following event handler from cannonjs examples
-            var contactNormal = new CANNON.Vec3(); // Normal in the contact, pointing *out* of whatever the player touched
-            var upAxis = new CANNON.Vec3(0, 1, 0);
-            character.rigidBody.addEventListener("collide", function (e) {
-                var contact = e.contact;
 
-                // contact.bi and contact.bj are the colliding bodies, and contact.ni is the collision normal.
-                // We do not yet know which one is which! Let's check.
-                if (contact.bi.id == character.rigidBody.id)  // bi is the player body, flip the contact normal
-                    contact.ni.negate(contactNormal);
-                else
-                    contact.ni.copy(contactNormal); // bi is something else. Keep the normal as it is
+            //// Shamelesly stole the following event handler from cannonjs examples
+            //var contactNormal = new Ammo.btVector3(); // Normal in the contact, pointing *out* of whatever the player touched
+            //var upAxis = new Ammo.btVector3(0, 1, 0);
+            //character.rigidBody.addEventListener("collide", function (e) {
+            //    var contact = e.contact;
 
-                // If contactNormal.dot(upAxis) is between 0 and 1, we know that the contact normal is somewhat in the up direction.
-                if (contactNormal.dot(upAxis) > 0.5) // Use a "good" threshold value between 0 and 1 here!
-                    jumping.data.canJump = true;
-            });
+            //    // contact.bi and contact.bj are the colliding bodies, and contact.ni is the collision normal.
+            //    // We do not yet know which one is which! Let's check.
+            //    if (contact.bi.id == character.rigidBody.id)  // bi is the player body, flip the contact normal
+            //        contact.ni.negate(contactNormal);
+            //    else
+            //        contact.ni.copy(contactNormal); // bi is something else. Keep the normal as it is
 
-            var jumpingInterupt = (object: DynamicObject): boolean => jumping.data.canJump;
+            //    // If contactNormal.dot(upAxis) is between 0 and 1, we know that the contact normal is somewhat in the up direction.
+            //    if (contactNormal.dot(upAxis) > 0.5) // Use a "good" threshold value between 0 and 1 here!
+            //        jumping.data.canJump = true;
+            //});
+
+            var errorMargin = 1;
+            var jumpingInterupt = (object: DynamicObject): boolean =>
+                object.rigidBody.getLinearVelocity().y() < 0 && Math.abs(object.mesh.position.y - jumping.data.beforeJumpY) < errorMargin;
 
             jumping = new State(CharacterStates.Jumping, jumpingEntry, StateMachineUtils.dummyEventHandler, jumpingInterupt);
 

@@ -11,7 +11,7 @@ module Thralldom {
 
     export class Character extends DynamicObject {
         public static MaxViewAngle = Math.PI / 3;
-        public static CharacterJumpVelocity = 30;
+        public static CharacterJumpImpulseY = 300;
 
 
         public get mesh(): THREE.Mesh {
@@ -50,7 +50,6 @@ module Thralldom {
             if (description.model) {
                 this.skinnedMesh = content.getContent(description["model"]);
                 this.animation = new THREE.Animation(this.skinnedMesh, this.skinnedMesh.geometry.animation.name, THREE.AnimationHandler.LINEAR);
-                //this.animation.play();
             }
 
             if (description.pos) {
@@ -71,7 +70,7 @@ module Thralldom {
             
         }
 
-        public attack(enemy: Character, hitPoint: THREE.Intersection): Ammo {
+        public attack(enemy: Character, hitPoint: THREE.Intersection): Ammunition {
             // Only attack if the viewing angle between the character and the target is less than Character.MaxViewAngle and the character is in range.
             var distance = new THREE.Vector3();
             distance.subVectors(enemy.mesh.position, this.mesh.position);
@@ -93,33 +92,33 @@ module Thralldom {
         }
 
         public update(delta: number): void {
-            if (this.id != "hero") { 
-                var radiusSquared = this.mesh.position.lengthSq();
-                var dvar = 1e-6;
-                var equation = (x: number, y: number) => x * x + y * y - radiusSquared;
-                var derivative = (x: number, y: number) => new THREE.Vector2(equation(x, y) - equation(x + dvar, y), equation(x, y) - equation(x, y + dvar));
-                var tangent = (x: number, y: number) => {
-                    var df = derivative(x, y);
-                    return new THREE.Vector2(-df.y, df.x);
-                };
+            //if (this.id != "hero") { 
+            //    var radiusSquared = this.mesh.position.lengthSq();
+            //    var dvar = 1e-6;
+            //    var equation = (x: number, y: number) => x * x + y * y - radiusSquared;
+            //    var derivative = (x: number, y: number) => new THREE.Vector2(equation(x, y) - equation(x + dvar, y), equation(x, y) - equation(x, y + dvar));
+            //    var tangent = (x: number, y: number) => {
+            //        var df = derivative(x, y);
+            //        return new THREE.Vector2(-df.y, df.x);
+            //    };
 
-                var normal = derivative(this.rigidBody.position.x, this.rigidBody.position.z);
-                var velocity =
-                    tangent(this.rigidBody.position.x, this.rigidBody.position.z)
-                    .multiplyScalar(1e7 * delta);
+            //    var normal = derivative(this.rigidBody.position.x, this.rigidBody.position.z);
+            //    var velocity =
+            //        tangent(this.rigidBody.position.x, this.rigidBody.position.z)
+            //        .multiplyScalar(1e7 * delta);
 
-                var normalizedVelocity = new THREE.Vector3(velocity.x, 0, velocity.y);
-                normalizedVelocity.normalize();
+            //    var normalizedVelocity = new THREE.Vector3(velocity.x, 0, velocity.y);
+            //    normalizedVelocity.normalize();
 
-                var normVel = new CANNON.Vec3(normalizedVelocity.x, 0, normalizedVelocity.z);
-                var quat = new CANNON.Quaternion();
-                var asd = new THREE.Quaternion();
-                quat.setFromVectors(new CANNON.Vec3(0, 0, 1), normVel);
-                this.rigidBody.quaternion.set(quat.x, quat.y, quat.z, quat.w);
+            //    var normVel = new CANNON.Vec3(normalizedVelocity.x, 0, normalizedVelocity.z);
+            //    var quat = new CANNON.Quaternion();
+            //    var asd = new THREE.Quaternion();
+            //    quat.setFromVectors(new CANNON.Vec3(0, 0, 1), normVel);
+            //    this.rigidBody.quaternion.set(quat.x, quat.y, quat.z, quat.w);
 
-                this.rigidBody.velocity.x = velocity.x;
-                this.rigidBody.velocity.z = velocity.y;
-            }
+            //    this.rigidBody.velocity.x = velocity.x;
+            //    this.rigidBody.velocity.z = velocity.y;
+            //}
         }
     }
 } 

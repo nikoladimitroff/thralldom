@@ -107,7 +107,7 @@
     <TypeScriptCompile Include="Code\Scene\Character.ts" />
     <TypeScriptCompile Include="Code\Scene\DynamicObject.ts" />
     <TypeScriptCompile Include="Code\GeometryUtils.ts" />
-    <TypeScriptCompile Include="Code\Scene\Ammo.ts" />
+    <TypeScriptCompile Include="Code\Scene\Ammunition.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\Bulgarian.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\English.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\ILanguagePack.ts" />
@@ -131,7 +131,9 @@
     <TypeScriptCompile Include="Code\StateMachine\StateMachineUtils.ts" />
     <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />
     <TypeScriptCompile Include="Code\Scene\Terrain.ts" />
+    <TypeScriptCompile Include="Code\ThralldomMotionState.ts" />
     <TypeScriptCompile Include="Code\Utilities.ts" />
+    <TypeScriptCompile Include="Scripts\typings\ammo.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\cannon.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery.documentReady.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\qunit.d.ts" />

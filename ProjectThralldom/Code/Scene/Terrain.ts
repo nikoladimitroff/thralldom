@@ -1,8 +1,9 @@
+/// <reference path="../../scripts/typings/ammo.d.ts" />
 module Thralldom {
     export class Terrain extends LoadableObject {
 
         public mesh: THREE.Mesh;
-        public rigidBody: CANNON.RigidBody;
+        public rigidBody: Ammo.btRigidBody;
         public id = "terrain";
         public tags: Array<string> = [];
 
@@ -26,41 +27,40 @@ module Thralldom {
             plane.rotation.x = -Math.PI / 2;
             plane.receiveShadow = true;
 
-            var terrain = <THREE.Mesh> content.getContent(ContentLibrary.Models.bore.objectTerrainJS);
+            this.mesh = plane;
 
-            this.mesh = terrain;
-            var scale = 1000;
-            terrain.scale.set(scale, scale, scale);
+            //var groundShape = new Ammo.btBoxShape(new Ammo.btVector3(25, 1, 25)); // Create block 50x2x50
+            var groundShape = new Ammo.btStaticPlaneShape(new Ammo.btVector3(0, 1, 0), 0);
+            var groundTransform = new Ammo.btTransform();
+            groundTransform.setIdentity();
+            groundTransform.setOrigin(new Ammo.btVector3(0, 0, 0)); // Set initial position
 
-            //var compound = new CANNON.Compound();
-            //var vertices = terrain.geometry.vertices;
-            //for (var i = 0; i < terrain.geometry.faces.length; i++) {
-            //    var face = <any> terrain.geometry.faces[i];
+            var groundMass = 0; // Mass of 0 means ground won't move from gravity or collisions
+            var localInertia = new Ammo.btVector3(0, 0, 0);
+            var motionState = new Ammo.btDefaultMotionState(groundTransform);
+            //var rbInfo = new Ammo.btRigidBodyConstructionInfo(groundMass, motionState, groundShape, localInertia);
+            //this.rigidBody = new Ammo.btRigidBody(rbInfo);
 
-            //    var v1 = vertices[<number>face.a],
-            //        v2 = vertices[<number>face.b],
-            //        v3 = vertices[<number>face.c];
 
-            //    var halfExtents = new CANNON.Vec3();
-            //    halfExtents.x = Math.abs((v1.x - v2.x) / 2) //* terrain.scale.x;
-            //    halfExtents.z = Math.abs((v1.z - v2.z) / 2) //* terrain.scale.x;
-            //    halfExtents.y = 0.5;
+            var mesh = <THREE.Mesh>content.getContent(ContentLibrary.Models.bore.objectTerrainJS);
+            var scale = 2000;
+            mesh.scale.set(scale, scale, scale);
+            var vertices: Array<Ammo.btVector3> = GeometryUtils.convertThreeToAmmoGeometry(mesh);
 
-            //    var box = new CANNON.Box(halfExtents);
-            //    var pos = new CANNON.Vec3();
-            //    pos.vadd(v1, pos);
-            //    pos.vadd(v2, pos);
-            //    pos.vadd(v3, pos);
-            //    pos.x /= 3;
-            //    pos.y /= 3;
-            //    pos.z /= 3;
+            var meshInterface = new Ammo.btTriangleMesh();
+            for (var i = 0; i < mesh.geometry.faces.length; i++) {
+                // Mulptiply by 3 because we are iterating faces, not vertices
+                var index = 3 * i;
+                var face = <THREE.Face3>mesh.geometry.faces[i];
+                meshInterface.addTriangle(vertices[face.a], vertices[face.b], vertices[face.c]);
+            }
 
-            //    compound.addChild(box, pos, new CANNON.Quaternion);
-            //}
+            meshInterface.setScaling(new Ammo.btVector3(mesh.scale.x, mesh.scale.y, mesh.scale.z));
+            this.mesh = mesh;
+            var shape = new Ammo.btBvhTriangleMeshShape(meshInterface, true);
+            var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(0, motionState, shape, localInertia);
+            this.rigidBody = new Ammo.btRigidBody(rigidBodyInfo);
 
-            var planeShape = new CANNON.Plane();
-            this.rigidBody = new CANNON.RigidBody(0, planeShape, PhysicsManager.material);
-            this.rigidBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
         }
     }
 } 

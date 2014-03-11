@@ -23,7 +23,7 @@ module Thralldom {
         public hero: Character;
 
         public npcs: Array<Character>;
-        public ammunitions: Array<Ammo>;
+        public ammunitions: Array<Ammunition>;
 
         public scene: Thralldom.Scene;
         public static scene: THREE.Scene;
@@ -87,7 +87,7 @@ module Thralldom {
             this.npcs = <Array<Character>> this.scene.select(".npc");
 
             // ammo
-            this.ammunitions = new Array<Ammo>();
+            this.ammunitions = new Array<Ammunition>();
 
             // Lights
             var pointLight = new THREE.PointLight(0xffffff, 2, 100);
@@ -161,9 +161,14 @@ module Thralldom {
                 "Quest complete!" :
                 "Your current quest:\n" + this.quest.toString();
 
+            var transform = new Ammo.btTransform();
+            this.hero.rigidBody.getMotionState().getWorldTransform(transform);
+
             node.innerText = this.language.welcome + "\n" +
-                Utilities.formatString("Velocity: {0}\n", this.hero.rigidBody.velocity.y.toFixed(7)) +
-                Utilities.formatString("Current pos: ({0}, {1}, {2})\n", this.hero.mesh.position.x.toFixed(5), this.hero.mesh.position.y.toFixed(5), this.hero.mesh.position.z.toFixed(5)) +
+            Utilities.formatString("Velocity: {0}\n", Utilities.formatVector(this.hero.rigidBody.getLinearVelocity(), 7)) +
+            Utilities.formatString("Current pos: {0}\n", Utilities.formatVector(this.hero.mesh.position, 5)) +
+            Utilities.formatString("Rigid body pos: {0}\n", Utilities.formatVector(transform.getOrigin(), 5)) +
+            Utilities.formatString("Delta: {0}\n", delta.toFixed(5)) + 
                 questText;
 
             var frameInfo = new FrameInfo(this.scene, this.hero, []);

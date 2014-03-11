@@ -105,7 +105,7 @@ module Thralldom {
 
 
             if (!(object instanceof Skybox))
-                this.physicsSim.world.add(object.rigidBody);
+                this.physicsSim.world.addRigidBody(object.rigidBody);
         }
 
         /*
@@ -114,7 +114,7 @@ module Thralldom {
         public addDynamic(object: DynamicObject): void {
             this.dynamics.push(object);
             this.renderScene.add(object.mesh);
-            this.physicsSim.world.add(object.rigidBody);
+            this.physicsSim.world.addRigidBody(object.rigidBody);
        }
 
         public addDrawable(object: IDrawable): void {
@@ -157,16 +157,24 @@ module Thralldom {
                 this.dynamics[i].update(delta);
             }
 
+            var transform = new Ammo.btTransform(),
+                pos: Ammo.btVector3,
+                quat: Ammo.btQuaternion;
 
-            this.physicsSim.world.step(1/60);
+            this.physicsSim.world.stepSimulation(1 / 60, 5);
+
             for (var i = 0; i < this.dynamics.length; i++) {
-                var pos = this.dynamics[i].rigidBody.position;
-                var centerToMesh = this.dynamics[i].rigidBody.centerToMesh;
-                var quat = this.dynamics[i].rigidBody.quaternion;
+                this.dynamics[i].rigidBody.getMotionState().getWorldTransform(transform);
+                
 
-                this.dynamics[i].mesh.position.set(pos.x + centerToMesh.x, pos.y + centerToMesh.y, pos.z + centerToMesh.z);
+                pos = transform.getOrigin();
+                quat = transform.getRotation();
+                var centerToMesh = this.dynamics[i].rigidBody.centerToMesh;
+
+                this.dynamics[i].mesh.position.set(pos.x() + centerToMesh.x, pos.y() + centerToMesh.y, pos.z() + centerToMesh.z);
+                //this.dynamics[i].mesh.position.set(0, 0, 0);
                 // WARNING: DONT SET THE QUATERNION FROM THE SIM
-                this.dynamics[i].mesh.quaternion.set(quat.x, quat.y, quat.z, quat.w);
+                //this.dynamics[i].mesh.quaternion.set(quat.x(), quat.y(), quat.z(), quat.w());
             }
 
 

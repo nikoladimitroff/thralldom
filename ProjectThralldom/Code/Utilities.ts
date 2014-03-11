@@ -20,6 +20,15 @@ module Thralldom {
             return Utilities._toFormattedString(false, arguments);
         }
 
+        public static formatVector(vector: THREE.Vector3, precision: number);
+        public static formatVector(vector: Ammo.btVector3, precision: number);
+        public static formatVector(vector: any, precision: number) {
+            var x = vector.x instanceof Function ? vector.x() : vector.x;
+            var y = vector.y instanceof Function ? vector.y() : vector.y;
+            var z = vector.z instanceof Function ? vector.z() : vector.z;
+            return Utilities.formatString("({0}, {1}, {2})", x.toFixed(precision), y.toFixed(precision), z.toFixed(precision));
+        }
+
         private static _toFormattedString = function String$_toFormattedString(useLocale, args) {
             var result = '';
             var format = args[0];

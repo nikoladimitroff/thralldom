@@ -12,8 +12,8 @@
         contactRegularizationTime: 4,
         frictionStiffness: 1,
         frictionRegularizationTime: 1,
-        linearDamping: 0.1,
-        gravity: -30,
+        linearDamping: 0.5,
+        gravity: -9.8,
     },
     terrain: {
         size: 2000,

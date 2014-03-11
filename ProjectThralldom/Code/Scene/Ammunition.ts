@@ -1,5 +1,5 @@
 module Thralldom {
-    export class Ammo extends DynamicObject {
+    export class Ammunition extends DynamicObject {
         mesh: THREE.Mesh;
         isNeeded(): boolean {
             throw new Error("This is class is abstract");

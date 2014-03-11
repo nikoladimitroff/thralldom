@@ -28,8 +28,8 @@ module Thralldom {
             // create skybox mesh
             var skybox = new THREE.Mesh(new THREE.CubeGeometry(size, size, size), skyBoxMaterial);
             this.mesh = skybox;
-            var box = new CANNON.Box(new CANNON.Vec3(size / 2, size / 2, size / 2));
-            this.rigidBody = new CANNON.RigidBody(0, box);
+            //var box = new CANNON.Box(new CANNON.Vec3(size / 2, size / 2, size / 2));
+            //this.rigidBody = new CANNON.RigidBody(0, box);
         }
     }
 } 

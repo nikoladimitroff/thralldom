@@ -29,7 +29,20 @@ module Thralldom {
             return axes;
         }
 
-        public static GetQuestMarker(material: THREE.MeshBasicMaterial): THREE.Mesh {
+        public static quaternionFromVectors(u: THREE.Vector3, v: THREE.Vector3) {
+            var quat = new THREE.Quaternion();
+            var a = new THREE.Vector3();
+            a.crossVectors(u, v);
+            quat.x = a.x;
+            quat.y = a.y;
+            quat.z = a.z;
+            quat.w = Math.sqrt(Math.pow(u.length(), 2) * Math.pow(v.length(), 2)) + u.dot(v);
+            quat.normalize();
+
+            return quat;
+        }
+
+        public static getQuestMarker(material: THREE.MeshBasicMaterial): THREE.Mesh {
             var geometry = new THREE.TetrahedronGeometry(10);
 
             geometry.faceVertexUvs[0] = [];     
@@ -58,14 +71,22 @@ module Thralldom {
             diff13.subVectors(plane[0], plane[2]);
             var normal = new THREE.Vector3();
             normal.crossVectors(diff12, diff13).normalize();
-            // Use CANNON's quaternions since they can be build from 2 vectors
-            var quat = new CANNON.Quaternion();
-            quat.setFromVectors(new CANNON.Vec3(normal.x, normal.y, normal.z), new CANNON.Vec3(0, 1, 0));
+
+
+            var quat = GeometryUtils.quaternionFromVectors(new THREE.Vector3(normal.x, normal.y, normal.z), new THREE.Vector3(0, 1, 0));
 
             node.quaternion.set(quat.x, quat.y, quat.z, quat.w);
             node.geometry.computeBoundingBox();
 
             return node;
+        }
+
+        public static convertThreeToAmmoGeometry(mesh: THREE.Mesh): Array<Ammo.btVector3> {
+            var vertices: Array<Ammo.btVector3>;
+
+            vertices = mesh.geometry.vertices.map((vertex) => new Ammo.btVector3(vertex.x, vertex.y, vertex.z));
+
+            return vertices;
         }
 
         /*
