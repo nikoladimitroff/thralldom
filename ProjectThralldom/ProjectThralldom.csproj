@@ -21,6 +21,8 @@
     <Content Include="Code\StringExtensions.js" />
     <Content Include="Content\Models\bore\house_two.js" />
     <Content Include="Content\Models\bore\Lightmap.png" />
+    <Content Include="Content\Models\bore\monastery_object.js" />
+    <Content Include="Content\Models\bore\monastery_texture.jpg" />
     <Content Include="Content\Models\bore\rooftxt.jpg" />
     <Content Include="Content\Models\bore\barrelsUV.jpg" />
     <Content Include="Content\Models\bore\barrels_one.js" />
@@ -53,6 +55,7 @@
     <Content Include="Content\Models\Test\diff_01.jpg" />
     <Content Include="Content\Models\Test\diff_02.jpg" />
     <Content Include="Content\Models\Test\diff_03.jpg" />
+    <Content Include="Content\Models\Test\Pistol.jpg" />
     <Content Include="Content\Models\Test\TestEight.js" />
     <Content Include="Content\Quests\default.js" />
     <Content Include="Content\Scenes\default.js" />
