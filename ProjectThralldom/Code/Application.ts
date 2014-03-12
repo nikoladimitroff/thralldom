@@ -107,7 +107,7 @@ module Thralldom {
             this.content.loadTexture(ContentLibrary.Textures.DirtTextureJPG);
             this.content.loadTexture(ContentLibrary.Textures.GrassJPG);
 
-            this.content.loadSkinnedModel(ContentLibrary.Models.Test.TestEightJS);
+            this.content.loadSkinnedModel(ContentLibrary.Models.Test.BoychoAnimJS);
 
 
             this.content.loadModel(ContentLibrary.Models.bore.objectHouse1JS);
@@ -115,8 +115,9 @@ module Thralldom {
             this.content.loadModel(ContentLibrary.Models.bore.objectTerrainJS);
             this.content.loadModel(ContentLibrary.Models.bore.barrelsoneJS);
             this.content.loadModel(ContentLibrary.Models.bore.barrelstwoJS);
+            this.content.loadModel(ContentLibrary.Models.bore.monasteryobjectJS);
 
-            this.content.loadModel(ContentLibrary.Models.bore.houseoneJS);
+         //   this.content.loadModel(ContentLibrary.Models.bore.houseoneJS);
             this.content.loadModel(ContentLibrary.Models.bore.housetwoJS);
 
 

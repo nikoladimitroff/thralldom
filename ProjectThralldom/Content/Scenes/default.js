@@ -35,7 +35,7 @@
             type: "character",
             tags: [],
             id: "hero",
-            model: "TestEight.js",
+            model: "BoychoAnim.js",
             pos: [0, 0, 0],
             scale: 5,
         },
@@ -43,7 +43,7 @@
             type: "character",
             tags: [],
             id: "",
-            model: "TestEight.js",
+            model: "BoychoAnim.js",
             pos: [30, 0, 0],
             scale: 5,
         },
@@ -54,8 +54,8 @@
         {"type":"environment","pos":[-140,0,-10],"rot":[0,40,0],"scale":3.5,"model":"objectHouse1.js"},
         {"type":"environment","pos":[300,0,100],"rot":[0,70,0],"scale":3.5,"model":"objectHouse1.js"},
         {"type":"environment","pos":[-30,0,200],"rot":[0,70,0],"scale":89.0,"model":"objectMarket.js"},
-        {"type":"environment","pos":[0,0,0],"rot":[0,0,0],"scale":2500,"model":"objectTerrain.js"},
         {"type":"environment","pos":[0,0,50],"rot":[0,0,0],"scale":100,"model":"barrels_one.js"},
-        {"type":"environment","pos":[0,0,0],"rot":[0,0,0],"scale":100,"model":"barrels_two.js"}
+        {"type":"environment","pos":[50,0,0],"rot":[0,0,0],"scale":100,"model":"barrels_two.js"},
+        {"type":"environment","pos":[250,0,350],"rot":[0,180,0],"scale":220,"model":"monastery_object.js"}
     ],
 }
