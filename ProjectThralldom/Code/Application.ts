@@ -18,6 +18,7 @@ module Thralldom {
             moveForward: InputManager.keyNameToKeyCode("W"),
             moveBackward: InputManager.keyNameToKeyCode("S"),
             jump: InputManager.keyNameToKeyCode("Space"),
+            sprint: InputManager.keyNameToKeyCode("Shift"),
         };
 
         public hero: Character;
@@ -103,13 +104,10 @@ module Thralldom {
         }
 
         private loadContent(): void {
-            this.content.loadSkinnedModel(ContentLibrary.Models.Engineer.engineerJS);
             this.content.loadTexture(ContentLibrary.Textures.BlackWhiteCheckerJPG);
             this.content.loadTexture(ContentLibrary.Textures.DirtTextureJPG);
             this.content.loadTexture(ContentLibrary.Textures.GrassJPG);
 
-            //this.content.loadModel(ContentLibrary.Models.Spartan.spartanJS);
-            //this.content.loadModel(ContentLibrary.Models.Buildings.churchJS);
             this.content.loadSkinnedModel(ContentLibrary.Models.Test.TestEightJS);
 
             this.content.loadModel(ContentLibrary.Models.bore.houseoneJS);
@@ -128,24 +126,6 @@ module Thralldom {
 
         private handleMouse(delta: number) {
             this.cameraController.handleMouseRotation(delta, this.input);
-
-            // Attack below, should refactor
-            var projector = new THREE.Projector();
-            var mouse3d = new THREE.Vector3();
-            mouse3d.x = 0;
-            mouse3d.y = 0;
-
-            var caster = projector.pickingRay(mouse3d, this.cameraController.camera);
-            //for (var i = 0; i < this.npcs.length; i++) {
-            //    var intersections = caster.intersectObject(this.npcs[i].mesh);
-            //    if (intersections.length != 0) {
-            //        var ammo = this.hero.attack(this.npcs[i], intersections[0]);
-            //        if (ammo) {
-            //            this.ammunitions.push(ammo);
-            //            this.scene.addDynamic(ammo);
-            //        }
-            //    }
-            //}
         }
 
         private update(): void {
@@ -153,7 +133,6 @@ module Thralldom {
 
             this.handleKeyboard(delta);
             this.handleMouse(delta);
-
 
             var node = document.getElementsByTagName("nav").item(0).getElementsByTagName("p").item(0);
             var questComplete = this.quest.getActiveObjectives().length == 0;
@@ -164,11 +143,14 @@ module Thralldom {
             var transform = new Ammo.btTransform();
             this.hero.rigidBody.getMotionState().getWorldTransform(transform);
 
+            var currentAnimTime = this.hero.animation.currentTime;
+
             node.innerText = this.language.welcome + "\n" +
             Utilities.formatString("Velocity: {0}\n", Utilities.formatVector(this.hero.rigidBody.getLinearVelocity(), 7)) +
             Utilities.formatString("Current pos: {0}\n", Utilities.formatVector(this.hero.mesh.position, 5)) +
             Utilities.formatString("Rigid body pos: {0}\n", Utilities.formatVector(transform.getOrigin(), 5)) +
-            Utilities.formatString("State: {0}\n", StateMachineUtils.translateState(this.hero.stateMachine.current)) + 
+            Utilities.formatString("State: {0}\n", StateMachineUtils.translateState(this.hero.stateMachine.current)) +
+            Utilities.formatString("Current anim time: {0}\n", currentAnimTime.toFixed(6)) + 
                 questText;
 
             var frameInfo = new FrameInfo(this.scene, this.hero, []);

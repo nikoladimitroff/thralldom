@@ -92,8 +92,8 @@ module Thralldom {
             // + start to reset back to start of original range
         }
 
-        public static almostZero(value: number): boolean {
-            return Math.abs(value) <= 1e-6;
+        public static almostZero(value: number, precision: number = 1e-6): boolean {
+            return Math.abs(value) <= Math.abs(precision);
         }
     }
 }

@@ -5,11 +5,15 @@ module Thralldom {
         public onExit: (next: number, object: DynamicObject) => void;
         public interuptCondition: (object: DynamicObject) => boolean;
         public entranceCondition: (object: DynamicObject) => boolean;
+
+        public update: (object: DynamicObject) => void;
         public data: any;
 
         private static truthPredicate = (object: DynamicObject) => true;
+        public static emptyUpdate = (object: DynamicObject) => { };
         
         constructor(index: number,
+            update: (object: DynamicObject) => void,
             onEntry: (previous: number, object: DynamicObject) => void,
             onExit: (next: number, object: DynamicObject) => void,
             interuptCondition: (object: DynamicObject) => boolean,
@@ -18,8 +22,11 @@ module Thralldom {
             this.index = index;
             this.onEntry = onEntry;
             this.onExit = onExit;
-            this.interuptCondition = interuptCondition;
+            this.interuptCondition = interuptCondition; 
             this.entranceCondition = entranceCondition;
+
+            this.update = update;
+
 
             this.data = {};
         }

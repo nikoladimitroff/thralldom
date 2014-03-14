@@ -57,6 +57,40 @@ module Thralldom {
             });
         }
 
+        private loadAnimationData(path: string): void {
+            this.loading++;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", path, true);
+
+            xhr.onreadystatechange = () => {
+                if (xhr.status == 404) {
+                    throw new Error("Can find animations file for model: " + path);
+                }
+
+                if (xhr.readyState == 4) {
+                    var animDescription = eval("Object(" + xhr.responseText + ")");
+                    var animationData = [];
+                    for (var animation in animDescription) {
+                        var normalizedName = animation[0].toUpperCase() + animation.substr(1).toLowerCase();    
+                        animationData[CharacterStates[normalizedName]] = animDescription[animation];
+                    }
+
+                    var duplicate = () => animationData;
+                    this.onContentLoaded(path, duplicate);
+                }
+            };
+            xhr.send();
+        }
+
+        public getAnimationFilePath(meshPath: string): string {
+
+            var modelFile = this.extractFileName(meshPath);
+            var animationFile = modelFile.substring(0, modelFile.lastIndexOf('.')) + ".anim";
+            var animationFile = meshPath.replace(modelFile, animationFile);
+            return animationFile
+        }
+
         public loadSkinnedModel(path: string): void {
             this.loading++;
 
@@ -76,6 +110,9 @@ module Thralldom {
                     last.scl = first.scl;
                 }
             }
+
+            // Load the model and its animation data
+            this.loadAnimationData(this.getAnimationFilePath(path));
 
             loader.load(path, (geometry, materials) => {
 
@@ -98,17 +135,33 @@ module Thralldom {
         }
 
         private parsePhysics(physicsDescription: any): void {
-
             physicsDescription.friction = physicsDescription.friction || 1;
             physicsDescription.restitution = physicsDescription.restitution || 0;
             physicsDescription.gravity = physicsDescription.gravity || -9.82;
             physicsDescription.linearDamping = physicsDescription.linearDamping || 0;
             physicsDescription.angularDamping = physicsDescription.angularDamping || 0;
 
+            PhysicsManager.defaultSettings = physicsDescription;
+        }
 
-            PhysicsManager.gravityAcceleration = physicsDescription.gravity;
-            PhysicsManager.linearDamping = physicsDescription.linearDamping;
-            PhysicsManager.angularDamping = physicsDescription.angularDamping;
+        private parseSettings(sceneDescription: any): void {
+            // Physics first!
+            this.parsePhysics(sceneDescription.physics);
+            var settings = sceneDescription.settings;
+            PhysicsManager.attachDebuggingVisuals = settings.debugDraw || false;
+
+            var controllerSettings = sceneDescription.controller;
+            if (!controllerSettings.angularSpeed || !controllerSettings.movementSpeed || !controllerSettings.sprintMultiplier) {
+                throw new Error("Some or all of character controller settings are missing!");
+            }
+
+            Thralldom.CharacterControllers.SkyrimCharacterController.defaultSettings = controllerSettings;
+
+            var characterSettings = sceneDescription.character;
+            if (!characterSettings.mass || !characterSettings.jumpImpulse || !characterSettings.viewAngle) {
+                throw new Error("Some or all character settings are missing!");
+            }
+            Thralldom.Character.defaultSettings = characterSettings;
 
         }
 
@@ -135,14 +188,9 @@ module Thralldom {
             }
         }
 
-        private parseScene(path, sceneDescription: any): void {
-            // Physics first!
-            this.parsePhysics(sceneDescription.physics);
-            var settings = sceneDescription.settings;
-            PhysicsManager.attachDebuggingVisuals = settings.debugDraw || false;
-
-            Thralldom.CharacterControllers.SkyrimCharacterController.angularSpeed = settings.cameraAngularSpeed || 10 * Math.PI;
-            Thralldom.CharacterControllers.SkyrimCharacterController.movementSpeed = settings.cameraMovementSpeed || 2 * 1e+6;
+        private parseScene(path: string, sceneDescription: any): void {
+            // Settings first
+            this.parseSettings(sceneDescription);
 
             var scene = new Scene();
             scene.name = sceneDescription["name"];

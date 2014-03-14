@@ -1,9 +1,18 @@
 ﻿{
     name: "level1",
+    // Settings below for various things
     settings: {
         debugDraw: true,
-        cameraAngularSpeed: 10 * Math.PI,
-        cameraMovementSpeed: 1 * 1e3,
+    },
+    controller: {
+        angularSpeed: 10 * Math.PI,
+        movementSpeed: 1 * 1e3,
+        sprintMultiplier: 2,
+    },
+    character: {
+        mass: 70,
+        jumpImpulse: 1000,
+        viewAngle: Math.PI / 3,
     },
     physics: {
         friction: 1,
@@ -12,6 +21,7 @@
         angularDamping: 1,
         gravity: -9.8,
     },
+    // No more settings, scene definition
     terrain: {
         scale: 2000,
         texture: "Grass.jpg",

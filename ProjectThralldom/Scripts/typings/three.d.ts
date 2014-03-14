@@ -5000,7 +5000,7 @@ declare module THREE {
         interpolationType: AnimationInterpolation;
         points: Vector3[];
         target: Vector3;
-        play(loop?: boolean, startTimeMS?: number): void;
+        play(startTimeMS?: number): void;
         pause(): void;
         stop(): void;
         update(deltaTimeMS: number): void;

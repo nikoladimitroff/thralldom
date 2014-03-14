@@ -12,8 +12,9 @@ module Thralldom {
             public pitch: number;
             public skybox: Skybox;
 
-            public static angularSpeed: number;
-            public static movementSpeed: number;
+            public static defaultSettings: IControllerSettings;
+
+            private settings: IControllerSettings;
 
             constructor(aspectRatio: number, camSpeed: number, hero: Character, distance: number, bias: THREE.Vector3, skybox: Skybox) {
                 this.camera = new THREE.PerspectiveCamera(60, aspectRatio, 1, 10000);
@@ -29,6 +30,7 @@ module Thralldom {
 
                 this.camera.position.y = 20;
 
+                this.settings = SkyrimCharacterController.defaultSettings;
             }
 
             private fixPosition(): void {
@@ -64,7 +66,7 @@ module Thralldom {
                 movement.y = (input.mouse.relative.x) * delta;
                 movement.x = (input.mouse.relative.y) * delta;
                 movement.z = (input.mouse.scroll - input.previousMouse.scroll) / 120;
-                var speed = delta * SkyrimCharacterController.angularSpeed;
+                var speed = delta * this.settings.angularSpeed;
 
                 // TODO: replace magic numbers! 
                 this.distance -= movement.z * this.cameraSpeed;
@@ -94,26 +96,39 @@ module Thralldom {
             }
 
             private previousKeepPlaying: boolean;
+            private getVelocityVector(delta: number, hero: Character, isSprinting: boolean = false): Ammo.btVector3 {
+                var forward = new THREE.Vector3(0, 0, 1);
+                var multiplier = this.settings.movementSpeed * delta;
+                if (isSprinting)
+                    multiplier *= this.settings.sprintMultiplier;
+
+                forward.transformDirection(hero.mesh.matrix).multiplyScalar(multiplier);
+
+                var velocity = hero.rigidBody.getLinearVelocity();
+                velocity.setX(forward.x);
+                velocity.setZ(forward.z);
+                return velocity;
+            }
+
             public handleKeyboardHeroMovement(delta: number, input: InputManager, keybindings: IKeybindings): void {
                 var hero = this.hero;
 
-                if (hero.stateMachine.current != CharacterStates.Jumping &&
-                    hero.stateMachine.current != CharacterStates.Falling) {
-                    var velocity = hero.rigidBody.getLinearVelocity();
-                    velocity.setX(0);
-                    velocity.setZ(0);
-                    hero.rigidBody.setLinearVelocity(velocity);
+                if (!(hero.stateMachine.current == CharacterStates.Jumping ||
+                    hero.stateMachine.current == CharacterStates.Falling)) {
+                    hero.rigidBody.setLinearVelocity(this.getVelocityVector(0, hero));
                 }
 
-                if (input.keyboard[keybindings.moveForward] && hero.stateMachine.requestTransitionTo(CharacterStates.Walking)) {      
-                                  
-                    var forward = new THREE.Vector3(0, 0, 1);
-                    forward.transformDirection(hero.mesh.matrix).multiplyScalar(SkyrimCharacterController.movementSpeed * delta);
-
-                    var velocity = hero.rigidBody.getLinearVelocity();
-                    velocity.setX(forward.x);
-                    velocity.setZ(forward.z);
-                    hero.rigidBody.setLinearVelocity(velocity);
+                if (input.keyboard[keybindings.moveForward]) {      
+                    // If the sprint key is down, try to sprint
+                    if (input.keyboard[keybindings.sprint] && hero.stateMachine.requestTransitionTo(CharacterStates.Sprinting)) {
+                        var velocity = this.getVelocityVector(delta, hero, true);
+                        hero.rigidBody.setLinearVelocity(velocity);
+                    }
+                    // Otherwise just walk
+                    else if (hero.stateMachine.requestTransitionTo(CharacterStates.Walking)) {
+                        var velocity = this.getVelocityVector(delta, hero);
+                        hero.rigidBody.setLinearVelocity(velocity);
+                    }
                 }
                 if (input.keyboard[keybindings.strafeLeft]) {
                     // hero.mesh.translateX(1 * delta);
@@ -127,8 +142,8 @@ module Thralldom {
                 if (input.keyboard[keybindings.jump]) {
                     hero.stateMachine.requestTransitionTo(CharacterStates.Jumping);
                 }
-                hero.stateMachine.requestTransitionTo(CharacterStates.Idle);
                 hero.stateMachine.requestTransitionTo(CharacterStates.Falling);
+                hero.stateMachine.requestTransitionTo(CharacterStates.Idle);
             }
         }
     }

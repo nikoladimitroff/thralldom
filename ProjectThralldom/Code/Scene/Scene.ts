@@ -165,7 +165,7 @@ module Thralldom {
 
             for (var i = 0; i < this.dynamics.length; i++) {
                 this.dynamics[i].rigidBody.getMotionState().getWorldTransform(transform);
-                
+                //this.dynamics[i].rigidBody.applyDamping();
 
                 pos = transform.getOrigin();
                 quat = transform.getRotation();

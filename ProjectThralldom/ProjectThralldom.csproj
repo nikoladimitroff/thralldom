@@ -38,15 +38,6 @@
     <Content Include="Content\Models\bore\three.jpg" />
     <Content Include="Content\Models\bore\two.jpg" />
     <Content Include="Content\Models\bore\walls.jpg" />
-    <Content Include="Content\Models\Engineer\engineer.js" />
-    <Content Include="Content\Models\Engineer\engineer_head.jpg" />
-    <Content Include="Content\Models\Engineer\engineer_red.jpg" />
-    <Content Include="Content\Models\Spartan\Ccloth.png" />
-    <Content Include="Content\Models\Spartan\Cgold.png" />
-    <Content Include="Content\Models\Spartan\Cnormal.png" />
-    <Content Include="Content\Models\Spartan\Cskin.png" />
-    <Content Include="Content\Models\Spartan\Csword.png" />
-    <Content Include="Content\Models\Spartan\spartan.js" />
     <Content Include="Content\Models\Test\diff2_01.jpg" />
     <Content Include="Content\Models\Test\diff2_02.jpg" />
     <Content Include="Content\Models\Test\diff2_03.jpg" />
@@ -89,6 +80,7 @@
     <Content Include="Scripts\implementations\cannon.min.js.map">
       <DependentUpon>cannon.min.js</DependentUpon>
     </Content>
+    <Content Include="Content\Models\Test\TestEight.anim" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -98,8 +90,8 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Code\Application.ts" />
-    <TypeScriptCompile Include="Code\CharacterController\ICharacterController.ts" />
-    <TypeScriptCompile Include="Code\CharacterController\SkyrimCharacterController.ts" />
+    <TypeScriptCompile Include="Code\CharacterControllers\ICharacterController.ts" />
+    <TypeScriptCompile Include="Code\CharacterControllers\SkyrimCharacterController.ts" />
     <TypeScriptCompile Include="Code\FrameInfo.ts" />
     <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
     <TypeScriptCompile Include="Code\Objectives.ts" />
@@ -126,6 +118,7 @@
     <TypeScriptCompile Include="Code\Scene\LoadableObject.ts" />
     <TypeScriptCompile Include="Code\Scene\Scene.ts" />
     <TypeScriptCompile Include="Code\Scene\Skybox.ts" />
+    <TypeScriptCompile Include="Code\Settings.ts" />
     <TypeScriptCompile Include="Code\StateMachine\State.ts" />
     <TypeScriptCompile Include="Code\StateMachine\StateMachine.ts" />
     <TypeScriptCompile Include="Code\StateMachine\StateMachineUtils.ts" />

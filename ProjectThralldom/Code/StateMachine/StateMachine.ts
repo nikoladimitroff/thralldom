@@ -31,5 +31,9 @@ module Thralldom {
 
             return canTransit;
         }
+
+        public update(delta: number): void {
+            this.states[this.currentState].update(this.target);
+        }
     }
 } 

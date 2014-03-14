@@ -5,9 +5,9 @@ module Thralldom {
         public world: Ammo.btDiscreteDynamicsWorld;
 
         public static attachDebuggingVisuals: boolean;
-        public static gravityAcceleration: number;
-        public static linearDamping: number;
-        public static angularDamping: number;
+        public static defaultSettings: IPhysicsSettings
+
+        private settings: IPhysicsSettings;
 
         constructor() {
             var collisionConfiguration= new Ammo.btDefaultCollisionConfiguration();
@@ -15,7 +15,10 @@ module Thralldom {
             var overlappingPairCache = new Ammo.btDbvtBroadphase();
             var solver = new Ammo.btSequentialImpulseConstraintSolver();
             this.world = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-            this.world.setGravity(new Ammo.btVector3(0, PhysicsManager.gravityAcceleration, 0));
+
+            this.settings = PhysicsManager.defaultSettings;
+
+            this.world.setGravity(new Ammo.btVector3(0, this.settings.gravity, 0));
         }
 
         private static computeInitialMotionState(mesh: THREE.Mesh, bias: THREE.Vector3 = new THREE.Vector3(0, 0, 0)) {
@@ -56,8 +59,8 @@ module Thralldom {
             rigidBody.setAngularFactor(new Ammo.btVector3(0, 1, 0));
             rigidBody.centerToMesh = shapeResult.centerToMesh;
 
-            rigidBody.setRestitution(0);
-            rigidBody.setFriction(0);
+            rigidBody.setRestitution(PhysicsManager.defaultSettings.restitution);
+            rigidBody.setFriction(PhysicsManager.defaultSettings.friction);
 
             
             if (PhysicsManager.attachDebuggingVisuals) {
@@ -66,7 +69,7 @@ module Thralldom {
                     // Call the visual gen
                     var drawableMesh: THREE.Mesh = debuggingVisualGenerator(halfExtents);
                     drawableMesh.position.set(0, 0, 0);
-                    // Move the mesh up to align the object's centres
+                    // Move the mesh up to align the objects' centres
                     drawableMesh.position.y = halfExtents.y;
                     drawableMesh.quaternion.set(0, 0, 0, 1);
                     mesh.add(drawableMesh);
@@ -99,7 +102,7 @@ module Thralldom {
             var rigidBody = PhysicsManager.computeRigidBodyFromMesh(mesh, mass, shapeGen, visualGen);
             rigidBody.setFlags(rigidBody.getFlags() | Ammo.CollisionFlags.CF_KINEMATIC_OBJECT);
             rigidBody.setActivationState(Ammo.ActivationConstants.DISABLE_DEACTIVATION);
-            rigidBody.setDamping(PhysicsManager.linearDamping, PhysicsManager.angularDamping);
+            rigidBody.setDamping(PhysicsManager.defaultSettings.linearDamping, PhysicsManager.defaultSettings.angularDamping);
 
             return rigidBody;
 

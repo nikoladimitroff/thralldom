@@ -10,11 +10,14 @@ module Thralldom {
         Dying
     }
 
-    export class Character extends DynamicObject {
-        public static MaxViewAngle = Math.PI / 3;
-        public static CharacterJumpImpulseY = 1000;
-        public static Mass = 70;
+    export interface IAnimationData {
+        startFrame: number;
+        endFrame: number;
+    }
 
+    export class Character extends DynamicObject {
+
+        public static defaultSettings: ICharacterSettings;
 
         public get mesh(): THREE.Mesh {
             return this.skinnedMesh;
@@ -37,6 +40,7 @@ module Thralldom {
         }
 
         public stateMachine: StateMachine;
+        public animationData: Map<CharacterStates, IAnimationData>;
 
         constructor() {
             super();
@@ -52,6 +56,8 @@ module Thralldom {
             if (description.model) {
                 this.skinnedMesh = content.getContent(description["model"]);
                 this.animation = new THREE.Animation(this.skinnedMesh, this.skinnedMesh.geometry.animation.name, THREE.AnimationHandler.LINEAR);
+
+                this.animationData = content.getContent(content.getAnimationFilePath(description.model));
             }
 
             if (description.pos) {
@@ -66,7 +72,7 @@ module Thralldom {
                 this.mesh.scale.set(scale, scale, scale);
             }
 
-            this.rigidBody = PhysicsManager.computeCapsuleBody(this.mesh, Character.Mass);
+            this.rigidBody = PhysicsManager.computeCapsuleBody(this.mesh, Character.defaultSettings.mass);
 
             this.stateMachine = StateMachineUtils.getCharacterStateMachine(this);
             
@@ -79,7 +85,7 @@ module Thralldom {
             var forwardVector = new THREE.Vector3(0, 0, 1);
             forwardVector.transformDirection(this.mesh.matrix);
 
-            if (distance.length() < this.range && distance.angleTo(forwardVector) < Character.MaxViewAngle) {
+            if (distance.length() < this.range && distance.angleTo(forwardVector) < Character.defaultSettings.viewAngle) {
                 enemy.health -= this.damage;
 
             }
@@ -88,12 +94,13 @@ module Thralldom {
             var startPoint = new THREE.Vector3();
             startPoint.copy(this.mesh.position).y = 10;
             var laser = new LaserOfDeath(startPoint, hitPoint.point);
-            return laser;
+            //return laser;
 
             return undefined;
         }
 
         public update(delta: number): void {
+            this.stateMachine.update(delta);
             //if (this.id != "hero") { 
             //    var radiusSquared = this.mesh.position.lengthSq();
             //    var dvar = 1e-6;

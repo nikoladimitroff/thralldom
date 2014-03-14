@@ -12,6 +12,13 @@ module Thralldom {
             };
         }
 
+
+        public static convertFrameToTime(frame: number, animation: THREE.Animation) {
+            return frame * animation.data.length / animation.data.fps;
+        }
+
+
+
         public static formatString(format: string, ...args) {
             /// <summary>Replaces the format items in a specified String with the text equivalents of the values of   corresponding object instances. The invariant culture will be used to format dates and numbers.</summary>
             /// <param name="format" type="String">A format string.</param>
