@@ -1,14 +1,12 @@
 module Thralldom {
     export class Scene {
-
-        public name: string;
         public dynamics: Array<DynamicObject>;
         public statics: Array<LoadableObject>;
 
         public renderScene: THREE.Scene;
 
 
-        private physicsSim: PhysicsManager;
+        public physicsSim: PhysicsManager;
 
         constructor() {
             this.renderScene = new THREE.Scene();

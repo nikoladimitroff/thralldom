@@ -3,7 +3,7 @@ module Thralldom {
         export class SkyrimCharacterController implements ICharacterController {
 
             public camera: THREE.PerspectiveCamera;
-            public cameraSpeed: number;
+            public zoomSpeed: number;
 
             public hero: Character;
             public distance: number;
@@ -11,6 +11,21 @@ module Thralldom {
             public yaw: number;
             public pitch: number;
             public skybox: Skybox;
+
+            public get position() {
+                return this.camera.position;
+            }
+
+            public get target() {
+                var mesh = this.hero.mesh;
+                var midY = mesh.scale.y * (mesh.geometry.boundingBox.max.y - mesh.geometry.boundingBox.min.y) / 2;
+                var target = new THREE.Vector3();
+                target.add(this.hero.mesh.position);
+                // The camera should look a little bit over him (2.25 looks good)
+                target.y += 2.25 * midY;
+
+                return target;
+            }
 
             public static defaultSettings: IControllerSettings;
 
@@ -21,7 +36,7 @@ module Thralldom {
                 this.hero = hero;
                 this.distance = distance;
                 this.bias = bias;
-                this.cameraSpeed = camSpeed;
+                this.zoomSpeed = camSpeed;
                 this.yaw = 0;
                 this.pitch = Math.PI / 2;
 
@@ -69,7 +84,7 @@ module Thralldom {
                 var speed = delta * this.settings.angularSpeed;
 
                 // TODO: replace magic numbers! 
-                this.distance -= movement.z * this.cameraSpeed;
+                this.distance -= movement.z * this.zoomSpeed;
                 var turnSpeed = movement.y * speed; 
                 this.yaw -= turnSpeed
                 this.pitch = THREE.Math.clamp(this.pitch + movement.x * speed, THREE.Math.degToRad(75), THREE.Math.degToRad(150));

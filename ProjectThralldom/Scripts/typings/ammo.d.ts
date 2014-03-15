@@ -15,7 +15,19 @@ declare module Ammo {
 
     }
 
-    export class btDiscreteDynamicsWorld {
+    export class ClosestRayResultCallback {
+        constructor(fromWorld: btVector3, toWorld: btVector3);
+
+        hasHit(): boolean;
+        get_m_collisionObject(): btCollisionObject;
+        get_m_hitPointWorld(): btVector3;
+    }
+
+    export class btCollisionWorld {
+        rayTest(fromWorld: btVector3, toWorld: btVector3, callback: ClosestRayResultCallback): void;
+    }
+
+    export class btDiscreteDynamicsWorld extends btCollisionWorld {
         constructor(dispatcher: btCollisionDispatcher, overlappingPairCache: btDbvtBroadphase, solver: btSequentialImpulseConstraintSolver, collisionConfiguration: btDefaultCollisionConfiguration);
         setGravity(vec: btVector3): void;
         stepSimulation(timeStep: number, maxSubStep: number): void;
@@ -32,6 +44,7 @@ declare module Ammo {
         setX(x: number): void;
         setY(y: number): void;
         setZ(z: number): void;
+        distance(vec: btVector3): number;
     }
 
     export class btQuaternion {
@@ -111,11 +124,11 @@ declare module Ammo {
         set_m_friction(frictionCoeff: number): void;
     }
 
-    export class btCollisionBody {
+    export class btCollisionObject {
 
     }
 
-    export class btRigidBody extends btCollisionBody {
+    export class btRigidBody extends btCollisionObject {
         constructor(info: btRigidBodyConstructionInfo);
         getMotionState(): btDefaultMotionState;
         setMotionState(): btDefaultMotionState;

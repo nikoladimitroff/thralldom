@@ -193,7 +193,6 @@ module Thralldom {
             this.parseSettings(sceneDescription);
 
             var scene = new Scene();
-            scene.name = sceneDescription["name"];
 
             this.parseCollection(sceneDescription.dynamics, ContentManager.dynamicTypes, scene.addDynamic.bind(scene));
             this.parseCollection(sceneDescription.statics, ContentManager.staticTypes, scene.addStatic.bind(scene));
@@ -235,6 +234,31 @@ module Thralldom {
                     this.parseCollection(questDescription.objectives, ContentManager.objectiveTypes, quest.objectives.push.bind(quest.objectives));
 
                     this.onContentLoaded(path, () => quest);
+                }
+            }
+            xhr.send();
+        }
+
+        public loadMeta(path: string): void {
+            this.loading++;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", path, true);
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == 4) {
+                    var meta = eval("Object(" + xhr.responseText + ")");
+
+                    if (!meta.scene) {
+                        throw new Error("Must provide a scene!");
+                    }
+                    if (!meta.quest) {
+                        throw new Error("Must provide a quest!");
+                    }
+
+                    this.loadScene(meta.scene);
+                    this.loadQuest(meta.quest);
+
+                    this.onContentLoaded(path, () => meta);
                 }
             }
             xhr.send();

@@ -19,6 +19,7 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
+    <Content Include="Content\Meta.js" />
     <Content Include="Content\Models\bore\house_one.js" />
     <Content Include="Content\Models\bore\house_two.js" />
     <Content Include="Content\Models\bore\Lightmap.png" />

@@ -12,8 +12,10 @@ module Thralldom {
 
         export interface ICharacterController {
             camera: THREE.PerspectiveCamera;
-            cameraSpeed: number;
+            zoomSpeed: number;
             distance: number;
+            target: THREE.Vector3;
+            position: THREE.Vector3;
 
             handleMouseRotation(delta: number, input: InputManager): void;
             handleKeyboardHeroMovement(delta: number, input: InputManager, keybindings: IKeybindings): void;

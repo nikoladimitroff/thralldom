@@ -1,5 +1,4 @@
 ﻿{
-    name: "level1",
     // Settings below for various things
     settings: {
         debugDraw: true,
