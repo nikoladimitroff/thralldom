@@ -90,13 +90,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Code\Algorithms\GraphDefinitions.ts" />
     <TypeScriptCompile Include="Code\Application.ts" />
+    <TypeScriptCompile Include="Code\Algorithms\AStar.ts" />
     <TypeScriptCompile Include="Code\CharacterControllers\ICharacterController.ts" />
     <TypeScriptCompile Include="Code\CharacterControllers\SkyrimCharacterController.ts" />
+    <TypeScriptCompile Include="Code\Constants.ts" />
     <TypeScriptCompile Include="Code\FrameInfo.ts" />
     <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
     <TypeScriptCompile Include="Code\Objectives.ts" />
     <TypeScriptCompile Include="Code\Quest.ts" />
+    <TypeScriptCompile Include="Code\AI\AIController.ts" />
+    <TypeScriptCompile Include="Code\AI\Citizen.ts" />
     <TypeScriptCompile Include="Code\Scene\Character.ts" />
     <TypeScriptCompile Include="Code\Scene\DynamicObject.ts" />
     <TypeScriptCompile Include="Code\GeometryUtils.ts" />
@@ -125,7 +130,6 @@
     <TypeScriptCompile Include="Code\StateMachine\StateMachineUtils.ts" />
     <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />
     <TypeScriptCompile Include="Code\Scene\Terrain.ts" />
-    <TypeScriptCompile Include="Code\ThralldomMotionState.ts" />
     <TypeScriptCompile Include="Code\Utilities.ts" />
     <TypeScriptCompile Include="Scripts\typings\ammo.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\cannon.d.ts" />

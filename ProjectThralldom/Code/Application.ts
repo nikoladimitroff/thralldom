@@ -129,22 +129,26 @@ module Thralldom {
             this.cameraController.handleKeyboardHeroMovement(delta, this.input, this.keybindings);
         }
 
+        // MEMLEAK
+        private fromWorldVec = new Ammo.btVector3();
+        private toWorldVec = new Ammo.btVector3();
+        private ray = new Ammo.ClosestRayResultCallback(this.fromWorldVec, this.toWorldVec);
+
         private handleMouse(delta: number) {
             this.cameraController.handleMouseRotation(delta, this.input);
-
-            var ray: Ammo.ClosestRayResultCallback;
 
             var pos = this.cameraController.position;
             var dir = this.cameraController.target;
 
 
-            var fromWorld = new Ammo.btVector3(pos.x, pos.y, pos.z);
-            var toWorld = new Ammo.btVector3(dir.x, dir.y, dir.z);
-            ray = new Ammo.ClosestRayResultCallback(fromWorld, toWorld);
-            this.scene.physicsSim.world.rayTest(fromWorld, toWorld, ray);
+            this.fromWorldVec.setValue(pos.x, pos.y, pos.z);
+            this.toWorldVec.setValue(dir.x, dir.y, dir.z);
+            this.ray.set_m_rayFromWorld(this.fromWorldVec);
+            this.ray.set_m_rayToWorld(this.toWorldVec);
+            this.scene.physicsSim.world.rayTest(this.fromWorldVec, this.toWorldVec, this.ray);
 
-            if (ray.hasHit()) {
-                var distance = ray.get_m_hitPointWorld().distance(fromWorld);
+            if (this.ray.hasHit()) {
+                var distance = this.ray.get_m_hitPointWorld().distance(this.fromWorldVec);
 
                 var pos = this.cameraController.position;
                 var dir = this.cameraController.target;
@@ -165,15 +169,11 @@ module Thralldom {
                 "Quest complete!" :
                 "Your current quest:\n" + this.quest.toString();
 
-            var transform = new Ammo.btTransform();
-            this.hero.rigidBody.getMotionState().getWorldTransform(transform);
-
             var currentAnimTime = this.hero.animation.currentTime;
 
             node.innerText = this.language.welcome + "\n" +
                 Utilities.formatString("Velocity: {0}\n", Utilities.formatVector(this.hero.rigidBody.getLinearVelocity(), 7)) +
                 Utilities.formatString("Current pos: {0}\n", Utilities.formatVector(this.hero.mesh.position, 5)) +
-                Utilities.formatString("Rigid body pos: {0}\n", Utilities.formatVector(transform.getOrigin(), 5)) +
                 Utilities.formatString("State: {0}\n", StateMachineUtils.translateState(this.hero.stateMachine.current)) +
                 Utilities.formatString("Current anim time: {0}\n", currentAnimTime.toFixed(6)) + 
                 questText;

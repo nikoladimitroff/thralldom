@@ -8,14 +8,15 @@ module Thralldom {
     }
 
     export interface IControllerSettings {
-        movementSpeed: number;
         angularSpeed: number;
-        sprintMultiplier: number;
     }
 
     export interface ICharacterSettings {
         mass: number;
         jumpImpulse: number;
         viewAngle: number;
+
+        movementSpeed: number;
+        sprintMultiplier: number;
     }
 } 

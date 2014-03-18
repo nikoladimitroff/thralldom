@@ -8,6 +8,15 @@ module Thralldom {
         private static dummyEventHandler = (state: number, object: DynamicObject) => { };
         private static dummyPredicate = (object: DynamicObject) => false;
 
+        // MEMLEAK
+        private static _jumpintImpulse: Ammo.btVector3;
+        private static get JumpingImpulse() {
+            if (!StateMachineUtils._jumpintImpulse) {
+                StateMachineUtils._jumpintImpulse = new Ammo.btVector3(0, Character.defaultSettings.jumpImpulse, 0);
+            }
+            return StateMachineUtils._jumpintImpulse;
+        }
+
         private static getDummyState(index: number) {
             return new State(index, State.emptyUpdate, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyPredicate);
         }
@@ -22,9 +31,10 @@ module Thralldom {
                     var startTime = Utilities.convertFrameToTime(startFrame, hero.animation);
                     hero.animation.play(startTime);
                 }
+
             }
 
-            var walkingUpdate = (hero: Character): void => {
+            var walkingUpdate = (delta: number, hero: Character): void => {
                 var animData: IAnimationData = hero.animationData[CharacterStates.Walking];
                 var startTime = Utilities.convertFrameToTime(animData.startFrame, hero.animation);
                 var endTime = Utilities.convertFrameToTime(animData.endFrame, hero.animation);
@@ -33,6 +43,10 @@ module Thralldom {
                     hero.animation.stop();
                     hero.animation.play(startTime);
                 }
+
+
+                var velocity = hero.getVelocityVector(delta);
+                hero.rigidBody.setLinearVelocity(velocity);
             }
 
             var walkingExit = (next: number, hero: Character): void => {
@@ -60,7 +74,7 @@ module Thralldom {
                 }
             }
 
-            var sprintingUpdate = (hero: Character): void => {
+            var sprintingUpdate = (delta: number, hero: Character): void => {
                 var animData: IAnimationData = hero.animationData[CharacterStates.Walking];
                 var startTime = Utilities.convertFrameToTime(animData.startFrame, hero.animation);
                 var endTime = Utilities.convertFrameToTime(animData.endFrame, hero.animation);
@@ -69,6 +83,9 @@ module Thralldom {
                     hero.animation.stop();
                     hero.animation.play(startTime);
                 }
+
+                var velocity = hero.getVelocityVector(delta, true);
+                hero.rigidBody.setLinearVelocity(velocity);
             }
 
             var sprintingExit = (next: number, hero: Character): void => {
@@ -90,11 +107,11 @@ module Thralldom {
             var jumpingEntry = (previous: number, object: DynamicObject) => {
                 jumping.data.beforeJumpY = object.mesh.position.y;
                 jumping.data.reachedPeak = false;
-                object.rigidBody.applyCentralImpulse(new Ammo.btVector3(0, Character.defaultSettings.jumpImpulse, 0));
+                object.rigidBody.applyCentralImpulse(StateMachineUtils.JumpingImpulse);
 
             }
 
-            var jumpingUpdate = (object: DynamicObject) => {
+            var jumpingUpdate = (delta: number, object: DynamicObject) => {
                 var velocity = object.rigidBody.getLinearVelocity().y()
                 if (!jumping.data.reachedPeak && velocity < 0) {
                     jumping.data.reachedPeak = true;
@@ -171,7 +188,7 @@ module Thralldom {
             }
 
 
-            var idleUpdate = (hero: Character): void => {
+            var idleUpdate = (delta: number, hero: Character): void => {
                 var animData: IAnimationData = hero.animationData[CharacterStates.Idle];
                 var startTime = Utilities.convertFrameToTime(animData.startFrame, hero.animation);
                 var endTime = Utilities.convertFrameToTime(animData.endFrame, hero.animation);

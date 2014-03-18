@@ -1,4 +1,7 @@
 declare module Ammo {
+
+    export function destroy(object: any): void;
+
     export class btDefaultCollisionConfiguration {
 
     }
@@ -21,6 +24,9 @@ declare module Ammo {
         hasHit(): boolean;
         get_m_collisionObject(): btCollisionObject;
         get_m_hitPointWorld(): btVector3;
+
+        set_m_rayFromWorld(vec: btVector3): void;
+        set_m_rayToWorld(vec: btVector3): void;
     }
 
     export class btCollisionWorld {
@@ -33,10 +39,11 @@ declare module Ammo {
         stepSimulation(timeStep: number, maxSubStep: number): void;
 
         addRigidBody(body: btRigidBody): void;
+        addRigidBody(body: btRigidBody, bodyType: number, collisionMask: number): void;
     }
 
     export class btVector3 {
-        constructor(x: number, y: number, z: number);
+        constructor(x?: number, y?: number, z?: number);
         x();
         y();
         z();
@@ -44,6 +51,7 @@ declare module Ammo {
         setX(x: number): void;
         setY(y: number): void;
         setZ(z: number): void;
+        setValue(x: number, y: number, z: number): void;
         distance(vec: btVector3): number;
     }
 
@@ -54,6 +62,7 @@ declare module Ammo {
         z(): number;
         w(): number;
 
+        setValue(x: number, y: number, z: number, w: number): void;
         setEuler(yaw: number, pitch: number, roll: number);
         setRotation(axis: btVector3, angle: number);
     }

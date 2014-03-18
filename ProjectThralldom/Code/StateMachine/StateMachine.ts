@@ -33,7 +33,7 @@ module Thralldom {
         }
 
         public update(delta: number): void {
-            this.states[this.currentState].update(this.target);
+            this.states[this.currentState].update(delta, this.target);
         }
     }
 } 

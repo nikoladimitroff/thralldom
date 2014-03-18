@@ -9,6 +9,11 @@ module Thralldom {
 
         private settings: IPhysicsSettings;
 
+        // MEMLEAK
+        private static CachedTransform = new Ammo.btTransform();
+        private static CachedVector = new Ammo.btVector3();
+        private static CachedQuat = new Ammo.btQuaternion();
+
         constructor() {
             var collisionConfiguration= new Ammo.btDefaultCollisionConfiguration();
             var dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration);
@@ -21,17 +26,22 @@ module Thralldom {
             this.world.setGravity(new Ammo.btVector3(0, this.settings.gravity, 0));
         }
 
-        private static computeInitialMotionState(mesh: THREE.Mesh, bias: THREE.Vector3 = new THREE.Vector3(0, 0, 0)) {
+        private static computeInitialMotionState(mesh: THREE.Mesh, bias: THREE.Vector3 = Const.ZeroVector) {
 
             // Compute transform / motionState
             var pos = mesh.position;
-            var quat = mesh.quaternion;
+            var rot = mesh.quaternion;
 
-            var initialTransform = new Ammo.btTransform();
+            // WARNING: CODE BELOW DEPENDS ON STATIC VARIABLES, DO NOT CALL ASYNC
+            var initialTransform = PhysicsManager.CachedTransform;
             initialTransform.setIdentity();
             // Mesh pos + bias
-            initialTransform.setOrigin(new Ammo.btVector3(pos.x + bias.x, pos.y + bias.y, pos.z + bias.z));
-            initialTransform.setRotation(new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w));
+            var vec = PhysicsManager.CachedVector;
+            vec.setValue(pos.x + bias.x, pos.y + bias.y, pos.z + bias.z);
+            initialTransform.setOrigin(vec);
+            var quat = PhysicsManager.CachedQuat;
+            quat.setValue(rot.x, rot.y, rot.z, rot.w);
+            initialTransform.setRotation(quat);
             var motionState = new Ammo.btDefaultMotionState(initialTransform);
 
             return motionState;
@@ -47,7 +57,7 @@ module Thralldom {
             var box = mesh.geometry.boundingBox;
             var halfExtents = new THREE.Vector3();
             halfExtents.subVectors(box.max, box.min).multiplyScalar(mesh.scale.x / 2);
-            var localInertia = new Ammo.btVector3(0, 0, 0);
+            var localInertia = Const.btZeroVector;
 
             var motionState = PhysicsManager.computeInitialMotionState(mesh, new THREE.Vector3(0, halfExtents.y, 0));
 
@@ -56,7 +66,7 @@ module Thralldom {
             var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shapeResult.shape, localInertia);
 
             var rigidBody = new Ammo.btRigidBody(rigidBodyInfo);
-            rigidBody.setAngularFactor(new Ammo.btVector3(0, 1, 0));
+            rigidBody.setAngularFactor(Const.btUpVector);
             rigidBody.centerToMesh = shapeResult.centerToMesh;
 
             rigidBody.setRestitution(PhysicsManager.defaultSettings.restitution);
@@ -75,6 +85,8 @@ module Thralldom {
                     mesh.add(drawableMesh);
                 }, 1000);
             }           
+
+            // MEMLEAK? Destroy motion state?
 
             return rigidBody;
         }
@@ -130,7 +142,7 @@ module Thralldom {
 
         public static computeTriangleMeshBody(mesh: THREE.Mesh): Ammo.btRigidBody {
             var motionState = PhysicsManager.computeInitialMotionState(mesh);
-            var localInertia = new Ammo.btVector3(0, 0, 0);
+            var localInertia = Const.btZeroVector;
 
             var vertices = mesh.geometry.vertices.map((vertex) => new Ammo.btVector3(vertex.x, vertex.y, vertex.z));
 
@@ -149,15 +161,18 @@ module Thralldom {
         public static computePlaneBody(): Ammo.btRigidBody {
             var groundTransform = new Ammo.btTransform();
             groundTransform.setIdentity();
-            groundTransform.setOrigin(new Ammo.btVector3(0, 0, 0)); // Set initial position
+            groundTransform.setOrigin(Const.btZeroVector); // Set initial position
 
             var groundMass = 0; // Mass of 0 means ground won't move from gravity or collisions
-            var localInertia = new Ammo.btVector3(0, 0, 0);
-            var motionState = new Ammo.btMotionState(groundTransform);
+            var localInertia = Const.btZeroVector;
+            var motionState = new Ammo.btDefaultMotionState(groundTransform);
 
-            var groundShape = new Ammo.btStaticPlaneShape(new Ammo.btVector3(0, 1, 0), 0);
+            var groundShape = new Ammo.btStaticPlaneShape(Const.btUpVector, 0);
             var rbInfo = new Ammo.btRigidBodyConstructionInfo(groundMass, motionState, groundShape, localInertia);
-            return new Ammo.btRigidBody(rbInfo);
+            var rigid = new Ammo.btRigidBody(rbInfo);
+
+            // MEMLEAK? DESTROY SHAPE, MOTION?
+            return rigid;
         }
     }
 }

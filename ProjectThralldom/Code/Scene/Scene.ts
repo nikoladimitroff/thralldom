@@ -170,10 +170,13 @@ module Thralldom {
                 var centerToMesh = this.dynamics[i].rigidBody.centerToMesh;
 
                 this.dynamics[i].mesh.position.set(pos.x() + centerToMesh.x, pos.y() + centerToMesh.y, pos.z() + centerToMesh.z);
-                //this.dynamics[i].mesh.position.set(0, 0, 0);
                 // WARNING: DONT SET THE QUATERNION FROM THE SIM
                 //this.dynamics[i].mesh.quaternion.set(quat.x(), quat.y(), quat.z(), quat.w());
             }
+
+            // MEMLEAK
+            console.log("over here!");
+            Ammo.destroy(transform);
 
 
         }

@@ -19,6 +19,8 @@ module Thralldom {
 
         public static defaultSettings: ICharacterSettings;
 
+        public settings: ICharacterSettings;
+
         public get mesh(): THREE.Mesh {
             return this.skinnedMesh;
         }
@@ -30,6 +32,8 @@ module Thralldom {
         private hp: number;
         private range: number;
         private damage: number;
+
+        private aiController: AI.AIController;
 
         public get health(): number {
             return this.hp;
@@ -48,6 +52,8 @@ module Thralldom {
             this.hp = 100;
             this.range = 100;
             this.damage = 1;
+            this.settings = Character.defaultSettings;
+
         }
 
         public loadFromDescription(description: any, content: ContentManager): void {
@@ -70,6 +76,27 @@ module Thralldom {
             if (description.scale) {
                 var scale = description.scale;
                 this.mesh.scale.set(scale, scale, scale);
+            }
+            if (description.ai) {
+                var locations: Array<THREE.Vector3> = [
+                    new THREE.Vector3(-393.82, 0, 51.73),
+                    new THREE.Vector3(90.60330488167114, 0, 120.77182926800373),
+                    new THREE.Vector3(-258.4222199467363, 0, 208.32359567890623),
+                    new THREE.Vector3(300.4222199467363, 0, 208.32359567890623),
+                    new THREE.Vector3(100, 0, -130),
+                ];
+
+                var edges: Array<Thralldom.Algorithms.Edge> = [
+                    new Algorithms.Edge(0, 1),
+                    new Algorithms.Edge(1, 2),
+                    new Algorithms.Edge(2, 3),
+                    new Algorithms.Edge(3, 4),
+                ];
+
+                this.aiController = new AI.Citizen(this, {
+                    nodes: locations,
+                    edges: edges,
+                });
             }
 
             this.rigidBody = PhysicsManager.computeCapsuleBody(this.mesh, Character.defaultSettings.mass);
@@ -100,34 +127,51 @@ module Thralldom {
         }
 
         public update(delta: number): void {
+            if (this.aiController) {
+                this.aiController.update(delta);
+            }
             this.stateMachine.update(delta);
-            //if (this.id != "hero") { 
-            //    var radiusSquared = this.mesh.position.lengthSq();
-            //    var dvar = 1e-6;
-            //    var equation = (x: number, y: number) => x * x + y * y - radiusSquared;
-            //    var derivative = (x: number, y: number) => new THREE.Vector2(equation(x, y) - equation(x + dvar, y), equation(x, y) - equation(x, y + dvar));
-            //    var tangent = (x: number, y: number) => {
-            //        var df = derivative(x, y);
-            //        return new THREE.Vector2(-df.y, df.x);
-            //    };
 
-            //    var normal = derivative(this.rigidBody.position.x, this.rigidBody.position.z);
-            //    var velocity =
-            //        tangent(this.rigidBody.position.x, this.rigidBody.position.z)
-            //        .multiplyScalar(1e7 * delta);
 
-            //    var normalizedVelocity = new THREE.Vector3(velocity.x, 0, velocity.y);
-            //    normalizedVelocity.normalize();
+                //var radiusSquared = this.mesh.position.lengthSq();
+                //var dvar = 1e-6;
+                //var equation = (x: number, y: number) => x * x + y * y - radiusSquared;
+                //var derivative = (x: number, y: number) => new THREE.Vector2(equation(x, y) - equation(x + dvar, y), equation(x, y) - equation(x, y + dvar));
+                //var tangent = (x: number, y: number) => {
+                //    var df = derivative(x, y);
+                //    return new THREE.Vector2(-df.y, df.x);
+                //};
 
-            //    var normVel = new CANNON.Vec3(normalizedVelocity.x, 0, normalizedVelocity.z);
-            //    var quat = new CANNON.Quaternion();
-            //    var asd = new THREE.Quaternion();
-            //    quat.setFromVectors(new CANNON.Vec3(0, 0, 1), normVel);
-            //    this.rigidBody.quaternion.set(quat.x, quat.y, quat.z, quat.w);
+                //var normal = derivative(this.rigidBody.position.x, this.rigidBody.position.z);
+                //var velocity =
+                //    tangent(this.rigidBody.position.x, this.rigidBody.position.z)
+                //    .multiplyScalar(1e7 * delta);
 
-            //    this.rigidBody.velocity.x = velocity.x;
-            //    this.rigidBody.velocity.z = velocity.y;
-            //}
+                //var normalizedVelocity = new THREE.Vector3(velocity.x, 0, velocity.y);
+                //normalizedVelocity.normalize();
+
+                //var normVel = new CANNON.Vec3(normalizedVelocity.x, 0, normalizedVelocity.z);
+                //var quat = new CANNON.Quaternion();
+                //var asd = new THREE.Quaternion();
+                //quat.setFromVectors(new CANNON.Vec3(0, 0, 1), normVel);
+                //this.rigidBody.quaternion.set(quat.x, quat.y, quat.z, quat.w);
+
+                //this.rigidBody.velocity.x = velocity.x;
+                //this.rigidBody.velocity.z = velocity.y;
+        }
+
+        public getVelocityVector(delta: number, isSprinting: boolean = false): Ammo.btVector3 {
+            var forward = new THREE.Vector3(0, 0, 1);
+            var multiplier = this.settings.movementSpeed * delta;
+            if (isSprinting)
+                multiplier *= this.settings.sprintMultiplier;
+
+            forward.transformDirection(this.mesh.matrix).multiplyScalar(multiplier);
+
+            var velocity = this.rigidBody.getLinearVelocity();
+            velocity.setX(forward.x);
+            velocity.setZ(forward.z);
+            return velocity;
         }
     }
 } 

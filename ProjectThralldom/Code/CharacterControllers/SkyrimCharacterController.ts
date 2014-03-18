@@ -48,7 +48,7 @@ module Thralldom {
                 this.settings = SkyrimCharacterController.defaultSettings;
             }
 
-            private fixPosition(): void {
+            private normalizePosition(): void {
                 // Standard sphere equation
                 var cameraToCharacter = new THREE.Vector3(
                     Math.sin(this.yaw) * Math.sin(this.pitch),
@@ -89,60 +89,31 @@ module Thralldom {
                 this.yaw -= turnSpeed
                 this.pitch = THREE.Math.clamp(this.pitch + movement.x * speed, THREE.Math.degToRad(75), THREE.Math.degToRad(150));
 
-                //var transform = this.hero.rigidBody.getCenterOfMassTransform();
-
-                //var quat = new Ammo.btQuaternion();
-                //quat.setEuler(this.yaw * 10, 0, 0);
-
-                //transform.setRotation(quat);
-
-                //this.hero.rigidBody.setCenterOfMassTransform(transform);
-
-                //this.hero.rigidBody.setAngularVelocity(new Ammo.btVector3(0, -movement.y * speed, 0));
-
-                //this.hero.rigidBody.activate();
-                //this.hero.rigidBody.applyTorqueImpulse(new Ammo.btVector3(0, -turnSpeed * 1000, 0));
-
-                this.hero.mesh.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this.yaw);
+                this.hero.mesh.quaternion.setFromAxisAngle(Const.UpVector, this.yaw);
 
                 this.bias.y += 0//movement.x * 100;
 
-                this.fixPosition();
+                this.normalizePosition();
             }
 
             private previousKeepPlaying: boolean;
-            private getVelocityVector(delta: number, hero: Character, isSprinting: boolean = false): Ammo.btVector3 {
-                var forward = new THREE.Vector3(0, 0, 1);
-                var multiplier = this.settings.movementSpeed * delta;
-                if (isSprinting)
-                    multiplier *= this.settings.sprintMultiplier;
-
-                forward.transformDirection(hero.mesh.matrix).multiplyScalar(multiplier);
-
-                var velocity = hero.rigidBody.getLinearVelocity();
-                velocity.setX(forward.x);
-                velocity.setZ(forward.z);
-                return velocity;
-            }
 
             public handleKeyboardHeroMovement(delta: number, input: InputManager, keybindings: IKeybindings): void {
                 var hero = this.hero;
 
                 if (!(hero.stateMachine.current == CharacterStates.Jumping ||
                     hero.stateMachine.current == CharacterStates.Falling)) {
-                    hero.rigidBody.setLinearVelocity(this.getVelocityVector(0, hero));
+                    hero.rigidBody.setLinearVelocity(hero.getVelocityVector(0));
                 }
 
                 if (input.keyboard[keybindings.moveForward]) {      
                     // If the sprint key is down, try to sprint
-                    if (input.keyboard[keybindings.sprint] && hero.stateMachine.requestTransitionTo(CharacterStates.Sprinting)) {
-                        var velocity = this.getVelocityVector(delta, hero, true);
-                        hero.rigidBody.setLinearVelocity(velocity);
+                    if (input.keyboard[keybindings.sprint]) {
+                        hero.stateMachine.requestTransitionTo(CharacterStates.Sprinting)
                     }
                     // Otherwise just walk
-                    else if (hero.stateMachine.requestTransitionTo(CharacterStates.Walking)) {
-                        var velocity = this.getVelocityVector(delta, hero);
-                        hero.rigidBody.setLinearVelocity(velocity);
+                    else {
+                        hero.stateMachine.requestTransitionTo(CharacterStates.Walking)
                     }
                 }
                 if (input.keyboard[keybindings.strafeLeft]) {
@@ -157,6 +128,10 @@ module Thralldom {
                 if (input.keyboard[keybindings.jump]) {
                     hero.stateMachine.requestTransitionTo(CharacterStates.Jumping);
                 }
+
+                // Update the state machine before trying to reset it back to falling / idle
+                hero.stateMachine.states[hero.stateMachine.current].update(delta, hero);
+
                 hero.stateMachine.requestTransitionTo(CharacterStates.Falling);
                 hero.stateMachine.requestTransitionTo(CharacterStates.Idle);
             }

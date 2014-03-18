@@ -151,14 +151,15 @@ module Thralldom {
             PhysicsManager.attachDebuggingVisuals = settings.debugDraw || false;
 
             var controllerSettings = sceneDescription.controller;
-            if (!controllerSettings.angularSpeed || !controllerSettings.movementSpeed || !controllerSettings.sprintMultiplier) {
+            if (!controllerSettings.angularSpeed) {
                 throw new Error("Some or all of character controller settings are missing!");
             }
 
             Thralldom.CharacterControllers.SkyrimCharacterController.defaultSettings = controllerSettings;
 
             var characterSettings = sceneDescription.character;
-            if (!characterSettings.mass || !characterSettings.jumpImpulse || !characterSettings.viewAngle) {
+            if (!characterSettings.mass || !characterSettings.jumpImpulse || !characterSettings.viewAngle ||
+                !characterSettings.movementSpeed || !characterSettings.sprintMultiplier) {
                 throw new Error("Some or all character settings are missing!");
             }
             Thralldom.Character.defaultSettings = characterSettings;

@@ -6,14 +6,14 @@ module Thralldom {
         public interuptCondition: (object: DynamicObject) => boolean;
         public entranceCondition: (object: DynamicObject) => boolean;
 
-        public update: (object: DynamicObject) => void;
+        public update: (delta: number, object: DynamicObject) => void;
         public data: any;
 
         private static truthPredicate = (object: DynamicObject) => true;
-        public static emptyUpdate = (object: DynamicObject) => { };
+        public static emptyUpdate = (delta: number, object: DynamicObject) => { };
         
         constructor(index: number,
-            update: (object: DynamicObject) => void,
+            update: (delta: number, object: DynamicObject) => void,
             onEntry: (previous: number, object: DynamicObject) => void,
             onExit: (next: number, object: DynamicObject) => void,
             interuptCondition: (object: DynamicObject) => boolean,
