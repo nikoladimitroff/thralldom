@@ -1,7 +1,7 @@
 ﻿{
     // Settings below for various things
     settings: {
-        debugDraw: true,
+        debugDraw: false,
     },
     controller: {
         angularSpeed: 10 * Math.PI,
@@ -50,8 +50,7 @@
         },
         {
             type: "character",
-            //ai: "citizen",
-            tags: ["npc"],
+            tags: ["guard", "npc"],
             id: "thisguy",
             model: "BoychoAnimation.js",
             pos: [30, 0, 0],

@@ -19,6 +19,11 @@ module Thralldom {
             "kill": Thralldom.Objectives.KillObjective,
         }
 
+        private static aiControllerTypes = {
+            "citizen": Thralldom.AI.Citizen,
+            "guard": Thralldom.AI.Guard,
+        }
+
 
         private onContentLoaded(path: string, object: any) {
             this.loaded++;
@@ -189,6 +194,16 @@ module Thralldom {
             }
         }
 
+        private loadAI(scene: Thralldom.Scene): void {
+            var graph = scene.aiManager.graph;
+            for (var typeName in ContentManager.aiControllerTypes) {
+                var type = ContentManager.aiControllerTypes[typeName];
+
+                var controllers = <Array<AI.AIController>> scene.selectByTag(typeName).map((character) => new type(character, graph));
+                scene.aiManager.controllers = scene.aiManager.controllers.concat(controllers);
+            }
+        }
+
         private parseScene(path: string, sceneDescription: any): void {
             // Settings first
             this.parseSettings(sceneDescription);
@@ -202,6 +217,8 @@ module Thralldom {
             this.tryAddSingletonDescription(singletons, sceneDescription, "skybox");
             this.tryAddSingletonDescription(singletons, sceneDescription, "terrain");
             this.parseCollection(singletons, ContentManager.staticTypes, scene.addStatic.bind(scene));
+
+            this.loadAI(scene);
 
             this.onContentLoaded(path, () => scene);
         }

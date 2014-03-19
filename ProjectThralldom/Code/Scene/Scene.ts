@@ -6,60 +6,74 @@ module Thralldom {
         public renderScene: THREE.Scene;
 
 
-        public physicsSim: PhysicsManager;
+        public physicsManager: PhysicsManager;
+        public aiManager: AIManager;
 
         constructor() {
             this.renderScene = new THREE.Scene();
             this.dynamics = new Array<DynamicObject>();
             this.statics = new Array<LoadableObject>();
 
-            this.physicsSim = new PhysicsManager();
+            this.physicsManager = new PhysicsManager();
+            this.aiManager = new AIManager();
         }
 
 
         /*
          * Selects some of the objects in the scene. Use '.' to select tags, '~' to select statics and '#' to select dynanamics
         */
-        public select(selector: string): Array<LoadableObject>  {
+        public select(selector: string): Array<LoadableObject> {
+            selector = selector.toLowerCase();
             var first = selector.charAt(0);
             var text = selector.substr(1);
 
             switch (first) {
                 case '#': 
-                    for (var i = 0; i < this.dynamics.length; i++) {
-                        if (this.dynamics[i].id == text) {
-                            return [this.dynamics[i]];
-                        }
-                    }
-                    return null;
-
+                    return [this.selectByDynamicId(text)];
                 case '~':
-                    for (var i = 0; i < this.statics.length; i++) {
-                        if (this.statics[i].id == text) {
-                            return [this.statics[i]];
-                        }
-                    }
-
-                    return null;
+                    return [this.selectByStaticId(text)];
                 case '.':
-                    var result = [];
-                    for (var i = 0; i < this.statics.length; i++) {
-                        if (this.statics[i].tags.indexOf(text) != -1) {
-                            result.push(this.statics[i]);
-                        }
-                    }
-                    for (var i = 0; i < this.dynamics.length; i++) {
-                        if (this.dynamics[i].tags.indexOf(text) != -1) {
-                            result.push(this.dynamics[i]);
-                        }
-                    }
-
-                    return result;
+                    return this.selectByTag(text);
 
                 default:
 
                     throw new Error("Invalid selector!");
             };
+        }
+
+        public selectByTag(tagName: string): Array<LoadableObject> {
+            var result = [];
+            for (var i = 0; i < this.statics.length; i++) {
+                if (this.statics[i].tags.indexOf(tagName) != -1) {
+                    result.push(this.statics[i]);
+                }
+            }
+            for (var i = 0; i < this.dynamics.length; i++) {
+                if (this.dynamics[i].tags.indexOf(tagName) != -1) {
+                    result.push(this.dynamics[i]);
+                }
+            }
+
+            return result;
+        }
+
+        public selectByDynamicId(id: string): DynamicObject {
+            for (var i = 0; i < this.dynamics.length; i++) {
+                if (this.dynamics[i].id == id) {
+                    return this.dynamics[i];
+                }
+            }
+            return null;
+        }
+
+        public selectByStaticId(id: string): LoadableObject {
+            for (var i = 0; i < this.statics.length; i++) {
+                if (this.statics[i].id == id) {
+                    return this.statics[i];
+                }
+            }
+
+            return null;
         }
 
         /*
@@ -68,6 +82,7 @@ module Thralldom {
         public static match(selector: string, objects: Array<LoadableObject>): number {
             var count = 0;
 
+            selector = selector.toLowerCase();
             var first = selector.charAt(0);
             var text = selector.substr(1);
 
@@ -103,7 +118,7 @@ module Thralldom {
 
 
             if (!(object instanceof Skybox))
-                this.physicsSim.world.addRigidBody(object.rigidBody);
+                this.physicsManager.world.addRigidBody(object.rigidBody);
         }
 
         /*
@@ -112,7 +127,7 @@ module Thralldom {
         public addDynamic(object: DynamicObject): void {
             this.dynamics.push(object);
             this.renderScene.add(object.mesh);
-            this.physicsSim.world.addRigidBody(object.rigidBody);
+            this.physicsManager.world.addRigidBody(object.rigidBody);
        }
 
         public addDrawable(object: IDrawable): void {
@@ -155,11 +170,13 @@ module Thralldom {
                 this.dynamics[i].update(delta);
             }
 
+            this.aiManager.update(delta, this);
+
             var transform = new Ammo.btTransform(),
                 pos: Ammo.btVector3,
                 quat: Ammo.btQuaternion;
 
-            this.physicsSim.world.stepSimulation(1 / 60, 5);
+            this.physicsManager.world.stepSimulation(1 / 60, 5);
 
             for (var i = 0; i < this.dynamics.length; i++) {
                 this.dynamics[i].rigidBody.getMotionState().getWorldTransform(transform);

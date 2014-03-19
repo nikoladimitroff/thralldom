@@ -28,12 +28,12 @@ module Thralldom {
         public animation: THREE.Animation;
         public keepPlaying: boolean;
 
+
+        public range: number;
+
         private skinnedMesh: THREE.SkinnedMesh;
         private hp: number;
-        private range: number;
         private damage: number;
-
-        private aiController: AI.AIController;
 
         public get health(): number {
             return this.hp;
@@ -81,27 +81,6 @@ module Thralldom {
                 var scale = description.scale;
                 this.mesh.scale.set(scale, scale, scale);
             }
-            if (description.ai) {
-                var locations: Array<THREE.Vector3> = [
-                    new THREE.Vector3(-393.82, 0, 51.73),
-                    new THREE.Vector3(90.60330488167114, 0, 120.77182926800373),
-                    new THREE.Vector3(-258.4222199467363, 0, 208.32359567890623),
-                    new THREE.Vector3(300.4222199467363, 0, 208.32359567890623),
-                    new THREE.Vector3(100, 0, -130),
-                ];
-
-                var edges: Array<Thralldom.Algorithms.Edge> = [
-                    new Algorithms.Edge(0, 1),
-                    new Algorithms.Edge(1, 2),
-                    new Algorithms.Edge(2, 3),
-                    new Algorithms.Edge(3, 4),
-                ];
-
-                this.aiController = new AI.Citizen(this, {
-                    nodes: locations,
-                    edges: edges,
-                });
-            }
 
             this.rigidBody = PhysicsManager.computeCapsuleBody(this.mesh, Character.defaultSettings.mass);
 
@@ -131,9 +110,6 @@ module Thralldom {
         }
 
         public update(delta: number): void {
-            if (this.aiController) {
-                this.aiController.update(delta);
-            }
             this.stateMachine.update(delta);
         }
 

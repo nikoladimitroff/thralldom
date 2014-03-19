@@ -6,7 +6,7 @@ module Thralldom {
                 super(character, graph);
             }
 
-            public update(delta: number): void {
+            public update(delta: number, scene: Thralldom.Scene): void {
 
                 var character = this.character;
 
@@ -30,6 +30,8 @@ module Thralldom {
 
                 character.stateMachine.requestTransitionTo(CharacterStates.Falling);
                 character.stateMachine.requestTransitionTo(CharacterStates.Walking);
+
+                character.stateMachine.update(delta);
             }
         }
     }

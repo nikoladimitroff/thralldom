@@ -14,7 +14,7 @@ module Thralldom {
                 this.character = character;
             }
 
-            update(delta: number): void {
+            update(delta: number, scene: Thralldom.Scene): void {
 
             }
         }

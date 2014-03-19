@@ -93,6 +93,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Code\AI\Guard.ts" />
     <TypeScriptCompile Include="Code\Algorithms\GraphDefinitions.ts" />
     <TypeScriptCompile Include="Code\Application.ts" />
     <TypeScriptCompile Include="Code\Algorithms\AStar.ts" />
@@ -100,6 +101,7 @@
     <TypeScriptCompile Include="Code\CharacterControllers\SkyrimCharacterController.ts" />
     <TypeScriptCompile Include="Code\Constants.ts" />
     <TypeScriptCompile Include="Code\FrameInfo.ts" />
+    <TypeScriptCompile Include="Code\Managers\AIManager.ts" />
     <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
     <TypeScriptCompile Include="Code\Objectives.ts" />
     <TypeScriptCompile Include="Code\Quest.ts" />

@@ -145,7 +145,7 @@ module Thralldom {
             this.toWorldVec.setValue(dir.x, dir.y, dir.z);
             this.ray.set_m_rayFromWorld(this.fromWorldVec);
             this.ray.set_m_rayToWorld(this.toWorldVec);
-            this.scene.physicsSim.world.rayTest(this.fromWorldVec, this.toWorldVec, this.ray);
+            this.scene.physicsManager.world.rayTest(this.fromWorldVec, this.toWorldVec, this.ray);
 
             //if (this.ray.hasHit()) {
             //    var distance = this.ray.get_m_hitPointWorld().distance(this.fromWorldVec);
