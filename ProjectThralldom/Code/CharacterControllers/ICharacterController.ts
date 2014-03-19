@@ -17,8 +17,8 @@ module Thralldom {
             target: THREE.Vector3;
             position: THREE.Vector3;
 
-            handleMouseRotation(delta: number, input: InputManager): void;
-            handleKeyboardHeroMovement(delta: number, input: InputManager, keybindings: IKeybindings): void;
+            handleMouse(delta: number, input: InputManager): void;
+            handleKeyboard(delta: number, input: InputManager, keybindings: IKeybindings): void;
         }
     }
 } 

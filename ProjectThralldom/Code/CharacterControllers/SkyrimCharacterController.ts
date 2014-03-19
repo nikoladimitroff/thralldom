@@ -75,7 +75,17 @@ module Thralldom {
                 this.camera.lookAt(target);
             }
 
-            public handleMouseRotation(delta: number, input: InputManager): void {
+            private handleMouseClick(delta: number, input: InputManager): void {
+                if (input.mouse.leftButton) {
+                    this.hero.stateMachine.requestTransitionTo(CharacterStates.Shooting);
+                }
+                if (input.mouse.rightButton) {
+                    this.hero.health = 0;
+                }
+            }
+
+            public handleMouse(delta: number, input: InputManager): void {
+                this.handleMouseClick(delta, input);
 
                 var movement = new THREE.Vector3;
                 movement.y = (input.mouse.relative.x) * delta;
@@ -89,7 +99,9 @@ module Thralldom {
                 this.yaw -= turnSpeed
                 this.pitch = THREE.Math.clamp(this.pitch + movement.x * speed, THREE.Math.degToRad(75), THREE.Math.degToRad(150));
 
-                this.hero.mesh.quaternion.setFromAxisAngle(Const.UpVector, this.yaw);
+
+                if (!this.hero.isDead)
+                    this.hero.mesh.quaternion.setFromAxisAngle(Const.UpVector, this.yaw);
 
                 this.bias.y += 0//movement.x * 100;
 
@@ -98,8 +110,13 @@ module Thralldom {
 
             private previousKeepPlaying: boolean;
 
-            public handleKeyboardHeroMovement(delta: number, input: InputManager, keybindings: IKeybindings): void {
+            public handleKeyboard(delta: number, input: InputManager, keybindings: IKeybindings): void {
                 var hero = this.hero;
+
+                // See if we are still alive
+                if (this.hero.health <= 0) {
+                    this.hero.stateMachine.requestTransitionTo(CharacterStates.Dying);
+                }
 
                 if (input.keyboard[keybindings.moveForward]) {      
                     // If the sprint key is down, try to sprint

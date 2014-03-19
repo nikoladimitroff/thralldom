@@ -126,7 +126,7 @@ module Thralldom {
 
         private handleKeyboard(delta: number) {
 
-            this.cameraController.handleKeyboardHeroMovement(delta, this.input, this.keybindings);
+            this.cameraController.handleKeyboard(delta, this.input, this.keybindings);
         }
 
         // MEMLEAK
@@ -135,7 +135,7 @@ module Thralldom {
         private ray = new Ammo.ClosestRayResultCallback(this.fromWorldVec, this.toWorldVec);
 
         private handleMouse(delta: number) {
-            this.cameraController.handleMouseRotation(delta, this.input);
+            this.cameraController.handleMouse(delta, this.input);
 
             var pos = this.cameraController.position;
             var dir = this.cameraController.target;

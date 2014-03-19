@@ -10,30 +10,44 @@ module Thralldom {
 
         // MEMLEAK
         private static _jumpintImpulse: Ammo.btVector3;
-        private static get JumpingImpulse() {
+        private static get JumpingImpulse(): Ammo.btVector3 {
             if (!StateMachineUtils._jumpintImpulse) {
                 StateMachineUtils._jumpintImpulse = new Ammo.btVector3(0, Character.defaultSettings.jumpImpulse, 0);
             }
             return StateMachineUtils._jumpintImpulse;
         }
 
-        private static getDummyState(index: number) {
+        private static getDummyState(index: number): State {
             return new State(index, State.emptyUpdate, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyPredicate);
         }
 
-        private static ensureAnimationLoop(hero: Character, animationData: IAnimationData) {
+        private static ensureAnimationLoop(animation: THREE.Animation, animationData: IAnimationData): boolean {
+            var startTime = Utilities.convertFrameToTime(animationData.startFrame, animation);
+            var endTime = Utilities.convertFrameToTime(animationData.endFrame, animation);
 
-            if (hero.animation.currentTime >= animationData.endTime) {
-                hero.animation.stop();
-                hero.animation.play(animationData.startTime);
+            if (animation.currentTime >= endTime) {
+                animation.stop();
+                animation.play(startTime);
+                return true;
             }
-
+            return false;
         }
 
-        private static restartAnimationIfNeeded(hero: Character, previousState: number, currentState: number) {
+        private static pauseAnimationAfterEnd(animation: THREE.Animation, animationData: IAnimationData): boolean {
+            var startTime = Utilities.convertFrameToTime(animationData.startFrame, animation);
+            var endTime = Utilities.convertFrameToTime(animationData.endFrame, animation);
+
+            if (animation.currentTime >= endTime && !animation.isPaused) {
+                animation.pause();
+                return true;
+            }
+            return false;
+        }
+
+        private static restartAnimationIfNeeded(hero: Character, previousState: number, currentState: number): void {
             if (previousState != currentState) {
                 hero.animation.stop();
-                var startTime = hero.animationData[currentState].startTime;
+                var startTime = Utilities.convertFrameToTime(hero.animationData[currentState].startFrame, hero.animation);
                 hero.animation.play(startTime);
             }
 
@@ -50,7 +64,7 @@ module Thralldom {
             }
 
             var walkingUpdate = (delta: number, hero: Character): void => {
-                StateMachineUtils.ensureAnimationLoop(hero, hero.animationData[CharacterStates.Walking]);
+                StateMachineUtils.ensureAnimationLoop(hero.animation, hero.animationData[CharacterStates.Walking]);
 
                 hero.setWalkingVelocity(delta);
 
@@ -83,7 +97,7 @@ module Thralldom {
 
             var sprintingUpdate = (delta: number, hero: Character): void => {
 
-                StateMachineUtils.ensureAnimationLoop(hero, hero.animationData[CharacterStates.Sprinting]);
+                StateMachineUtils.ensureAnimationLoop(hero.animation, hero.animationData[CharacterStates.Sprinting]);
 
                 var velocity = hero.setWalkingVelocity(delta, true);
                 //hero.rigidBody.setLinearVelocity(velocity);
@@ -173,18 +187,66 @@ module Thralldom {
             return falling;
         }
 
+        private static getShootingState(): State {
+            var shooting: State;
+
+            var shootingEntry = (previous: number, hero: Character): void => {
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Shooting);
+                shooting.data.animationFinished = false;
+            }
+
+            var shootingUpdate = (delta: number, hero: Character): void => {
+                shooting.data.animationFinished =
+                    shooting.data.animationFinished ||
+                    StateMachineUtils.ensureAnimationLoop(hero.animation, hero.animationData[CharacterStates.Shooting]);
+            }
+
+            var shootingExit = (next: number, hero: Character): void => {
+            }
+
+            var shootingInterupt = (hero: Character): boolean => {
+                return shooting.data.animationFinished;
+            };
+
+            shooting = new State(CharacterStates.Shooting, shootingUpdate, shootingEntry, shootingExit, shootingInterupt);
+
+            return shooting;
+        }
+
+        private static getDyingState(): State {
+            var dying: State;
+
+            var dyingEntry = (previous: number, hero: Character): void => {
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Dying);
+                dying.data.animationFinished = false;
+            }
+
+            var dyingUpdate = (delta: number, hero: Character): void => {
+                StateMachineUtils.pauseAnimationAfterEnd(hero.animation, hero.animationData[CharacterStates.Dying]);
+            }
+
+            var dyingExit = (next: number, hero: Character): void => {
+            }
+
+            var dyingInterupt = (hero: Character): boolean => {
+                return false;
+            };
+
+            dying = new State(CharacterStates.Dying, dyingUpdate, dyingEntry, dyingExit, dyingInterupt);
+
+            return dying;
+        }
+
         public static getCharacterStateMachine(character: Character): StateMachine {
             var transitions = new Array<Array<number>>();
             transitions[CharacterStates.Idle] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Shooting, CharacterStates.Sprinting, CharacterStates.Walking];
             transitions[CharacterStates.Walking] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Shooting, CharacterStates.Walking, CharacterStates.Sprinting];
             transitions[CharacterStates.Sprinting] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Walking];
-            transitions[CharacterStates.Shooting] = [CharacterStates.Dying, CharacterStates.Idle];
+            transitions[CharacterStates.Shooting] = [CharacterStates.Dying];
             transitions[CharacterStates.Dying] = [];
             transitions[CharacterStates.Jumping] = [CharacterStates.Dying];
             transitions[CharacterStates.Falling] = [CharacterStates.Dying];
 
-            var shooting = StateMachineUtils.getDummyState(CharacterStates.Shooting);
-            var dying = StateMachineUtils.getDummyState(CharacterStates.Dying);
 
             var idleEntry = (previous: number, hero: Character): void => {
                 StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Idle);
@@ -194,7 +256,7 @@ module Thralldom {
 
 
             var idleUpdate = (delta: number, hero: Character): void => {
-                StateMachineUtils.ensureAnimationLoop(hero, hero.animationData[CharacterStates.Idle]);
+                StateMachineUtils.ensureAnimationLoop(hero.animation, hero.animationData[CharacterStates.Idle]);
             }
 
             var idle = new State(CharacterStates.Idle, idleUpdate, idleEntry, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyPredicate);
@@ -202,7 +264,9 @@ module Thralldom {
             var jumping = StateMachineUtils.getJumpingState();
             var falling = StateMachineUtils.getFallingState();
             var sprinting = StateMachineUtils.getSprintingState();
-            
+            var shooting = StateMachineUtils.getShootingState();
+            var dying = StateMachineUtils.getDyingState();
+
             var states = [idle, sprinting, shooting, dying, jumping, falling, walking].sort((x, y) => x.index - y.index);
 
             return new StateMachine(states, transitions, character);

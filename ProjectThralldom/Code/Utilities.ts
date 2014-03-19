@@ -14,7 +14,7 @@ module Thralldom {
 
 
         public static convertFrameToTime(frame: number, animation: THREE.Animation) {
-            return frame * animation.data.length / animation.data.fps;
+            return frame / animation.data.fps;
         }
 
 

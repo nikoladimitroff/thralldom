@@ -11,8 +11,8 @@ module Thralldom {
     }
 
     export interface IAnimationData {
-        startTime: number;
-        endTime: number;
+        startFrame: number;
+        endFrame: number;
     }
 
     export class Character extends DynamicObject {
@@ -41,6 +41,10 @@ module Thralldom {
 
         public set health(value: number) {
             this.hp = value;
+        }
+
+        public get isDead(): boolean {
+            return this.hp <= 0;
         }
 
         public stateMachine: StateMachine;

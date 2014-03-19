@@ -62,7 +62,7 @@ module Thralldom {
                 };
             };
 
-            document.addEventListener("mousemove",(args) => {
+            window.addEventListener("mousemove",(args) => {
                 var widthOver2 = this.container.offsetWidth / 2;
                 var height = this.container.offsetHeight;
                 var heightOverTwo = height / 2;
@@ -100,6 +100,7 @@ module Thralldom {
 
         public swap(): void {
             this.previousKeyboard = Array.apply(Array, this.keyboard);
+            //this.mouse.leftButton = this.mouse.rightButton = false;
             this.previousMouse.cloneFrom(this.mouse);
             this.mouse.relative.x = 0;
             this.mouse.relative.y = 0;
