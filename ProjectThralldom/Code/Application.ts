@@ -113,9 +113,9 @@ module Thralldom {
             this.content.loadTexture(ContentLibrary.Textures.DirtTextureJPG);
             this.content.loadTexture(ContentLibrary.Textures.GrassJPG);
 
-            this.content.loadSkinnedModel(ContentLibrary.Models.Test.TestEightJS);
+            this.content.loadSkinnedModel(ContentLibrary.Models.Heroes.Boycho.BoychoAnimationJS);
 
-            this.content.loadModel(ContentLibrary.Models.bore.houseoneJS);
+            this.content.loadModel(ContentLibrary.Models.bore.objectHouse1JS);
             this.content.loadModel(ContentLibrary.Models.bore.housetwoJS);
             this.content.loadModel(ContentLibrary.Models.bore.objectTerrainJS);
 
@@ -147,13 +147,13 @@ module Thralldom {
             this.ray.set_m_rayToWorld(this.toWorldVec);
             this.scene.physicsSim.world.rayTest(this.fromWorldVec, this.toWorldVec, this.ray);
 
-            if (this.ray.hasHit()) {
-                var distance = this.ray.get_m_hitPointWorld().distance(this.fromWorldVec);
+            //if (this.ray.hasHit()) {
+            //    var distance = this.ray.get_m_hitPointWorld().distance(this.fromWorldVec);
 
-                var pos = this.cameraController.position;
-                var dir = this.cameraController.target;
-                this.cameraController.distance -= distance * 1.05;
-            }
+            //    var pos = this.cameraController.position;
+            //    var dir = this.cameraController.target;
+            //    this.cameraController.distance -= distance * 1.05;
+            //}
 
         }
 

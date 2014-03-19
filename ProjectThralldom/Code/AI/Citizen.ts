@@ -10,7 +10,7 @@ module Thralldom {
 
                 var character = this.character;
 
-                character.rigidBody.setLinearVelocity(character.getVelocityVector(0));
+                character.setWalkingVelocity(0);
 
                 var node = this.path[this.currentNode];
                 var pos = new THREE.Vector2(character.mesh.position.x, character.mesh.position.z);

@@ -101,11 +101,6 @@ module Thralldom {
             public handleKeyboardHeroMovement(delta: number, input: InputManager, keybindings: IKeybindings): void {
                 var hero = this.hero;
 
-                if (!(hero.stateMachine.current == CharacterStates.Jumping ||
-                    hero.stateMachine.current == CharacterStates.Falling)) {
-                    hero.rigidBody.setLinearVelocity(hero.getVelocityVector(0));
-                }
-
                 if (input.keyboard[keybindings.moveForward]) {      
                     // If the sprint key is down, try to sprint
                     if (input.keyboard[keybindings.sprint]) {
@@ -114,6 +109,7 @@ module Thralldom {
                     // Otherwise just walk
                     else {
                         hero.stateMachine.requestTransitionTo(CharacterStates.Walking)
+                        console.log("WALKING: ", Utilities.formatVector(hero.rigidBody.getLinearVelocity(), 5));
                     }
                 }
                 if (input.keyboard[keybindings.strafeLeft]) {
@@ -126,14 +122,16 @@ module Thralldom {
 
                 }
                 if (input.keyboard[keybindings.jump]) {
-                    hero.stateMachine.requestTransitionTo(CharacterStates.Jumping);
+                    if (hero.stateMachine.requestTransitionTo(CharacterStates.Jumping)) {
+                        console.log("JUMPING: ", Utilities.formatVector(hero.rigidBody.getLinearVelocity(), 5));
+                    }
                 }
 
-                // Update the state machine before trying to reset it back to falling / idle
-                hero.stateMachine.states[hero.stateMachine.current].update(delta, hero);
 
                 hero.stateMachine.requestTransitionTo(CharacterStates.Falling);
                 hero.stateMachine.requestTransitionTo(CharacterStates.Idle);
+                // Update the state machine before trying to reset it back to falling / idle
+                hero.stateMachine.states[hero.stateMachine.current].update(delta, hero);
             }
         }
     }

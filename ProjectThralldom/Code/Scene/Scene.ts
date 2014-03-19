@@ -175,7 +175,6 @@ module Thralldom {
             }
 
             // MEMLEAK
-            console.log("over here!");
             Ammo.destroy(transform);
 
 

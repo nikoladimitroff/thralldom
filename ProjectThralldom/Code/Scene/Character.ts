@@ -11,8 +11,8 @@ module Thralldom {
     }
 
     export interface IAnimationData {
-        startFrame: number;
-        endFrame: number;
+        startTime: number;
+        endTime: number;
     }
 
     export class Character extends DynamicObject {
@@ -131,36 +131,9 @@ module Thralldom {
                 this.aiController.update(delta);
             }
             this.stateMachine.update(delta);
-
-
-                //var radiusSquared = this.mesh.position.lengthSq();
-                //var dvar = 1e-6;
-                //var equation = (x: number, y: number) => x * x + y * y - radiusSquared;
-                //var derivative = (x: number, y: number) => new THREE.Vector2(equation(x, y) - equation(x + dvar, y), equation(x, y) - equation(x, y + dvar));
-                //var tangent = (x: number, y: number) => {
-                //    var df = derivative(x, y);
-                //    return new THREE.Vector2(-df.y, df.x);
-                //};
-
-                //var normal = derivative(this.rigidBody.position.x, this.rigidBody.position.z);
-                //var velocity =
-                //    tangent(this.rigidBody.position.x, this.rigidBody.position.z)
-                //    .multiplyScalar(1e7 * delta);
-
-                //var normalizedVelocity = new THREE.Vector3(velocity.x, 0, velocity.y);
-                //normalizedVelocity.normalize();
-
-                //var normVel = new CANNON.Vec3(normalizedVelocity.x, 0, normalizedVelocity.z);
-                //var quat = new CANNON.Quaternion();
-                //var asd = new THREE.Quaternion();
-                //quat.setFromVectors(new CANNON.Vec3(0, 0, 1), normVel);
-                //this.rigidBody.quaternion.set(quat.x, quat.y, quat.z, quat.w);
-
-                //this.rigidBody.velocity.x = velocity.x;
-                //this.rigidBody.velocity.z = velocity.y;
         }
 
-        public getVelocityVector(delta: number, isSprinting: boolean = false): Ammo.btVector3 {
+        public setWalkingVelocity(delta: number, isSprinting: boolean = false): void {
             var forward = new THREE.Vector3(0, 0, 1);
             var multiplier = this.settings.movementSpeed * delta;
             if (isSprinting)
@@ -171,7 +144,6 @@ module Thralldom {
             var velocity = this.rigidBody.getLinearVelocity();
             velocity.setX(forward.x);
             velocity.setZ(forward.z);
-            return velocity;
         }
     }
 } 

@@ -20,11 +20,11 @@
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
     <Content Include="Content\Meta.js" />
-    <Content Include="Content\Models\bore\house_one.js" />
     <Content Include="Content\Models\bore\house_two.js" />
     <Content Include="Content\Models\bore\Lightmap.png" />
+    <Content Include="Content\Models\bore\monastery_object.js" />
+    <Content Include="Content\Models\bore\monastery_texture.jpg" />
     <Content Include="Content\Models\bore\rooftxt.jpg" />
-    <Content Include="Content\Models\bore\UVMap.jpg" />
     <Content Include="Content\Models\bore\barrelsUV.jpg" />
     <Content Include="Content\Models\bore\barrels_one.js" />
     <Content Include="Content\Models\bore\barrels_two.js" />
@@ -47,7 +47,17 @@
     <Content Include="Content\Models\Test\diff_01.jpg" />
     <Content Include="Content\Models\Test\diff_02.jpg" />
     <Content Include="Content\Models\Test\diff_03.jpg" />
-    <Content Include="Content\Models\Test\TestEight.js" />
+    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.js" />
+    <Content Include="Content\Models\Heroes\Boycho\Boycho_Cloth.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Boycho_Head.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Boycho_Left_Eye.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Boycho_Left_Hand.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Boycho_Pants.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Eye.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Hand.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Boycho_Tie.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
+    <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Quests\default.js" />
     <Content Include="Content\Scenes\default.js" />
     <Content Include="Content\Textures\BlackWhiteChecker.jpg" />
@@ -64,10 +74,6 @@
     <Content Include="Content\Textures\Skybox\negZ.png" />
     <Content Include="default.htm" />
     <Content Include="Content\Fonts\Helvetiker.js" />
-    <Content Include="Scripts\implementations\cannon.js" />
-    <Content Include="Scripts\implementations\cannon.min.js">
-      <DependentUpon>cannon.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\three.min.js" />
@@ -78,10 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Scripts\implementations\cannon.min.js.map">
-      <DependentUpon>cannon.min.js</DependentUpon>
-    </Content>
-    <Content Include="Content\Models\Test\TestEight.anim" />
+    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.anim" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -132,14 +135,18 @@
     <TypeScriptCompile Include="Code\Scene\Terrain.ts" />
     <TypeScriptCompile Include="Code\Utilities.ts" />
     <TypeScriptCompile Include="Scripts\typings\ammo.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\cannon.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery.documentReady.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\qunit.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\stats.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\three.d.ts" />
     <TypeScriptCompile Include="Tests\Tests.ts" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\Models\Buildings\Barrels\" />
+    <Folder Include="Content\Models\Buildings\House_01\" />
+    <Folder Include="Content\Models\Buildings\House_02\" />
+    <Folder Include="Content\Models\Buildings\Monastery\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

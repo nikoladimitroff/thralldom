@@ -1,0 +1,4 @@
+﻿{
+	"Walking": { startTime: 0, endTime: 12},
+	"Idle": { startTime: 13, endTime: 23 }
+}

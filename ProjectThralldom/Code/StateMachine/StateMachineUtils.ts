@@ -21,32 +21,40 @@ module Thralldom {
             return new State(index, State.emptyUpdate, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyPredicate);
         }
 
+        private static ensureAnimationLoop(hero: Character, animationData: IAnimationData) {
+
+            if (hero.animation.currentTime >= animationData.endTime) {
+                hero.animation.stop();
+                hero.animation.play(animationData.startTime);
+            }
+
+        }
+
+        private static restartAnimationIfNeeded(hero: Character, previousState: number, currentState: number) {
+            if (previousState != currentState) {
+                hero.animation.stop();
+                var startTime = hero.animationData[currentState].startTime;
+                hero.animation.play(startTime);
+            }
+
+        }
+
         private static getWalkingState(): State {
             var walking: State;
 
             var walkingEntry = (previous: number, hero: Character): void => {
-                if (previous != CharacterStates.Walking) {
-                    hero.animation.stop();
-                    var startFrame: number = hero.animationData[CharacterStates.Walking].startFrame;
-                    var startTime = Utilities.convertFrameToTime(startFrame, hero.animation);
-                    hero.animation.play(startTime);
-                }
 
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Walking);
+
+                walking.data.isWalking = true;
             }
 
             var walkingUpdate = (delta: number, hero: Character): void => {
-                var animData: IAnimationData = hero.animationData[CharacterStates.Walking];
-                var startTime = Utilities.convertFrameToTime(animData.startFrame, hero.animation);
-                var endTime = Utilities.convertFrameToTime(animData.endFrame, hero.animation);
+                StateMachineUtils.ensureAnimationLoop(hero, hero.animationData[CharacterStates.Walking]);
 
-                if (hero.animation.currentTime >= endTime) {
-                    hero.animation.stop();
-                    hero.animation.play(startTime);
-                }
+                hero.setWalkingVelocity(delta);
 
-
-                var velocity = hero.getVelocityVector(delta);
-                hero.rigidBody.setLinearVelocity(velocity);
+                walking.data.isWalking = false;
             }
 
             var walkingExit = (next: number, hero: Character): void => {
@@ -54,8 +62,9 @@ module Thralldom {
 
             var walkingInterupt = (hero: Character): boolean => {
                 var velocity = hero.rigidBody.getLinearVelocity();
-                return GeometryUtils.almostZero(velocity.x()) && GeometryUtils.almostZero(velocity.z());
-                };
+
+                return !walking.data.isWalking// && GeometryUtils.almostZero(velocity.x()) && GeometryUtils.almostZero(velocity.z());
+            }
 
             walking = new State(CharacterStates.Walking, walkingUpdate, walkingEntry, walkingExit, walkingInterupt);
 
@@ -66,26 +75,20 @@ module Thralldom {
             var sprinting: State;
 
             var sprintingEntry = (previous: number, hero: Character): void => {
-                if (previous != CharacterStates.Sprinting) {
-                    hero.animation.stop();
-                    var startFrame: number = hero.animationData[CharacterStates.Walking].startFrame;
-                    var startTime = Utilities.convertFrameToTime(startFrame, hero.animation);
-                    hero.animation.play(startTime);
-                }
+
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Sprinting);
+
+                sprinting.data.isSprinting = true;
             }
 
             var sprintingUpdate = (delta: number, hero: Character): void => {
-                var animData: IAnimationData = hero.animationData[CharacterStates.Walking];
-                var startTime = Utilities.convertFrameToTime(animData.startFrame, hero.animation);
-                var endTime = Utilities.convertFrameToTime(animData.endFrame, hero.animation);
 
-                if (hero.animation.currentTime >= endTime) {
-                    hero.animation.stop();
-                    hero.animation.play(startTime);
-                }
+                StateMachineUtils.ensureAnimationLoop(hero, hero.animationData[CharacterStates.Sprinting]);
 
-                var velocity = hero.getVelocityVector(delta, true);
-                hero.rigidBody.setLinearVelocity(velocity);
+                var velocity = hero.setWalkingVelocity(delta, true);
+                //hero.rigidBody.setLinearVelocity(velocity);
+
+                sprinting.data.isSprinting = false;
             }
 
             var sprintingExit = (next: number, hero: Character): void => {
@@ -93,7 +96,7 @@ module Thralldom {
 
             var sprintingInterupt = (hero: Character): boolean => {
                 var velocity = hero.rigidBody.getLinearVelocity();
-                return GeometryUtils.almostZero(velocity.x()) && GeometryUtils.almostZero(velocity.z());
+                return !sprinting.data.isSprinting //&& GeometryUtils.almostZero(velocity.x()) && GeometryUtils.almostZero(velocity.z());
             };
 
             sprinting = new State(CharacterStates.Sprinting, sprintingUpdate, sprintingEntry, sprintingExit, sprintingInterupt);
@@ -107,7 +110,10 @@ module Thralldom {
             var jumpingEntry = (previous: number, object: DynamicObject) => {
                 jumping.data.beforeJumpY = object.mesh.position.y;
                 jumping.data.reachedPeak = false;
-                object.rigidBody.applyCentralImpulse(StateMachineUtils.JumpingImpulse);
+                //object.rigidBody.applyCentralImpulse(StateMachineUtils.JumpingImpulse);
+
+                var velocity = object.rigidBody.getLinearVelocity();
+                velocity.setY(Character.defaultSettings.jumpImpulse);
 
             }
 
@@ -132,7 +138,7 @@ module Thralldom {
                     object.mesh.position.y == jumping.data.previousY &&
                     velocity == jumping.data.previousVelY;
 
-                return jumpFinished || samePosition;
+                return jumpFinished;
             };
 
             jumping = new State(CharacterStates.Jumping, jumpingUpdate, jumpingEntry, StateMachineUtils.dummyEventHandler, jumpingInterupt);
@@ -181,22 +187,14 @@ module Thralldom {
             var dying = StateMachineUtils.getDummyState(CharacterStates.Dying);
 
             var idleEntry = (previous: number, hero: Character): void => {
-                hero.animation.stop();
-                var startFrame = hero.animationData[CharacterStates.Idle].startFrame;
-                var startTime = Utilities.convertFrameToTime(startFrame, hero.animation);
-                hero.animation.play(startTime);
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Idle);
+
+                hero.setWalkingVelocity(0);
             }
 
 
             var idleUpdate = (delta: number, hero: Character): void => {
-                var animData: IAnimationData = hero.animationData[CharacterStates.Idle];
-                var startTime = Utilities.convertFrameToTime(animData.startFrame, hero.animation);
-                var endTime = Utilities.convertFrameToTime(animData.endFrame, hero.animation);
-
-                if (hero.animation.currentTime >= endTime) {
-                    hero.animation.stop();
-                    hero.animation.play(startTime);
-                }
+                StateMachineUtils.ensureAnimationLoop(hero, hero.animationData[CharacterStates.Idle]);
             }
 
             var idle = new State(CharacterStates.Idle, idleUpdate, idleEntry, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyPredicate);

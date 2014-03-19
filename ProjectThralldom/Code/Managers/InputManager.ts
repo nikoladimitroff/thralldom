@@ -90,7 +90,6 @@ module Thralldom {
         public requestPointerLock(domElement: HTMLElement) {
             domElement.addEventListener("click", () => {
                 var element = <any> domElement;
-                console.log(element);
                 element.requestPointerLock = element.requestPointerLock ||
                 element.mozRequestPointerLock ||
                 element.webkitRequestPointerLock;

@@ -34,4 +34,4 @@ module Thralldom {
             this.rigidBody = null;
         }
     }
-} 
+}

@@ -1,4 +1,0 @@
-﻿{
-	"Walking": { startFrame: 0, endFrame: 12},
-	"Idle": { startFrame: 13, endFrame: 23 }
-}

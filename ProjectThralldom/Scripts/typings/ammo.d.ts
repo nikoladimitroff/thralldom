@@ -160,7 +160,7 @@ declare module Ammo {
         applyTorque(vec: btVector3): void;
         applyCentralImpulse(vec: btVector3): void;
         applyTorqueImpulse(vec: btVector3): void;
-        applyDamping(): void;
+        applyDamping(delta: number): void;
         setAngularFactor(vec: btVector3): void;
         isActive(): boolean;
         activate(): void;
