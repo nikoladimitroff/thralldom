@@ -32,12 +32,12 @@
     <Content Include="Content\Models\Buildings\House_01\objectHouse1.js" />
     <Content Include="Content\Models\Buildings\House_02\objectMarket.js" />
     <Content Include="Content\Models\Buildings\House_02\one.jpg" />
-    <Content Include="Content\Models\Buildings\rooftxt.jpg" />
     <Content Include="Content\Models\Buildings\objectTerrain.js" />
-    <Content Include="Content\Models\Buildings\terraintextr.jpg" />
+    <Content Include="Content\Models\Buildings\rooftxt.jpg" />
     <Content Include="Content\Models\Buildings\House_02\three.jpg" />
     <Content Include="Content\Models\Buildings\House_02\two.jpg" />
     <Content Include="Content\Models\Buildings\House_01\walls.jpg" />
+    <Content Include="Content\Models\Buildings\terraintextr.jpg" />
     <Content Include="Content\Models\Buildings\Test1.js" />
     <Content Include="Content\Models\Buildings\Test1.png" />
     <Content Include="Content\Models\Engineer\engineer.js" />
