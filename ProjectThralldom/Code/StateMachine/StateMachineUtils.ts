@@ -21,34 +21,48 @@ module Thralldom {
             return new State(index, State.emptyUpdate, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyPredicate);
         }
 
-        private static ensureAnimationLoop(animation: THREE.Animation, animationData: IAnimationData): boolean {
+        private static ensureAnimationLoop(character: Character): boolean {
+            var animation = character.animation;
+            var animationData = character.animationData[character.stateMachine.current];
+
             var startTime = Utilities.convertFrameToTime(animationData.startFrame, animation);
             var endTime = Utilities.convertFrameToTime(animationData.endFrame, animation);
 
             if (animation.currentTime >= endTime) {
                 animation.stop();
                 animation.play(startTime);
+
+                character.weapon.animation.stop();
+                character.weapon.animation.play(startTime);
+
                 return true;
             }
             return false;
         }
 
-        private static pauseAnimationAfterEnd(animation: THREE.Animation, animationData: IAnimationData): boolean {
+        private static pauseAnimationAfterEnd(character: Character): boolean {
+            var animation = character.animation;
+            var animationData = character.animationData[character.stateMachine.current];
+
             var startTime = Utilities.convertFrameToTime(animationData.startFrame, animation);
             var endTime = Utilities.convertFrameToTime(animationData.endFrame, animation);
 
             if (animation.currentTime >= endTime && !animation.isPaused) {
                 animation.pause();
+                character.weapon.animation.pause();
+
                 return true;
             }
             return false;
         }
 
-        private static restartAnimationIfNeeded(hero: Character, previousState: number, currentState: number): void {
+        private static restartAnimationIfNeeded(character: Character, previousState: number, currentState: number): void {
             if (previousState != currentState) {
-                hero.animation.stop();
-                var startTime = Utilities.convertFrameToTime(hero.animationData[currentState].startFrame, hero.animation);
-                hero.animation.play(startTime);
+                character.animation.stop();
+                character.weapon.animation.stop();
+                var startTime = Utilities.convertFrameToTime(character.animationData[currentState].startFrame, character.animation);
+                character.animation.play(startTime);
+                character.weapon.animation.play(startTime);
             }
 
         }
@@ -64,7 +78,7 @@ module Thralldom {
             }
 
             var walkingUpdate = (delta: number, hero: Character): void => {
-                StateMachineUtils.ensureAnimationLoop(hero.animation, hero.animationData[CharacterStates.Walking]);
+                StateMachineUtils.ensureAnimationLoop(hero);
 
                 hero.setWalkingVelocity(delta);
 
@@ -97,7 +111,7 @@ module Thralldom {
 
             var sprintingUpdate = (delta: number, hero: Character): void => {
 
-                StateMachineUtils.ensureAnimationLoop(hero.animation, hero.animationData[CharacterStates.Sprinting]);
+                StateMachineUtils.ensureAnimationLoop(hero);
 
                 var velocity = hero.setWalkingVelocity(delta, true);
                 //hero.rigidBody.setLinearVelocity(velocity);
@@ -198,7 +212,7 @@ module Thralldom {
             var shootingUpdate = (delta: number, hero: Character): void => {
                 shooting.data.animationFinished =
                     shooting.data.animationFinished ||
-                    StateMachineUtils.ensureAnimationLoop(hero.animation, hero.animationData[CharacterStates.Shooting]);
+                    StateMachineUtils.ensureAnimationLoop(hero);
             }
 
             var shootingExit = (next: number, hero: Character): void => {
@@ -222,7 +236,7 @@ module Thralldom {
             }
 
             var dyingUpdate = (delta: number, hero: Character): void => {
-                StateMachineUtils.pauseAnimationAfterEnd(hero.animation, hero.animationData[CharacterStates.Dying]);
+                StateMachineUtils.pauseAnimationAfterEnd(hero);
             }
 
             var dyingExit = (next: number, hero: Character): void => {
@@ -256,7 +270,7 @@ module Thralldom {
 
 
             var idleUpdate = (delta: number, hero: Character): void => {
-                StateMachineUtils.ensureAnimationLoop(hero.animation, hero.animationData[CharacterStates.Idle]);
+                StateMachineUtils.ensureAnimationLoop(hero);
             }
 
             var idle = new State(CharacterStates.Idle, idleUpdate, idleEntry, StateMachineUtils.dummyEventHandler, StateMachineUtils.dummyPredicate);

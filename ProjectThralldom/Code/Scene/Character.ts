@@ -21,17 +21,13 @@ module Thralldom {
 
         public settings: ICharacterSettings;
 
-        public get mesh(): THREE.Mesh {
-            return this.skinnedMesh;
-        }
-
+        public mesh: THREE.SkinnedMesh;
         public animation: THREE.Animation;
-        public keepPlaying: boolean;
 
+        public weapon: Weapon;
 
         public range: number;
 
-        private skinnedMesh: THREE.SkinnedMesh;
         private hp: number;
         private damage: number;
 
@@ -64,10 +60,16 @@ module Thralldom {
             super.loadFromDescription(description, content);
 
             if (description.model) {
-                this.skinnedMesh = content.getContent(description["model"]);
-                this.animation = new THREE.Animation(this.skinnedMesh, this.skinnedMesh.geometry.animation.name, THREE.AnimationHandler.LINEAR);
+                this.mesh = content.getContent(description["model"]);
+                this.animation = new THREE.Animation(this.mesh, this.mesh.geometry.animation.name, THREE.AnimationHandler.LINEAR);
 
                 this.animationData = content.getContent(content.getAnimationFilePath(description.model));
+            }
+
+            if (description.weapon) {
+                this.weapon = new Weapon();
+                this.weapon.loadFromDescription({ model: description.weapon }, content);
+                this.mesh.add(this.weapon.mesh);
             }
 
             if (description.pos) {

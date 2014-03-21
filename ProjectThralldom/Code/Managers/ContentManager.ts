@@ -69,11 +69,12 @@ module Thralldom {
             xhr.open("GET", path, true);
 
             xhr.onreadystatechange = () => {
-                if (xhr.status == 404) {
-                    throw new Error("Can find animations file for model: " + path);
-                }
-
                 if (xhr.readyState == 4) {
+                    if (xhr.status == 404) {
+                        console.log("WARNING: Can't find animations file for model: " + path);
+                        return;
+                    }
+
                     var animDescription = eval("Object(" + xhr.responseText + ")");
                     var animationData = [];
                     for (var animation in animDescription) {
@@ -96,7 +97,7 @@ module Thralldom {
             return animationFile
         }
 
-        public loadSkinnedModel(path: string): void {
+        public loadSkinnedModel(path: string, hasAnimationData: boolean = true): void {
             this.loading++;
 
             var loader = new THREE.JSONLoader();
@@ -117,11 +118,14 @@ module Thralldom {
             }
 
             // Load the model and its animation data
-            this.loadAnimationData(this.getAnimationFilePath(path));
+            if (hasAnimationData) {
+                this.loadAnimationData(this.getAnimationFilePath(path));
+            }
 
             loader.load(path, (geometry, materials) => {
 
                 ensureLoop(geometry.animation);
+                geometry.animation.name += path;
                 THREE.AnimationHandler.add(geometry.animation);
                 
                 for (var i = 0; i < materials.length; i++) {

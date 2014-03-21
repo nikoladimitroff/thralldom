@@ -26,6 +26,29 @@ module Thralldom {
             this.world.setGravity(new Ammo.btVector3(0, this.settings.gravity, 0));
         }
 
+
+        // MEMLEAK
+        private cachedFromWorld = new Ammo.btVector3();
+        private cachedToWorld = new Ammo.btVector3();
+        private cachedRay = new Ammo.ClosestRayResultCallback(this.cachedFromWorld, this.cachedToWorld);
+        private cachedRaycastTransform = new Ammo.btTransform();
+
+        public raycast(fromCharacter: Character, toCharacter: Character): Ammo.ClosestRayResultCallback {
+            var from = new THREE.Vector3();
+            from.subVectors(fromCharacter.mesh.position, fromCharacter.rigidBody.centerToMesh);
+
+            var to = new THREE.Vector3();
+            to.subVectors(toCharacter.mesh.position, toCharacter.rigidBody.centerToMesh);
+
+            this.cachedFromWorld.setValue(from.x, from.y, from.z);
+            this.cachedToWorld.setValue(to.x, to.y, to.z);
+            this.cachedRay.set_m_rayFromWorld(this.cachedFromWorld);
+            this.cachedRay.set_m_rayToWorld(this.cachedToWorld);
+            this.world.rayTest(this.cachedFromWorld, this.cachedToWorld, this.cachedRay);
+
+            return this.cachedRay;
+        }
+
         private static computeInitialMotionState(mesh: THREE.Mesh, bias: THREE.Vector3 = Const.ZeroVector) {
 
             // Compute transform / motionState

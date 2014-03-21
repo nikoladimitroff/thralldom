@@ -114,6 +114,7 @@ module Thralldom {
             this.content.loadTexture(ContentLibrary.Textures.GrassJPG);
 
             this.content.loadSkinnedModel(ContentLibrary.Models.Heroes.Boycho.BoychoAnimationJS);
+            this.content.loadSkinnedModel(ContentLibrary.Models.Heroes.Boycho.PistolAnimationJS, false);
 
             this.content.loadModel(ContentLibrary.Models.bore.objectHouse1JS);
             this.content.loadModel(ContentLibrary.Models.bore.housetwoJS);
@@ -129,10 +130,6 @@ module Thralldom {
             this.cameraController.handleKeyboard(delta, this.input, this.keybindings);
         }
 
-        // MEMLEAK
-        private fromWorldVec = new Ammo.btVector3();
-        private toWorldVec = new Ammo.btVector3();
-        private ray = new Ammo.ClosestRayResultCallback(this.fromWorldVec, this.toWorldVec);
 
         private handleMouse(delta: number) {
             this.cameraController.handleMouse(delta, this.input);
@@ -141,11 +138,6 @@ module Thralldom {
             var dir = this.cameraController.target;
 
 
-            this.fromWorldVec.setValue(pos.x, pos.y, pos.z);
-            this.toWorldVec.setValue(dir.x, dir.y, dir.z);
-            this.ray.set_m_rayFromWorld(this.fromWorldVec);
-            this.ray.set_m_rayToWorld(this.toWorldVec);
-            this.scene.physicsManager.world.rayTest(this.fromWorldVec, this.toWorldVec, this.ray);
 
             //if (this.ray.hasHit()) {
             //    var distance = this.ray.get_m_hitPointWorld().distance(this.fromWorldVec);

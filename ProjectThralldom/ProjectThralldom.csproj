@@ -129,6 +129,7 @@
     <TypeScriptCompile Include="Code\Scene\LoadableObject.ts" />
     <TypeScriptCompile Include="Code\Scene\Scene.ts" />
     <TypeScriptCompile Include="Code\Scene\Skybox.ts" />
+    <TypeScriptCompile Include="Code\Scene\Weapon.ts" />
     <TypeScriptCompile Include="Code\Settings.ts" />
     <TypeScriptCompile Include="Code\StateMachine\State.ts" />
     <TypeScriptCompile Include="Code\StateMachine\StateMachine.ts" />

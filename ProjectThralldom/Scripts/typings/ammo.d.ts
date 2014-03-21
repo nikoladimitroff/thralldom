@@ -2,23 +2,27 @@ declare module Ammo {
 
     export function destroy(object: any): void;
 
-    export class btDefaultCollisionConfiguration {
+    export class AsmJsObject {
+        ptr: number;
+    }
+
+    export class btDefaultCollisionConfiguration extends AsmJsObject {
 
     }
 
-    export class btCollisionDispatcher {
+    export class btCollisionDispatcher extends AsmJsObject {
         constructor(config: btDefaultCollisionConfiguration);
     }
 
-    export class btDbvtBroadphase {
+    export class btDbvtBroadphase extends AsmJsObject {
 
     }
 
-    export class btSequentialImpulseConstraintSolver {
+    export class btSequentialImpulseConstraintSolver extends AsmJsObject {
 
     }
 
-    export class ClosestRayResultCallback {
+    export class ClosestRayResultCallback extends AsmJsObject {
         constructor(fromWorld: btVector3, toWorld: btVector3);
 
         hasHit(): boolean;
@@ -29,7 +33,7 @@ declare module Ammo {
         set_m_rayToWorld(vec: btVector3): void;
     }
 
-    export class btCollisionWorld {
+    export class btCollisionWorld extends AsmJsObject {
         rayTest(fromWorld: btVector3, toWorld: btVector3, callback: ClosestRayResultCallback): void;
     }
 
@@ -42,7 +46,7 @@ declare module Ammo {
         addRigidBody(body: btRigidBody, bodyType: number, collisionMask: number): void;
     }
 
-    export class btVector3 {
+    export class btVector3 extends AsmJsObject {
         constructor(x?: number, y?: number, z?: number);
         x();
         y();
@@ -55,7 +59,7 @@ declare module Ammo {
         distance(vec: btVector3): number;
     }
 
-    export class btQuaternion {
+    export class btQuaternion extends AsmJsObject {
         constructor(x?: number, y?: number, z?: number, w?: number);
         x(): number;
         y(): number;
@@ -67,7 +71,7 @@ declare module Ammo {
         setRotation(axis: btVector3, angle: number);
     }
 
-    export class btCollisionShape {
+    export class btCollisionShape extends AsmJsObject {
 
     }
 
@@ -91,7 +95,7 @@ declare module Ammo {
         constructor(radius: number, height: number);
     }
 
-    export class btStridingMeshInterface {
+    export class btStridingMeshInterface extends AsmJsObject {
         getScaling(): btVector3;
         setScaling(scale: btVector3): void;
     }
@@ -109,7 +113,7 @@ declare module Ammo {
         constructor(stridingMeshInterface: btStridingMeshInterface, useQuantizedAabbCompression: boolean);
     }
 
-    export class btTransform {
+    export class btTransform extends AsmJsObject {
         setIdentity(): void;
         setOrigin(vec: btVector3): void;
         setRotation(quat: btQuaternion): void;
@@ -118,7 +122,7 @@ declare module Ammo {
         getRotation(): btQuaternion;
     }
 
-    export class btMotionState {
+    export class btMotionState extends AsmJsObject {
         constructor(transform: btTransform);
         getWorldTransform(transform: btTransform): void;
         setWorldTransform(transform: btTransform): void;
@@ -128,12 +132,12 @@ declare module Ammo {
     export class btDefaultMotionState extends btMotionState {
     }
 
-    export class btRigidBodyConstructionInfo {
+    export class btRigidBodyConstructionInfo extends AsmJsObject {
         constructor(mass: number, motionState: btMotionState, shape: btCollisionShape, inertia: btVector3);
         set_m_friction(frictionCoeff: number): void;
     }
 
-    export class btCollisionObject {
+    export class btCollisionObject extends AsmJsObject {
 
     }
 
@@ -175,7 +179,7 @@ declare module Ammo {
 
     }
 
-    export class btKinematicCharacterController {
+    export class btKinematicCharacterController extends AsmJsObject {
         constructor(ghostObject: btPairCachingGhostObject, convexShape: btConvexShape, stepHeight: number);
 
         setFallSpeed(fallSpeed: number): void;
