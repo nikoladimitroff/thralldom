@@ -55,3 +55,11 @@ nav {
 
     display: none;
 }
+
+#subtitles {
+    max-width: 70%;
+    max-height: 40%;
+    margin: auto;
+    margin-top: 35%;
+    border: 1px solid black;
+}

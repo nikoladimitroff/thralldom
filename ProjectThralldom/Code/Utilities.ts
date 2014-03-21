@@ -12,12 +12,15 @@ module Thralldom {
             };
         }
 
-
         public static convertFrameToTime(frame: number, animation: THREE.Animation) {
             return frame / animation.data.fps;
         }
 
+        public static parseVector3(text: string): THREE.Vector3 {
+            var coordinates = text.match(/\d+/g);
 
+            return new THREE.Vector3(parseFloat(coordinates[0]), parseFloat(coordinates[1]), parseFloat(coordinates[2]));
+        }
 
         public static formatString(format: string, ...args) {
             /// <summary>Replaces the format items in a specified String with the text equivalents of the values of   corresponding object instances. The invariant culture will be used to format dates and numbers.</summary>
