@@ -208,7 +208,7 @@ module Thralldom {
             }
         }
 
-        private parseScene(path: string, sceneDescription: any): void {
+        private parseScene(path: string, sceneDescription: any): Thralldom.Scene {
             // Settings first
             this.parseSettings(sceneDescription);
 
@@ -224,7 +224,7 @@ module Thralldom {
 
             this.loadAI(scene);
 
-            this.onContentLoaded(path, () => scene);
+            return scene;
         }
 
         public loadScene(path: string): void {
@@ -236,7 +236,9 @@ module Thralldom {
             xhr.onreadystatechange = () => {
                 if (xhr.readyState == 4) {
                     var sceneDescription = eval("Object(" + xhr.responseText + ")");
-                    this.parseScene(path, sceneDescription);
+                    var scene = this.parseScene(path, sceneDescription);
+
+                    this.onContentLoaded(path, () => scene);
                 }
             };
             xhr.send();
@@ -261,6 +263,26 @@ module Thralldom {
             xhr.send();
         }
 
+
+        public loadScript(path: string): void {
+            this.loading++;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", path, true);
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == 4) {
+                    var scriptDescription = xhr.responseText;
+                    var script = new ScriptedEvent();
+                    script.loadFromDescription(scriptDescription, this);
+
+                    this.onContentLoaded(path, () => script);
+                }
+            }
+            xhr.send();
+        }
+
+
         public loadMeta(path: string): void {
             this.loading++;
             var xhr = new XMLHttpRequest();
@@ -279,6 +301,10 @@ module Thralldom {
 
                     this.loadScene(meta.scene);
                     this.loadQuest(meta.quest);
+
+                    for (var i = 0; i < meta.scripts.length; i++) {
+                        this.loadScript(meta.scripts[i]);
+                    }
 
                     this.onContentLoaded(path, () => meta);
                 }

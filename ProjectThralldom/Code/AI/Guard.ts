@@ -51,7 +51,7 @@ module Thralldom {
                 }
             }
 
-            public update(delta: number, scene: Thralldom.Scene): void {
+            public updateCallback(delta: number, scene: Thralldom.Scene): void {
 
                 var guard = this.character;
 
@@ -67,9 +67,6 @@ module Thralldom {
                 else {
                     this.scanAround(scene, guardToTarget, guardToTargetDist);
                 }
-
-                guard.stateMachine.requestTransitionTo(CharacterStates.Falling);
-                guard.stateMachine.update(delta);
             }
         }
     }

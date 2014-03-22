@@ -39,21 +39,23 @@ module Thralldom {
 
         public hasCompleted: boolean;
 
-        private destination: THREE.Vector3;
+        private destination: THREE.Vector2;
 
         constructor(args) {
-            this.destination = Utilities.parseVector3(args);
+            this.destination = Utilities.parseVector2(args);
         }
 
         public begin(): void { }
 
         public update(character: Character, scene: Thralldom.Scene, delta: number): void {
-            var diff = new THREE.Vector3();
-            diff.subVectors(this.destination, character.mesh.position);
+            var characterPos = GeometryUtils.Vector3To2(character.mesh.position);
+            var diff = new THREE.Vector2();
+            diff.subVectors(this.destination, characterPos);
             var distance = diff.length();
 
             diff.normalize();
-            character.mesh.quaternion.copy(GeometryUtils.quaternionFromVectors(Const.ForwardVector, diff));
+            var diff3d = GeometryUtils.Vector2To3(diff);
+            character.mesh.quaternion.copy(GeometryUtils.quaternionFromVectors(Const.ForwardVector, diff3d));
 
             character.stateMachine.requestTransitionTo(CharacterStates.Walking);
 
@@ -69,22 +71,26 @@ module Thralldom {
 
         public hasCompleted: boolean;
 
-        private lookat: THREE.Vector3;
+        private lookat: THREE.Vector2;
 
         constructor(args) {
-            this.lookat = Utilities.parseVector3(args);
+            this.lookat = Utilities.parseVector2(args);
         }
 
 
         public begin(): void { }
 
         public update(character: Character, scene: Thralldom.Scene, delta: number): void {
-            var diff = new THREE.Vector3();
-            diff.subVectors(this.lookat, character.mesh.position);
+            var characterPos = GeometryUtils.Vector3To2(character.mesh.position);
+            var diff = new THREE.Vector2();
+            diff.subVectors(this.lookat, characterPos);
             var distance = diff.length();
 
             diff.normalize();
-            character.mesh.quaternion.copy(GeometryUtils.quaternionFromVectors(Const.ForwardVector, diff));
+            var diff3d = GeometryUtils.Vector2To3(diff);
+            character.mesh.quaternion.copy(GeometryUtils.quaternionFromVectors(Const.ForwardVector, diff3d));
+
+            character.stateMachine.requestTransitionTo(CharacterStates.Idle);
 
             this.hasCompleted = true;
         }
@@ -108,6 +114,8 @@ module Thralldom {
         }
 
         public update(character: Character, scene: Thralldom.Scene, delta: number): void {
+            character.stateMachine.requestTransitionTo(CharacterStates.Idle);
+
             this.hasCompleted = Math.abs(Date.now() - this.startTime) >= this.delay;
         }
     }

@@ -5,19 +5,65 @@ module Thralldom {
             return previous;
         }, {});
 
-        private trigger: THREE.Vector3;
+        private trigger: THREE.Vector2;
         private triggerRadius: number;
         public actors: Map<string, ScriptController>;
+
+        public get finished(): boolean {
+            var finished = true;
+
+            for (var name in this.actors) {
+                finished = finished && this.actors[name].finished;
+            }
+
+            return finished;
+        }
 
         constructor() {
             this.actors = <Map<string, ScriptController>> {};
         }
 
-        public tryTrigger(character: Character, scene: Thralldom.Scene): boolean {
-            return character.mesh.position.distanceTo(this.trigger) <= this.triggerRadius;
+        public tryTrigger(playerCharacter: Character, scene: Thralldom.Scene): boolean {
+            var characterPos = GeometryUtils.Vector3To2(playerCharacter.mesh.position);
+            var canTrigger = !this.finished && characterPos.distanceToSquared(this.trigger) <= this.triggerRadius * this.triggerRadius;
+
+            if (canTrigger) {
+                var actors = this.actors;
+                for (var name in actors) {
+                    var character = scene.selectByDynamicId(name);
+                    var controller = scene.aiManager.controllers.filter((controller) => controller.character == character)[0];
+                    if (!controller) {
+                        console.log(Utilities.formatString("No matching character with id {0} found when activatin script", name));
+                        actors[name].finished = true;
+                        continue;
+                    }
+                    controller.script = actors[name];
+                    controller.script.trigger();
+                }
+            }
+
+            return canTrigger;
+        }
+
+        public disable(scene: Thralldom.Scene): void {
+            var actors = this.actors;
+            for (var name in actors) {
+                var character = scene.selectByDynamicId(name);
+                var controller = scene.aiManager.controllers.filter((controller) => controller.character == character)[0];
+                if (!controller) {
+                    console.log(Utilities.formatString("No matching character with id {0} found when disabling script", name));
+                    continue;
+                }
+                controller.script = null;
+            }
         }
 
         private parseAction(line: string): IScriptedAction {
+            // Skip if the line contains only whitespace
+            if (line.match(/\s*/g)[0] == line) {
+                return;
+            }
+
             var descriptors = line.split(MultiAction.Keyword);
             var actions = [];
             for (var i = 0; i < descriptors.length; i++) {
@@ -42,8 +88,8 @@ module Thralldom {
             var settings = blocks.shift().match(linePattern);
             for (var i = 0; i < settings.length; i++) {
                 var line = settings[i];
-                if (line.startsWith("trigger at")) {
-                    this.trigger = Utilities.parseVector3(line.match(/\(.*\)/g)[0]);
+                if (line.indexOf("trigger at") != -1) {
+                    this.trigger = Utilities.parseVector2(line.match(/\(.*\)/g)[0]);
                     this.triggerRadius = parseFloat(line.substr(line.lastIndexOf(" ") + 1));
                 }
             }

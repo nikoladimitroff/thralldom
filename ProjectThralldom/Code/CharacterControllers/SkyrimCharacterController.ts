@@ -126,7 +126,6 @@ module Thralldom {
                     // Otherwise just walk
                     else {
                         hero.stateMachine.requestTransitionTo(CharacterStates.Walking)
-                        console.log("WALKING: ", Utilities.formatVector(hero.rigidBody.getLinearVelocity(), 5));
                     }
                 }
                 if (input.keyboard[keybindings.strafeLeft]) {
@@ -139,9 +138,7 @@ module Thralldom {
 
                 }
                 if (input.keyboard[keybindings.jump]) {
-                    if (hero.stateMachine.requestTransitionTo(CharacterStates.Jumping)) {
-                        console.log("JUMPING: ", Utilities.formatVector(hero.rigidBody.getLinearVelocity(), 5));
-                    }
+                    hero.stateMachine.requestTransitionTo(CharacterStates.Jumping);
                 }
 
 

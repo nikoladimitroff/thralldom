@@ -60,6 +60,7 @@
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Quests\default.js" />
     <Content Include="Content\Scenes\default.js" />
+    <None Include="Content\Scripts\RandomStuff.script" />
     <Content Include="Content\Textures\BlackWhiteChecker.jpg" />
     <Content Include="Content\Textures\BlueGreenChecker.png" />
     <Content Include="Content\Textures\Crosshair.png" />

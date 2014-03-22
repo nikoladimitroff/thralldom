@@ -95,5 +95,13 @@ module Thralldom {
         public static almostZero(value: number, precision: number = 1e-6): boolean {
             return Math.abs(value) <= Math.abs(precision);
         }
+
+        public static Vector3To2(vec: THREE.Vector3): THREE.Vector2 {
+            return new THREE.Vector2(vec.x, vec.z);
+        }
+
+        public static Vector2To3(vec: THREE.Vector2): THREE.Vector3 {
+            return new THREE.Vector3(vec.x, 0, vec.y);
+        }
     }
 }

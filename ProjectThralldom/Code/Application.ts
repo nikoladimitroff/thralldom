@@ -2,11 +2,13 @@ module Thralldom {
     export interface IMetaGameData {
         scene: string;
         quest: string;
+        scripts: Array<string>;
     }
 
     export class Application {
         // Game specific
         private updateInterval: number;
+        private isOnFocus: boolean;
 
         // Three.js variables
         private clock: THREE.Clock;
@@ -35,6 +37,9 @@ module Thralldom {
 
         public scene: Thralldom.Scene;
         public quest: Thralldom.Quest;
+        private scripts: Array<ScriptedEvent>;
+        private activeScript: ScriptedEvent;
+
 
         // Constants
         private static zoomSpeed: number = 5;
@@ -66,6 +71,7 @@ module Thralldom {
 
             this.scene = this.content.getContent(meta.scene);
             this.quest = this.content.getContent(meta.quest);
+            this.scripts = <Array<ScriptedEvent>> meta.scripts.map((file) => this.content.getContent(file));
             this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
             this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
@@ -75,8 +81,12 @@ module Thralldom {
             if (Thralldom.InputManager.isMouseLockSupported())
                 this.input.requestPointerLock(document.body);
 
-            // Scene 
+            // Detect going out of focus
+            // TODO
+            //Utilities.setWindowFocusListener((isVisible) => this.isOnFocus = isVisible);
+            //this.isOnFocus = true;
 
+            // Scene 
 
             this.hero = <Character> this.scene.select("#hero")[0];
             // Camera controller
@@ -105,7 +115,6 @@ module Thralldom {
             // Axes
             var axes = new THREE.AxisHelper(1000);
             //  this.scene.renderScene.add(axes);
-
         }
 
         private loadContent(): void {
@@ -130,7 +139,6 @@ module Thralldom {
             this.cameraController.handleKeyboard(delta, this.input, this.keybindings);
         }
 
-
         private handleMouse(delta: number) {
             this.cameraController.handleMouse(delta, this.input);
 
@@ -149,11 +157,44 @@ module Thralldom {
 
         }
 
+        private triggerScriptedEvents(): void {
+            if (this.activeScript) {
+                if (this.activeScript.finished) {
+                    this.activeScript.disable(this.scene);
+
+                    var index = this.scripts.indexOf(this.activeScript);
+                    this.scripts[index] = this.scripts[this.scripts.length - 1];
+                    this.scripts.pop();
+                    this.activeScript = null;
+                    console.log("finished, array length:", this.scripts.length);
+                }
+
+                return;
+            }
+
+
+            for (var i = 0; i < this.scripts.length; i++) {
+                var script = this.scripts[i];
+                if (script.tryTrigger(this.hero, this.scene)) {
+                    this.activeScript = script;
+                    console.log("triggering");
+
+                    return;
+                }
+            }
+        }
+
         private update(): void {
             var delta = this.clock.getDelta();
+            // Pause the game if we are out of focus
+            if (!this.isOnFocus) {
+                delta = 0;
+            }
 
             this.handleKeyboard(delta);
             this.handleMouse(delta);
+
+            this.triggerScriptedEvents();
 
             var node = document.getElementsByTagName("nav").item(0).getElementsByTagName("p").item(0);
             var questComplete = this.quest.getActiveObjectives().length == 0;

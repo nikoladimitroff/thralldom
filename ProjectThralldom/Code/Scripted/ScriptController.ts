@@ -18,7 +18,7 @@ module Thralldom {
 
         public update(character: Character, scene: Thralldom.Scene, delta: number): void {
             if (this.finished) {
-                return;
+                //return;
             }
 
             this.sequence[this.current].update(character, scene, delta);
@@ -28,6 +28,7 @@ module Thralldom {
 
                 if (this.current >= this.sequence.length) {
                     this.finished = true;
+                    this.current--;
                 }
                 else {
                     this.sequence[this.current].begin();

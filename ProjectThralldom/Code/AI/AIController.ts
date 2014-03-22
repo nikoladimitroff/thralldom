@@ -3,6 +3,7 @@ module Thralldom {
         export class AIController {
 
             public character: Character;
+            public script: ScriptController;
             public graph: Algorithms.IGraph;
             public path: Array<THREE.Vector2>;
             public currentNode: number;
@@ -14,7 +15,22 @@ module Thralldom {
                 this.character = character;
             }
 
-            update(delta: number, scene: Thralldom.Scene): void {
+            public update(delta: number, scene: Thralldom.Scene): void {
+                if (this.script) {
+                    this.script.update(this.character, scene, delta);
+                }
+                else {
+                    this.updateCallback(delta, scene);
+                }
+
+
+                this.character.stateMachine.requestTransitionTo(CharacterStates.Falling);
+                this.character.stateMachine.requestTransitionTo(CharacterStates.Idle);
+
+                this.character.stateMachine.update(delta);
+            }
+
+            public updateCallback(delta: number, scene: Thralldom.Scene): void {
 
             }
         }

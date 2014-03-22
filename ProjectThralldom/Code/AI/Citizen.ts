@@ -6,7 +6,7 @@ module Thralldom {
                 super(character, graph);
             }
 
-            public update(delta: number, scene: Thralldom.Scene): void {
+            public updateCallback(delta: number, scene: Thralldom.Scene): void {
 
                 var character = this.character;
 
@@ -28,10 +28,8 @@ module Thralldom {
                 var quat = GeometryUtils.quaternionFromVectors(Const.ForwardVector, new THREE.Vector3(fromTo.x, 0, fromTo.y));
                 character.mesh.quaternion.copy(quat);
 
-                character.stateMachine.requestTransitionTo(CharacterStates.Falling);
+                //character.stateMachine.requestTransitionTo(CharacterStates.Falling);
                 character.stateMachine.requestTransitionTo(CharacterStates.Walking);
-
-                character.stateMachine.update(delta);
             }
         }
     }
