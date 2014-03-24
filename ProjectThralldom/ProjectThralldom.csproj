@@ -19,6 +19,9 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
+    <Content Include="Code\StringExtensions.min.js">
+      <DependentUpon>StringExtensions.js</DependentUpon>
+    </Content>
     <Content Include="Content\Assets.js" />
     <Content Include="Content\Meta.js" />
     <Content Include="Content\Models\bore\house_two.js" />
@@ -61,6 +64,9 @@
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Quests\default.js" />
     <Content Include="Content\Scenes\default.js" />
+    <Content Include="Code\StringExtensions.min.js.map">
+      <DependentUpon>StringExtensions.min.js</DependentUpon>
+    </Content>
     <None Include="Content\Scripts\RandomStuff.script" />
     <Content Include="Content\Textures\BlackWhiteChecker.jpg" />
     <Content Include="Content\Textures\BlueGreenChecker.png" />

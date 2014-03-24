@@ -61,23 +61,6 @@
     <Content Include="build\three.min.js">
       <DependentUpon>three.js</DependentUpon>
     </Content>
-    <Content Include="content\barrelsUV.jpg" />
-    <Content Include="content\barrels_one.js" />
-    <Content Include="content\barrels_two.js" />
-    <Content Include="content\four.jpg" />
-    <Content Include="content\house_two.js" />
-    <Content Include="content\Lightmap.png" />
-    <Content Include="content\monastery_object.js" />
-    <Content Include="content\monastery_texture.jpg" />
-    <Content Include="content\objectHouse1.js" />
-    <Content Include="content\objectMarket.js" />
-    <Content Include="content\objectTerrain.js" />
-    <Content Include="content\one.jpg" />
-    <Content Include="content\rooftxt.jpg" />
-    <Content Include="content\terraintextr.jpg" />
-    <Content Include="content\three.jpg" />
-    <Content Include="content\two.jpg" />
-    <Content Include="content\walls.jpg" />
     <Content Include="css\dark.css" />
     <Content Include="css\light.css" />
     <Content Include="css\types.css" />
