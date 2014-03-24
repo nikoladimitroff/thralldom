@@ -57,7 +57,7 @@ Menubar.File = function ( editor ) {
 		input.click();
 
 	} );
-	options.add( option );
+	options.add(option);
 
 	options.add( new UI.HorizontalRule() );
 

@@ -95,6 +95,15 @@ Thralldom.Exporter = function (editor) {
         }
     }
 
+    function prettyJsonStringify(data) {
+        var result = "{\r\n";
+        for (var prop in data) {
+            result += prop + ": " + JSON.stringify(data[prop]) + ",\r\n";
+        }
+        result += "}"
+        return result;
+    }
+
     function exportScene() {
         isStateValid = true;
 
@@ -103,11 +112,16 @@ Thralldom.Exporter = function (editor) {
         var terrain = scene.filter(getFilterPredicate("Terrain"));
         if (terrain.length > 1) {
             console.warn("More than one mesh marked as terrain, only the first will be xported");
-            if (terrain[0]) {
-                var terrainDescriptor = {};
-                terrainDescriptor.scale = terrain[0].scale;
-                terrainDescriptor.model = terrain.name;
-            }
+        }
+        if (terrain[0]) {
+            var terrainDescriptor = {};
+            terrainDescriptor.scale = terrain[0].scale.x;
+            terrainDescriptor.model = terrain[0].name;
+
+            terrain = terrainDescriptor
+        }
+        else {
+            terrain = undefined;
         }
 
         var nodes = [],
@@ -129,7 +143,7 @@ Thralldom.Exporter = function (editor) {
             "graph": graph,
         }
 
-        var blob = new Blob([JSON.stringify(data)], { type: 'text/plain' });
+        var blob = new Blob([prettyJsonStringify(data)], { type: 'text/plain' });
         var objectURL = URL.createObjectURL(blob);
 
         window.open(objectURL, '_blank');
