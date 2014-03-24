@@ -6,7 +6,7 @@ module Thralldom {
             private edges: Array<Edge>;
 
             constructor(graph: IGraph) {
-                this.vertices = graph.nodes.map((vector) => new Vertex(vector.x, vector.z));
+                this.vertices = graph.nodes;
                 this.edges = graph.edges;
             }
 

@@ -97,6 +97,13 @@ THREE.MaterialExporter.prototype = {
 			output.opacity = material.opacity;
 			output.transparent = material.transparent;
 
+		} else if (material instanceof THREE.LineBasicMaterial) {
+
+		    output.type = 'LineBasicMaterial';
+		    output.color = material.color.getHex();
+		    output.opacity = material.opacity;
+		    output.transparent = material.transparent;
+
 		}
 
 		return output;

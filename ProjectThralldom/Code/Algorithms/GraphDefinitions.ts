@@ -1,7 +1,7 @@
 module Thralldom {
     export module Algorithms {
         export interface IGraph {
-            nodes: Array<THREE.Vector3>;
+            nodes: Array<Vertex>;
             edges: Array<Edge>;
         }
 

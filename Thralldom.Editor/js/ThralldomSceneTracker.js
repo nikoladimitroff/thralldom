@@ -49,7 +49,7 @@ Thralldom.Exporter = function (editor) {
     }
 
     function exportWaypointPath(nodes, edges, object) {
-        if (!(object.geometry instanceof THREE.LineGeometry)) {
+        if (!(object instanceof THREE.Line)) {
             console.warn("Something other from a line marked as a waypoint, ignoring");
             return;
         }
@@ -61,10 +61,11 @@ Thralldom.Exporter = function (editor) {
         var firstNode = new THREE.Vector2(p.x, p.z);
         var secondNode = new THREE.Vector2(q.x, q.z);
 
+        var errorMargin = 10;
 
         var firstIndex = -1;
         var firstCloseEnough = nodes.filter(function (value, index) {
-            if (x.distanceToSquared(firstNode) <= 1e-2 * 1e-2) {
+            if (value.distanceToSquared(firstNode) <= errorMargin) {
                 firstIndex = index;
             }
         });
@@ -75,7 +76,7 @@ Thralldom.Exporter = function (editor) {
 
         var secondIndex = -1;
         var secondCloseEnough = nodes.filter(function (value, index) {
-            if (x.distanceToSquared(secondNode) <= 1e-2 * 1e-2) {
+            if (value.distanceToSquared(secondNode) <= errorMargin) {
                 secondIndex = index;
             }
         });
@@ -111,7 +112,7 @@ Thralldom.Exporter = function (editor) {
 
         var nodes = [],
             edges = [];
-        var waypoints = scene.filter(getFilterPredicate("Waypoint Path")).forEach(exportWaypointPath.bind(nodes, edges));
+        var waypoints = scene.filter(getFilterPredicate("Waypoint Path")).forEach(exportWaypointPath.bind(undefined, nodes, edges));
         nodes = nodes.map(function (p) { return [p.x, p.y]; });
         var graph = {
             nodes: nodes,

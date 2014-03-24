@@ -197,8 +197,9 @@ module Thralldom {
             }
         }
 
-        private loadAI(scene: Thralldom.Scene): void {
-            var graph = scene.aiManager.graph;
+        private loadAI(scene: Thralldom.Scene, graph: Algorithms.IGraph): void {
+            scene.aiManager.graph = graph;
+
             for (var typeName in ContentManager.aiControllerTypes) {
                 var type = ContentManager.aiControllerTypes[typeName];
 
@@ -221,7 +222,16 @@ module Thralldom {
             this.tryAddSingletonDescription(singletons, sceneDescription, "terrain");
             this.parseCollection(singletons, ContentManager.staticTypes, scene.addStatic.bind(scene));
 
-            this.loadAI(scene);
+            if (!sceneDescription.waypoints) {
+                console.error("No pathfinding graph supplied to scene, AI cannot work!");
+            }
+
+            var graph = {
+                nodes: sceneDescription.waypoints.nodes.map((array) => new Algorithms.Vertex(array[0], array[1])),
+                edges: sceneDescription.waypoints.edges.map((array) => new Algorithms.Edge(array[0], array[1])),
+            }
+
+            this.loadAI(scene, graph);
 
             return scene;
         }

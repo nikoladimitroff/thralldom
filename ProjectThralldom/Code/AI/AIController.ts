@@ -10,7 +10,10 @@ module Thralldom {
 
             constructor(character: Character, graph: Algorithms.IGraph) {
                 var astar = new Algorithms.AStar(graph);
-                this.path = astar.runQuery(graph.nodes[0], graph.nodes[graph.nodes.length - 1]);
+                var start = new THREE.Vector3(graph.nodes[0].x, 0, graph.nodes[0].y);
+                var goal = new THREE.Vector3(graph.nodes[graph.nodes.length - 1].x, 0, graph.nodes[graph.nodes.length - 1].y)
+
+                this.path = astar.runQuery(start, goal);
                 this.currentNode = 0;
                 this.character = character;
             }

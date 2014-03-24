@@ -12556,6 +12556,27 @@ THREE.ObjectLoader.prototype = {
 					object = new THREE.Sprite( material );
 
 					break;
+                // WARNING: THRALLDOM CHANGES BELOW, VERY FRAGILE
+                case 'Line':
+
+                    var geometry = geometries[data.geometry];
+                    var material = materials[data.material];
+
+                    if (geometry === undefined) {
+
+                        console.error('THREE.ObjectLoader: Undefined geometry ' + data.geometry);
+
+                    }
+
+                    if (material === undefined) {
+
+                        console.error('THREE.ObjectLoader: Undefined material ' + data.material);
+
+                    }
+
+                    object = new THREE.Line(geometry, material);
+
+                    break;
 
 				default:
 

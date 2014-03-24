@@ -63,7 +63,7 @@ Menubar.Add = function ( editor ) {
 	options.add( option );
 
     
-    // add plane
+    // add line
 
 	var option = new UI.Panel();
 	option.setClass( 'option' );
@@ -72,7 +72,7 @@ Menubar.Add = function ( editor ) {
 
 	    var scale = 100;
 
-	    var lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
+	    var lineMaterial = new THREE.LineBasicMaterial({ color: 0xff00ff });
 	    var lineGeometry = new THREE.Geometry();
 	    lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
 	    lineGeometry.vertices.push(new THREE.Vector3(scale, 0, 0));
