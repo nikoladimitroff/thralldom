@@ -147,7 +147,9 @@ Menubar.File = function ( editor ) {
 	} );
 	options.add(option);
 
-	var thralldom = Thralldom.Scene(editor);
+    // Thralldom export
+
+	var thralldom = Thralldom.Exporter(editor);
 	var option = new UI.Panel();
 	option.setClass("option");
 	option.setTextContent("Export Thralldom Scene");

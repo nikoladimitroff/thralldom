@@ -84,7 +84,7 @@ module Thralldom {
             // Detect going out of focus
             // TODO
             //Utilities.setWindowFocusListener((isVisible) => this.isOnFocus = isVisible);
-            //this.isOnFocus = true;
+            this.isOnFocus = true;
 
             // Scene 
 
@@ -115,23 +115,6 @@ module Thralldom {
             // Axes
             var axes = new THREE.AxisHelper(1000);
             //  this.scene.renderScene.add(axes);
-        }
-
-        private loadContent(): void {
-            this.content.loadTexture(ContentLibrary.Textures.BlackWhiteCheckerJPG);
-            this.content.loadTexture(ContentLibrary.Textures.DirtTextureJPG);
-            this.content.loadTexture(ContentLibrary.Textures.GrassJPG);
-
-            this.content.loadSkinnedModel(ContentLibrary.Models.Heroes.Boycho.BoychoAnimationJS);
-            this.content.loadSkinnedModel(ContentLibrary.Models.Heroes.Boycho.PistolAnimationJS, false);
-
-            this.content.loadModel(ContentLibrary.Models.bore.objectHouse1JS);
-            this.content.loadModel(ContentLibrary.Models.bore.housetwoJS);
-            this.content.loadModel(ContentLibrary.Models.bore.objectTerrainJS);
-
-
-            // Quests
-            this.content.loadQuest(ContentLibrary.Quests.defaultJS);
         }
 
         private handleKeyboard(delta: number) {
@@ -252,17 +235,11 @@ module Thralldom {
         }
 
         public run(): void {
-            this.loadContent();
-            // Load all models
-            this.content.onLoaded = () => {
-                this.content.loadMeta(Application.MetaFilePath);
-                // Load the scene
-                this.content.onLoaded = () => {
-                    this.init(this.content.getContent(Application.MetaFilePath));
-                    window.addEventListener("resize", Utilities.GetOnResizeHandler(this.container, this.renderer, this.cameraController.camera));
-                    this.loop();
-                }
-            }
+            this.content.loadMeta(Application.MetaFilePath, (meta: IMetaGameData) => {
+                this.init(meta);
+                window.addEventListener("resize", Utilities.GetOnResizeHandler(this.container, this.renderer, this.cameraController.camera));
+                this.loop();
+            });
         }
     }
 }

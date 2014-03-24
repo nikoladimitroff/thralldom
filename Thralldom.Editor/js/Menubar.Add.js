@@ -62,6 +62,29 @@ Menubar.Add = function ( editor ) {
 	} );
 	options.add( option );
 
+    
+    // add plane
+
+	var option = new UI.Panel();
+	option.setClass( 'option' );
+	option.setTextContent( 'Line' );
+	option.onClick( function () {
+
+	    var scale = 100;
+
+	    var lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
+	    var lineGeometry = new THREE.Geometry();
+	    lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+	    lineGeometry.vertices.push(new THREE.Vector3(scale, 0, 0));
+	    var line = new THREE.Line(lineGeometry, lineMaterial);
+	    line.name = 'Line ' + (++meshCount);
+
+	    editor.addObject(line);
+	    editor.select(line);
+
+	} );
+	options.add( option );
+
 	// add box
 
 	var option = new UI.Panel();

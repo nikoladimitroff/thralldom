@@ -69,7 +69,7 @@ module Thralldom {
                 this.radius = description.radius || 0;
                 this.isComplete = false;
 
-                this.mesh = GeometryUtils.getQuestMarker(new THREE.MeshPhongMaterial({ color: 0x0000FF }));
+                this.mesh = GeometryUtils.getQuestMarker(content);
             }
 
             public update(frameInfo: FrameInfo) {
@@ -123,7 +123,7 @@ module Thralldom {
                 this.achievedKills = 0;
                 this.isComplete = false;
 
-                this.mesh = GeometryUtils.getQuestMarker(new THREE.MeshPhongMaterial({ color: 0xFF0000 }));
+                this.mesh = GeometryUtils.getQuestMarker(content);
             }
 
             private static getCloserTargetComparer(heroPos: THREE.Vector3): (a: LoadableObject, b: LoadableObject) => number {

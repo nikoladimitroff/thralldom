@@ -1,24 +1,22 @@
 ﻿/// <reference path="Editor.js" />
 /// <reference path="libs/signals.min.js" />
 var Thralldom = {};
-Thralldom.Scene = function (editor) {
+Thralldom.Exporter = function (editor) {
     editor = editor || new Editor();
 
-    var enviroment = [];
+    var scene = [];
+
+    var isStateValid = true;
 
     editor.signals.objectAdded.add(function (object) {
-        if (object.geometry) {
-            enviroment.push(object);
-        }
+        scene.push(object);
     });
 
     editor.signals.objectRemoved.add(function (object) {
-        if (object.geometry) {
-            var i = enviroment.indexOf(object);
-            if (i != -1) {
-                enviroment[i] = enviroment[enviroment.length - 1];
-                enviroment.pop();
-            }
+        var i = scene.indexOf(object);
+        if (i != -1) {
+            scene[i] = scene[scene.length - 1];
+            scene.pop();
         }
     });
 
@@ -26,40 +24,111 @@ Thralldom.Scene = function (editor) {
         return "Model " + value.name + " with coordinates at (" + value.position.x + ", " + value.position.y + ", " + value.position.z + ").";
     }
 
+    function exportObject(object, index) {
+        if (object.scale.x != object.scale.y || object.scale.x != object.scale.z || object.scale.y != object.scale.z) {
+            alert("ERROR: " + printObjectInfo(object) + "Different scaling weights per axis");
+            isStateValid = false;
+            return;
+        }
+
+        if (object.userData.tags && !(object.userData.tags instanceof Array)) {
+            alert("ERROR: " + printObjectInfo(object) + "Tags is not an array!")
+            isStateValid = false;
+            return;
+        }
+
+        return {
+            type: object.userData.exportAs.toLowerCase(),
+            pos: [object.position.x, object.position.y, object.position.z],
+            rot: [object.rotation.x, object.rotation.y, object.rotation.z],
+            scale: object.scale.x,
+            model: object.name,
+            id: object.userData.id,
+            tags: object.userData.tags,
+        }
+    }
+
+    function exportWaypointPath(nodes, edges, object) {
+        if (!(object.geometry instanceof THREE.LineGeometry)) {
+            console.warn("Something other from a line marked as a waypoint, ignoring");
+            return;
+        }
+        var p = object.geometry.vertices[0],
+            q = object.geometry.vertices[1];
+
+        p.applyMatrix4(object.matrix);
+        q.applyMatrix4(object.matrix);
+        var firstNode = new THREE.Vector2(p.x, p.z);
+        var secondNode = new THREE.Vector2(q.x, q.z);
+
+
+        var firstIndex = -1;
+        var firstCloseEnough = nodes.filter(function (value, index) {
+            if (x.distanceToSquared(firstNode) <= 1e-2 * 1e-2) {
+                firstIndex = index;
+            }
+        });
+        if (firstIndex == -1) {
+            nodes.push(firstNode);
+            firstIndex = nodes.length - 1;
+        }
+
+        var secondIndex = -1;
+        var secondCloseEnough = nodes.filter(function (value, index) {
+            if (x.distanceToSquared(secondNode) <= 1e-2 * 1e-2) {
+                secondIndex = index;
+            }
+        });
+        if (secondIndex == -1) {
+            nodes.push(secondNode);
+            secondIndex = nodes.length - 1;
+        }
+
+        edges.push([firstIndex, secondIndex]);
+
+    }
+
+    function getFilterPredicate(value) {
+        return function (object) {
+            return object.userData.exportAs == value;
+        }
+    }
+
     function exportScene() {
-        var isValid = true;
+        isStateValid = true;
 
-        function exportObject(value, index) {
-            if (value.scale.x != value.scale.y || value.scale.x != value.scale.z || value.scale.y != value.scale.z) {
-                alert("ERROR: " + printObjectInfo(value) + "Different scaling weights per axis");
-                isValid = false;
-                return;
-            }
-
-            if (value.userData.tags && !(value.userData.tags instanceof Array)) {
-                alert("ERROR: " + printObjectInfo(value) + "Tags is not an array!")
-                isValid = false;
-                return;
-            }
-
-            return {
-                type: "environment",
-                pos: [value.position.x, value.position.y, value.position.z],
-                rot: [value.rotation.x, value.rotation.y, value.rotation.z],
-                scale: value.scale.x,
-                model: value.name,
-                id: value.userData.id,
-                tags: value.userData.tags,
+        var env = scene.filter(getFilterPredicate("Environment")).map(exportObject);
+        var characters = scene.filter(getFilterPredicate("Character")).map(exportObject);
+        var terrain = scene.filter(getFilterPredicate("Terrain"));
+        if (terrain.length > 1) {
+            console.warn("More than one mesh marked as terrain, only the first will be xported");
+            if (terrain[0]) {
+                var terrainDescriptor = {};
+                terrainDescriptor.scale = terrain[0].scale;
+                terrainDescriptor.model = terrain.name;
             }
         }
 
-        var output = JSON.stringify(enviroment.map(exportObject));
+        var nodes = [],
+            edges = [];
+        var waypoints = scene.filter(getFilterPredicate("Waypoint Path")).forEach(exportWaypointPath.bind(nodes, edges));
+        nodes = nodes.map(function (p) { return [p.x, p.y]; });
+        var graph = {
+            nodes: nodes,
+            edges: edges,
+        }
 
-        if (!isValid)
+        if (!isStateValid)
             return;
 
+        var data = {
+            "statics": env,
+            "dynamics": characters,
+            "terrain": terrain,
+            "graph": graph,
+        }
 
-        var blob = new Blob([output], { type: 'text/plain' });
+        var blob = new Blob([JSON.stringify(data)], { type: 'text/plain' });
         var objectURL = URL.createObjectURL(blob);
 
         window.open(objectURL, '_blank');

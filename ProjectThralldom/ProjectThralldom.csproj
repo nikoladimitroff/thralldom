@@ -19,6 +19,7 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
+    <Content Include="Content\Assets.js" />
     <Content Include="Content\Meta.js" />
     <Content Include="Content\Models\bore\house_two.js" />
     <Content Include="Content\Models\bore\Lightmap.png" />
@@ -75,6 +76,7 @@
     <Content Include="Content\Textures\Skybox\negZ.png" />
     <Content Include="default.htm" />
     <Content Include="Content\Fonts\Helvetiker.js" />
+    <Content Include="Scripts\implementations\ammo.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\three.min.js" />

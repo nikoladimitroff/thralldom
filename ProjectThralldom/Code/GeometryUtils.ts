@@ -42,7 +42,7 @@ module Thralldom {
             return quat;
         }
 
-        public static getQuestMarker(material: THREE.MeshBasicMaterial): THREE.Mesh {
+        public static getQuestMarker(content: ContentManager): THREE.Mesh {
             var geometry = new THREE.TetrahedronGeometry(10);
 
             geometry.faceVertexUvs[0] = [];     
@@ -60,7 +60,7 @@ module Thralldom {
             geometry.computeFaceNormals();
             geometry.uvsNeedUpdate = true;
 
-            material = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture("Content/Textures/RedChecker.png") });
+            var material = new THREE.MeshPhongMaterial({ map: content.getContent(ContentLibrary.Textures.RedCheckerPNG) });
 
             var node = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial([material]));
             var head = node.geometry.vertices[0];

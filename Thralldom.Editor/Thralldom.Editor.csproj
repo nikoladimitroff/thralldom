@@ -257,6 +257,7 @@
     <Content Include="examples\files\inconsolata.woff" />
     <Content Include="examples\fonts\droid\NOTICE" />
     <Content Include="examples\fonts\LICENSE" />
+    <Content Include="js\Sidebar.Thralldom.js" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

@@ -35,9 +35,9 @@ module Thralldom {
 
         }
 
-        public onLoaded: () => void;
+        private onLoaded: () => void;
 
-        public loadTexture(path: string, compressed?: boolean): void {
+        private loadTexture(path: string, compressed?: boolean): void {
             
             this.loading++;
 
@@ -49,7 +49,7 @@ module Thralldom {
             }
         }
 
-        public loadModel(path: string): void {
+        private loadModel(path: string): void {
             this.loading++;
 
             var loader = new THREE.JSONLoader();
@@ -90,14 +90,13 @@ module Thralldom {
         }
 
         public getAnimationFilePath(meshPath: string): string {
-
             var modelFile = this.extractFileName(meshPath);
             var animationFile = modelFile.substring(0, modelFile.lastIndexOf('.')) + ".anim";
             var animationFile = meshPath.replace(modelFile, animationFile);
             return animationFile
         }
 
-        public loadSkinnedModel(path: string, hasAnimationData: boolean = true): void {
+        private loadSkinnedModel(path: string, hasAnimationData: boolean = true): void {
             this.loading++;
 
             var loader = new THREE.JSONLoader();
@@ -227,7 +226,7 @@ module Thralldom {
             return scene;
         }
 
-        public loadScene(path: string): void {
+        private loadScene(path: string): void {
             this.loading++;
 
             var xhr = new XMLHttpRequest();
@@ -244,7 +243,7 @@ module Thralldom {
             xhr.send();
         }
 
-        public loadQuest(path: string): void {
+        private loadQuest(path: string): void {
             this.loading++;
 
             var xhr = new XMLHttpRequest();
@@ -264,7 +263,7 @@ module Thralldom {
         }
 
 
-        public loadScript(path: string): void {
+        private loadScript(path: string): void {
             this.loading++;
 
             var xhr = new XMLHttpRequest();
@@ -282,9 +281,29 @@ module Thralldom {
             xhr.send();
         }
 
+        private loadAssets(path: string): void {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", path, true);
 
-        public loadMeta(path: string): void {
-            this.loading++;
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == 4) {
+                    var assets = eval("Object(" + xhr.responseText + ")");
+                    for (var i in assets.textures) {
+                        this.loadTexture(assets.textures[i]);
+                    }
+                    for (var i in assets.skinned) {
+                        this.loadSkinnedModel(assets.skinned[i].path, assets.skinned[i].animationData);
+                    }
+                    for (var i in assets.models) {
+                        this.loadModel(assets.models[i]);
+                    }
+                }
+            }
+            xhr.send();
+        }
+
+
+        public loadMeta(path: string, callback: (meta: IMetaGameData) => void): void {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", path, true);
 
@@ -299,14 +318,22 @@ module Thralldom {
                         throw new Error("Must provide a quest!");
                     }
 
-                    this.loadScene(meta.scene);
-                    this.loadQuest(meta.quest);
+                    this.loadAssets(meta.assets);
+                    this.onLoaded = () => {
 
-                    for (var i = 0; i < meta.scripts.length; i++) {
-                        this.loadScript(meta.scripts[i]);
-                    }
+                        this.loadScene(meta.scene);
+                        this.loadQuest(meta.quest);
 
-                    this.onContentLoaded(path, () => meta);
+                        for (var i = 0; i < meta.scripts.length; i++) {
+                            this.loadScript(meta.scripts[i]);
+                        }
+
+                        this.onLoaded = () => {
+                            this.onContentLoaded(path, () => meta);
+
+                            callback(meta);
+                        }
+                    };
                 }
             }
             xhr.send();
