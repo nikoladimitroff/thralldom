@@ -23,7 +23,7 @@ module Thralldom {
             this.actors = <Map<string, ScriptController>> {};
         }
 
-        public tryTrigger(playerCharacter: Character, scene: Thralldom.Scene): boolean {
+        public tryTrigger(playerCharacter: Character, scene: Thralldom.World): boolean {
             var characterPos = GeometryUtils.Vector3To2(playerCharacter.mesh.position);
             var canTrigger = !this.finished && characterPos.distanceToSquared(this.trigger) <= this.triggerRadius * this.triggerRadius;
 
@@ -45,7 +45,7 @@ module Thralldom {
             return canTrigger;
         }
 
-        public disable(scene: Thralldom.Scene): void {
+        public disable(scene: Thralldom.World): void {
             var actors = this.actors;
             for (var name in actors) {
                 var character = scene.selectByDynamicId(name);

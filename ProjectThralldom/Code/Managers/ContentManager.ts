@@ -24,6 +24,11 @@ module Thralldom {
             "guard": Thralldom.AI.Guard,
         }
 
+        public audioContext: any;
+
+        constructor() {
+            this.audioContext = new (<any>window).AudioContext();
+        }
 
         private onContentLoaded(path: string, object: any) {
             this.loaded++;
@@ -36,6 +41,26 @@ module Thralldom {
         }
 
         private onLoaded: () => void;
+
+        private loadAudio(soundName: string, path: string, volume: number): void {
+            this.loading++;
+
+            var request = new XMLHttpRequest();
+            request.open('GET', path, true);
+            request.responseType = 'arraybuffer';
+
+            request.onload = () => {
+                this.audioContext.decodeAudioData(request.response, (decoded) => {
+                    this.onContentLoaded(soundName, () => {
+                        return {
+                            buffer: decoded,
+                            volume: volume
+                        };
+                    });
+                });
+            };
+            request.send();
+        }
 
         private loadTexture(path: string, compressed?: boolean): void {
             
@@ -197,7 +222,7 @@ module Thralldom {
             }
         }
 
-        private loadAI(scene: Thralldom.Scene, graph: Algorithms.IGraph): void {
+        private loadAI(scene: Thralldom.World, graph: Algorithms.IGraph): void {
             scene.aiManager.graph = graph;
 
             for (var typeName in ContentManager.aiControllerTypes) {
@@ -208,11 +233,11 @@ module Thralldom {
             }
         }
 
-        private parseScene(path: string, sceneDescription: any): Thralldom.Scene {
+        private parseScene(path: string, sceneDescription: any): Thralldom.World {
             // Settings first
             this.parseSettings(sceneDescription);
 
-            var scene = new Scene();
+            var scene = new World();
 
             this.parseCollection(sceneDescription.dynamics, ContentManager.dynamicTypes, scene.addDynamic.bind(scene));
             this.parseCollection(sceneDescription.statics, ContentManager.staticTypes, scene.addStatic.bind(scene));
@@ -272,7 +297,6 @@ module Thralldom {
             xhr.send();
         }
 
-
         private loadScript(path: string): void {
             this.loading++;
 
@@ -306,6 +330,9 @@ module Thralldom {
                     }
                     for (var i in assets.models) {
                         this.loadModel(assets.models[i]);
+                    }
+                    for (var i in assets.audio) {
+                        this.loadAudio(assets.audio[i].sound, assets.audio[i].path, assets.audio[i].volume);
                     }
                 }
             }

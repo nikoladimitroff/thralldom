@@ -9,12 +9,12 @@ module Thralldom {
         private static dummyPredicate = (object: DynamicObject) => false;
 
         // MEMLEAK
-        private static _jumpintImpulse: Ammo.btVector3;
+        private static _jumpingImpulse: Ammo.btVector3;
         private static get JumpingImpulse(): Ammo.btVector3 {
-            if (!StateMachineUtils._jumpintImpulse) {
-                StateMachineUtils._jumpintImpulse = new Ammo.btVector3(0, Character.defaultSettings.jumpImpulse, 0);
+            if (!StateMachineUtils._jumpingImpulse) {
+                StateMachineUtils._jumpingImpulse = new Ammo.btVector3(0, Character.defaultSettings.jumpImpulse, 0);
             }
-            return StateMachineUtils._jumpintImpulse;
+            return StateMachineUtils._jumpingImpulse;
         }
 
         private static getDummyState(index: number): State {
@@ -72,8 +72,11 @@ module Thralldom {
 
             var walkingEntry = (previous: number, hero: Character): void => {
 
-                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Walking);
+                if (previous != CharacterStates.Walking) {
+                    AudioManager.instance.playSound("Walking", hero.mesh, true, false);
+                }
 
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Walking);
                 walking.data.isWalking = true;
             }
 
@@ -86,6 +89,8 @@ module Thralldom {
             }
 
             var walkingExit = (next: number, hero: Character): void => {
+                if (next != CharacterStates.Walking)
+                    AudioManager.instance.stopSound("Walking", hero.mesh.id);
             }
 
             var walkingInterupt = (hero: Character): boolean => {
@@ -104,6 +109,10 @@ module Thralldom {
 
             var sprintingEntry = (previous: number, hero: Character): void => {
 
+                if (previous != CharacterStates.Sprinting) {
+                    AudioManager.instance.playSound("Sprinting", hero.mesh, true, false);
+                }
+
                 StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Sprinting);
 
                 sprinting.data.isSprinting = true;
@@ -114,12 +123,14 @@ module Thralldom {
                 StateMachineUtils.ensureAnimationLoop(hero);
 
                 var velocity = hero.setWalkingVelocity(delta, true);
-                //hero.rigidBody.setLinearVelocity(velocity);
 
                 sprinting.data.isSprinting = false;
             }
 
             var sprintingExit = (next: number, hero: Character): void => {
+                if (next != CharacterStates.Sprinting) {
+                    AudioManager.instance.stopSound("Walking", hero.mesh.id);
+                }
             }
 
             var sprintingInterupt = (hero: Character): boolean => {
@@ -205,6 +216,10 @@ module Thralldom {
             var shooting: State;
 
             var shootingEntry = (previous: number, hero: Character): void => {
+
+                AudioManager.instance.playSound("Shooting", hero.mesh, false, false);
+
+
                 StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Shooting);
                 shooting.data.animationFinished = false;
             }
@@ -216,6 +231,7 @@ module Thralldom {
             }
 
             var shootingExit = (next: number, hero: Character): void => {
+
             }
 
             var shootingInterupt = (hero: Character): boolean => {

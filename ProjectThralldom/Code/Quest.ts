@@ -15,7 +15,7 @@ module Thralldom {
             return this.objectives.filter((x) => x.group == this.currentGroup);
         }  
 
-        public update(frameInfo: FrameInfo, scene: Scene): void {
+        public update(frameInfo: FrameInfo, scene: World): void {
             for (var i = 0; i < this.objectives.length; i++) {
                 this.objectives[i].update(frameInfo);
             }

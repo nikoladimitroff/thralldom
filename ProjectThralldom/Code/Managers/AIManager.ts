@@ -21,7 +21,7 @@ module Thralldom {
             this.graph = graph;
         }
 
-        public update(delta: number, scene: Thralldom.Scene) {
+        public update(delta: number, scene: Thralldom.World) {
             for (var i = 0; i < this.controllers.length; i++) {
                 this.controllers[i].update(delta, scene);
             }

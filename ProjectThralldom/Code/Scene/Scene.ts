@@ -1,5 +1,5 @@
 module Thralldom {
-    export class Scene {
+    export class World {
         public dynamics: Array<DynamicObject>;
         public statics: Array<LoadableObject>;
 

@@ -132,7 +132,7 @@ module Thralldom {
 
             public update(frameInfo: FrameInfo) {
                 // Detect all killing blows on the target.
-                var count = Thralldom.Scene.match(this.targetSelector, frameInfo.killedEnemies);
+                var count = Thralldom.World.match(this.targetSelector, frameInfo.killedEnemies);
                 this.achievedKills += count;
                 if (this.achievedKills >= this.requiredKills) {
                     this.isComplete = true;

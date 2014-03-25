@@ -30,7 +30,7 @@ module Thralldom {
                 }
             }
 
-            private scanAround(scene: Thralldom.Scene, guardToTarget: THREE.Vector3, guardToTargetDist: number): void {
+            private scanAround(scene: Thralldom.World, guardToTarget: THREE.Vector3, guardToTargetDist: number): void {
                 var guard = this.character;
 
                 var ray = scene.physicsManager.raycast(guard, this.target);
@@ -51,7 +51,7 @@ module Thralldom {
                 }
             }
 
-            public updateCallback(delta: number, scene: Thralldom.Scene): void {
+            public updateCallback(delta: number, scene: Thralldom.World): void {
 
                 var guard = this.character;
 

@@ -60,7 +60,7 @@ module Thralldom {
             geometry.computeFaceNormals();
             geometry.uvsNeedUpdate = true;
 
-            var material = new THREE.MeshPhongMaterial({ map: content.getContent(ContentLibrary.Textures.RedCheckerPNG) });
+            var material = new THREE.MeshPhongMaterial({ map: content.getContent("Content/Textures/RedChecker.png") });
 
             var node = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial([material]));
             var head = node.geometry.vertices[0];

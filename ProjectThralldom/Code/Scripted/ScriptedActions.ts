@@ -3,7 +3,7 @@ module Thralldom {
 
     export interface IScriptedAction {
         hasCompleted: boolean;
-        update(character: Character, scene: Thralldom.Scene, delta: number): void;
+        update(character: Character, scene: Thralldom.World, delta: number): void;
         begin(): void;
     }
 
@@ -26,7 +26,7 @@ module Thralldom {
             }
         }
 
-        public update(character: Character, scene: Thralldom.Scene, delta: number): void {
+        public update(character: Character, scene: Thralldom.World, delta: number): void {
             for (var i = 0; i < this.actions.length; i++) {
                 this.actions[i].update(character, scene, delta);
             }            
@@ -47,7 +47,7 @@ module Thralldom {
 
         public begin(): void { }
 
-        public update(character: Character, scene: Thralldom.Scene, delta: number): void {
+        public update(character: Character, scene: Thralldom.World, delta: number): void {
             var characterPos = GeometryUtils.Vector3To2(character.mesh.position);
             var diff = new THREE.Vector2();
             diff.subVectors(this.destination, characterPos);
@@ -80,7 +80,7 @@ module Thralldom {
 
         public begin(): void { }
 
-        public update(character: Character, scene: Thralldom.Scene, delta: number): void {
+        public update(character: Character, scene: Thralldom.World, delta: number): void {
             var characterPos = GeometryUtils.Vector3To2(character.mesh.position);
             var diff = new THREE.Vector2();
             diff.subVectors(this.lookat, characterPos);
@@ -113,7 +113,7 @@ module Thralldom {
             this.startTime = Date.now();
         }
 
-        public update(character: Character, scene: Thralldom.Scene, delta: number): void {
+        public update(character: Character, scene: Thralldom.World, delta: number): void {
             character.stateMachine.requestTransitionTo(CharacterStates.Idle);
 
             this.hasCompleted = Math.abs(Date.now() - this.startTime) >= this.delay;

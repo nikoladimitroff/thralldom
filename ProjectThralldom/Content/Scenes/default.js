@@ -18,18 +18,18 @@
         restitution: 0,
         linearDamping: 0.7,
         angularDamping: 1,
-        gravity: -9.8,
+        gravity: -500,
     },
     // No more settings, scene definition
     terrain: {
-        scale: 2000,
+        scale: 250,
         texture: "Grass.jpg",
         repeatTexture: true,
         // If a model is provided, the texture above is ignored
-        model: "objectTerrain.js",
+        model: "terrain.js",
     },
     skybox: {
-        scale: 2000,
+        scale: 10000,
         textures: [
                 "Content/Textures/Skybox/posX.png", 
                 "Content/Textures/Skybox/negX.png", 

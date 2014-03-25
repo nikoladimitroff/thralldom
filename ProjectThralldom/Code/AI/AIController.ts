@@ -18,7 +18,7 @@ module Thralldom {
                 this.character = character;
             }
 
-            public update(delta: number, scene: Thralldom.Scene): void {
+            public update(delta: number, scene: Thralldom.World): void {
                 if (this.script) {
                     this.script.update(this.character, scene, delta);
                 }
@@ -33,7 +33,7 @@ module Thralldom {
                 this.character.stateMachine.update(delta);
             }
 
-            public updateCallback(delta: number, scene: Thralldom.Scene): void {
+            public updateCallback(delta: number, scene: Thralldom.World): void {
 
             }
         }

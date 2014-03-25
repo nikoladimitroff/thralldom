@@ -32,7 +32,7 @@ namespace Thralldom.OfflineTool
             string folder = args[0],
                 destination = args[1];
 
-            CreateContentLibrary(folder, destination);
+            //CreateContentLibrary(folder, destination);
             //FixModelFilesAnimation(folder);
         }
 

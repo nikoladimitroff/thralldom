@@ -35,7 +35,7 @@ module Thralldom {
 
         public static MetaFilePath = "Content/Meta.js";
 
-        public scene: Thralldom.Scene;
+        public scene: Thralldom.World;
         public quest: Thralldom.Quest;
         private scripts: Array<ScriptedEvent>;
         private activeScript: ScriptedEvent;
@@ -47,6 +47,7 @@ module Thralldom {
         // Managers
         private input: InputManager;
         private content: ContentManager;
+        private audio: AudioManager;
         private language: Languages.ILanguagePack;
 
         constructor(container: HTMLElement, updateInterval: number) {
@@ -55,6 +56,7 @@ module Thralldom {
             this.input = new InputManager(container);
             this.language = new Languages.English();
             this.content = new ContentManager();
+            this.audio = new AudioManager(this.content);
             this.clock = new THREE.Clock();
         }
 
@@ -115,6 +117,9 @@ module Thralldom {
             // Axes
             var axes = new THREE.AxisHelper(1000);
             //  this.scene.renderScene.add(axes);
+
+            // Audio
+            this.audio.playSound("Soundtrack", this.cameraController.camera, true, true);
         }
 
         private handleKeyboard(delta: number) {
@@ -217,11 +222,11 @@ module Thralldom {
             this.quest.update(frameInfo, this.scene);
 
             THREE.AnimationHandler.update(0.9 * delta);
+            this.audio.update(this.cameraController.camera);
             this.input.swap();
         }
         
         private draw() {
-            this.update();
             this.stats.begin();
             this.renderer.render(this.scene.renderScene, this.cameraController.camera);
             this.stats.end();

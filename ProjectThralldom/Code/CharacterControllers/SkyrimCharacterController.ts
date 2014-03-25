@@ -32,7 +32,7 @@ module Thralldom {
             private settings: IControllerSettings;
 
             constructor(aspectRatio: number, camSpeed: number, hero: Character, distance: number, bias: THREE.Vector3, skybox: Skybox) {
-                this.camera = new THREE.PerspectiveCamera(60, aspectRatio, 1, 10000);
+                this.camera = new THREE.PerspectiveCamera(60, aspectRatio, 1, 100000);
                 this.hero = hero;
                 this.distance = distance;
                 this.bias = bias;

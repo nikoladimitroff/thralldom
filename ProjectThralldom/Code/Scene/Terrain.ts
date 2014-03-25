@@ -25,7 +25,7 @@ module Thralldom {
                 this.rigidBody = PhysicsManager.computePlaneBody();
             }
             else if (description.model) {
-                var mesh = <THREE.Mesh>content.getContent(ContentLibrary.Models.bore.objectTerrainJS);
+                var mesh = <THREE.Mesh>content.getContent(description.model);
                 mesh.scale.set(scale, scale, scale);
                 this.mesh = mesh;
                 this.rigidBody = PhysicsManager.computeTriangleMeshBody(mesh);

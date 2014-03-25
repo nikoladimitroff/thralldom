@@ -16,24 +16,20 @@
 
     <div id="crosshair"></div>
 
-    <script>
-        // Predefine asm.js values, Default memory is 2^27, quadruple it!
-        //var Module = {
-        //    TOTAL_MEMORY: 1 << 29
-        //}
-    </script>
-
     <!-- External libs -->
     <script src="Scripts/implementations/three.min.js"></script>
+    <script src="Scripts/implementations/Three.Plugins/THREE.AudioObject.js"></script>
     <script src="Scripts/implementations/jquery.documentReady.js"></script>
     <script src="Scripts/implementations/ammo.js"></script>
     <script src="Scripts/implementations/stats.min.js"></script>
+
     <!-- Fonts -->
     <script src="Content/Fonts/Helvetiker.js"></script>
     <!-- /Fonts-->
 
     <!--JS Polyfill-->
     <script src="Code/StringExtensions.js"></script>
+
     <!-- Ours -->
 
     <!-- Constants -->
@@ -53,25 +49,35 @@
     <script src="Code/Scripted/ScriptedActions.js"></script>
     <script src="Code/Scripted/ScriptedEvent.js"></script>
     <script src="Code/Scripted/ScriptController.js"></script>
-
     <!-- /Scripted-->
 
+    <!-- Audio -->
+    <!-- /Audio -->
+
+    <!-- Character controllers & AI -->
     <script src="Code/CharacterControllers/SkyrimCharacterController.js"></script>
     <script src="Code/AI/AIController.js"></script>
     <script src="Code/AI/Citizen.js"></script>
     <script src="Code/AI/Guard.js"></script>
+    <!-- /Character controllers & AI -->
 
+    <!-- State machine -->
     <script src="Code/StateMachine/State.js"></script>
     <script src="Code/StateMachine/StateMachine.js"></script>
     <script src="Code/StateMachine/StateMachineUtils.js"></script>
+    <!-- /State machine -->
 
+    <!-- Managers -->
     <script src="Code/Utilities.js"></script>
     <script src="Code/GeometryUtils.js"></script>
     <script src="Code/Managers/MouseData.js"></script>
     <script src="Code/Managers/InputManager.js"></script>
     <script src="Code/Managers/PhysicsManager.js"></script>
     <script src="Code/Managers/AIManager.js"></script>
+    <script src="Code/Managers/AudioManager.js"></script>
+    <!-- Managers -->
 
+    <!-- Scene -->
     <script src="Code/Scene/Scene.js"></script>
     <script src="Code/Objectives.js"></script>
     <script src="Code/Quest.js"></script>
@@ -85,9 +91,9 @@
     <script src="Code/Scene/Character.js"></script>
     <script src="Code/Scene/Ammunition.js"></script>
     <script src="Code/Scene/LaserOfDeath.js"></script>
+    <!-- Scene -->
 
     <!-- Content -->
-    <script src="Code/Managers/ContentLibrary.js"></script>
     <script src="Code/Managers/ContentManager.js"></script>
     <!-- /Content -->
 
