@@ -325,14 +325,14 @@ module Thralldom {
 
                 this.loadAssets(meta.assets);
 
-                for (var i = 0; i < meta.scripts.length; i++) {
-                    this.loadScript(meta.scripts[i]);
-                }
-
                 this.onLoaded = () => {
                     // Once all the assets have been loaded, load the world and quests since they depend on the assets
                     this.loadWorld(meta.world);
                     this.loadQuest(meta.quest);
+                    for (var i = 0; i < meta.scripts.length; i++) {
+                        this.loadScript(meta.scripts[i]);
+                    }
+
 
                     this.onLoaded = () => {
                         this.onContentLoaded(path, () => meta);

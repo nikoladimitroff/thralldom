@@ -92,6 +92,7 @@
     <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.js" />
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Models\Terrain\terrain.js" />
+    <Content Include="Content\Models\Terrain\terrainTextureMicro.jpg" />
     <Content Include="Content\Models\Terrain\terrainTextureSmall.jpg" />
     <Content Include="Content\Models\Terrain\terrainTexture.jpg" />
     <Content Include="Content\Quests\default.js" />
