@@ -42,14 +42,21 @@ module Thralldom {
 
         private onLoaded: () => void;
 
-        private loadAudio(soundName: string, path: string, volume: number): void {
-            this.loading++;
+        private ajaxLoad(path: string, callback: (xhr: XMLHttpRequest) => void, isContent: boolean = true, responseType?: string) {
+            if (isContent)
+                this.loading++;
 
             var request = new XMLHttpRequest();
             request.open('GET', path, true);
-            request.responseType = 'arraybuffer';
+            if (responseType)
+                request.responseType = responseType;
 
-            request.onload = () => {
+            request.onload = () => { callback(request); };
+            request.send();
+        }
+
+        private loadAudio(soundName: string, path: string, volume: number): void {
+            this.ajaxLoad(path, (request: XMLHttpRequest) => {
                 this.audioContext.decodeAudioData(request.response, (decoded) => {
                     this.onContentLoaded(soundName, () => {
                         return {
@@ -58,27 +65,18 @@ module Thralldom {
                         };
                     });
                 });
-            };
-            request.send();
+            }, true, "arraybuffer");
         }
 
         private loadSubtitles(path: string): void {
-            this.loading++;
-
-            var request = new XMLHttpRequest();
-            request.open('GET', path, true);
-
-            request.onload = () => { 
+            this.ajaxLoad(path, (request: XMLHttpRequest) => {
                 var subtitles = Subs.parse(request.responseText);
                 this.onContentLoaded(path, () => subtitles);
-            };
-            request.send();
+            });
         }
 
         private loadTexture(path: string, compressed?: boolean): void {
-            
             this.loading++;
-
             if (compressed) {
                 throw new Error("not supported");
             }
@@ -101,30 +99,17 @@ module Thralldom {
         }
 
         private loadAnimationData(path: string): void {
-            this.loading++;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 404) {
-                        console.log("WARNING: Can't find animations file for model: " + path);
-                        return;
-                    }
-
-                    var animDescription = eval("Object(" + xhr.responseText + ")");
-                    var animationData = [];
-                    for (var animation in animDescription) {
-                        var normalizedName = animation[0].toUpperCase() + animation.substr(1).toLowerCase();    
-                        animationData[CharacterStates[normalizedName]] = animDescription[animation];
-                    }
-
-                    var duplicate = () => animationData;
-                    this.onContentLoaded(path, duplicate);
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var animDescription = eval("Object(" + xhr.responseText + ")");
+                var animationData = [];
+                for (var animation in animDescription) {
+                    var normalizedName = animation[0].toUpperCase() + animation.substr(1).toLowerCase();
+                    animationData[CharacterStates[normalizedName]] = animDescription[animation];
                 }
-            };
-            xhr.send();
+
+                var duplicate = () => animationData;
+                this.onContentLoaded(path, duplicate);
+            });
         }
 
         public getAnimationFilePath(meshPath: string): string {
@@ -164,7 +149,7 @@ module Thralldom {
                 ensureLoop(geometry.animation);
                 geometry.animation.name += path;
                 THREE.AnimationHandler.add(geometry.animation);
-                
+
                 for (var i = 0; i < materials.length; i++) {
 
                     var m = <any> materials[i];
@@ -275,121 +260,86 @@ module Thralldom {
         }
 
         private loadWorld(path: string): void {
-            this.loading++;
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var worldDescription = eval("Object(" + xhr.responseText + ")");
+                var world = this.parseWorld(path, worldDescription);
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    var worldDescription = eval("Object(" + xhr.responseText + ")");
-                    var world = this.parseWorld(path, worldDescription);
-
-                    this.onContentLoaded(path, () => world);
-                }
-            };
-            xhr.send();
+                this.onContentLoaded(path, () => world);
+            });
         }
 
         private loadQuest(path: string): void {
-            this.loading++;
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var questDescription = eval("Object(" + xhr.responseText + ")");
+                var quest = new Quest();
+                quest.name = quest["name"];
+                this.parseCollection(questDescription.objectives, ContentManager.objectiveTypes, quest.objectives.push.bind(quest.objectives));
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    var questDescription = eval("Object(" + xhr.responseText + ")");
-                    var quest = new Quest();
-                    quest.name = quest["name"];
-                    this.parseCollection(questDescription.objectives, ContentManager.objectiveTypes, quest.objectives.push.bind(quest.objectives));
-
-                    this.onContentLoaded(path, () => quest);
-                }
-            }
-            xhr.send();
+                this.onContentLoaded(path, () => quest);
+            });
         }
 
         private loadScript(path: string): void {
-            this.loading++;
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var scriptDescription = xhr.responseText;
+                var script = new ScriptedEvent();
+                script.loadFromDescription(scriptDescription, this);
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    var scriptDescription = xhr.responseText;
-                    var script = new ScriptedEvent();
-                    script.loadFromDescription(scriptDescription, this);
-
-                    this.onContentLoaded(path, () => script);
-                }
-            }
-            xhr.send();
+                this.onContentLoaded(path, () => script);
+            });
         }
 
         private loadAssets(path: string): void {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    var assets = eval("Object(" + xhr.responseText + ")");
-                    for (var i in assets.textures) {
-                        this.loadTexture(assets.textures[i]);
-                    }
-                    for (var i in assets.skinned) {
-                        this.loadSkinnedModel(assets.skinned[i].path, assets.skinned[i].animationData);
-                    }
-                    for (var i in assets.models) {
-                        this.loadModel(assets.models[i]);
-                    }
-                    for (var i in assets.audio) {
-                        this.loadAudio(assets.audio[i].sound, assets.audio[i].path, assets.audio[i].volume);
-                    }
-                    for (var i in assets.subtitles) {
-                        this.loadSubtitles(assets.subtitles[i]);
-                    }
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var assets = eval("Object(" + xhr.responseText + ")");
+                for (var i in assets.textures) {
+                    this.loadTexture(assets.textures[i]);
                 }
-            }
-            xhr.send();
+                for (var i in assets.skinned) {
+                    this.loadSkinnedModel(assets.skinned[i].path, assets.skinned[i].animationData);
+                }
+                for (var i in assets.models) {
+                    this.loadModel(assets.models[i]);
+                }
+                for (var i in assets.audio) {
+                    this.loadAudio(assets.audio[i].sound, assets.audio[i].path, assets.audio[i].volume);
+                }
+                for (var i in assets.subtitles) {
+                    this.loadSubtitles(assets.subtitles[i]);
+                }
+            }, false);
         }
 
 
         public loadMeta(path: string, callback: (meta: IMetaGameData) => void): void {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
 
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    var meta: IMetaGameData = eval("Object(" + xhr.responseText + ")");
+                var meta: IMetaGameData = eval("Object(" + xhr.responseText + ")");
 
-                    if (!meta.world) {
-                        throw new Error("Must provide a World!");
-                    }
-                    if (!meta.quest) {
-                        throw new Error("Must provide a quest!");
-                    }
-
-                    this.loadAssets(meta.assets);
-                    this.onLoaded = () => {
-
-                        this.loadWorld(meta.world);
-                        this.loadQuest(meta.quest);
-
-                        for (var i = 0; i < meta.scripts.length; i++) {
-                            this.loadScript(meta.scripts[i]);
-                        }
-
-                        this.onLoaded = () => {
-                            this.onContentLoaded(path, () => meta);
-
-                            callback(meta);
-                        }
-                    };
+                if (!meta.world) {
+                    throw new Error("Must provide a World!");
                 }
-            }
-            xhr.send();
+                if (!meta.quest) {
+                    throw new Error("Must provide a quest!");
+                }
+
+                this.loadAssets(meta.assets);
+
+                for (var i = 0; i < meta.scripts.length; i++) {
+                    this.loadScript(meta.scripts[i]);
+                }
+
+                this.onLoaded = () => {
+                    // Once all the assets have been loaded, load the world and quests since they depend on the assets
+                    this.loadWorld(meta.world);
+                    this.loadQuest(meta.quest);
+
+                    this.onLoaded = () => {
+                        this.onContentLoaded(path, () => meta);
+                        callback(meta);
+                    }
+                };
+            }, false);
         }
 
         private extractFileName(path: string): string {

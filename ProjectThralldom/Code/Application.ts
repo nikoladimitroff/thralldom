@@ -109,11 +109,15 @@ module Thralldom {
             this.ammunitions = new Array<Ammunition>();
 
             // Lights
-            var pointLight = new THREE.PointLight(0xffffff, 2, 100);
-            pointLight.position = new THREE.Vector3(0, 100, 30);
+            var pointLight = new THREE.PointLight(0xffffff, 2, 5000);
+            pointLight.position = new THREE.Vector3(0, 0, 30);
             this.world.renderScene.add(pointLight);
-            var ambient = new THREE.AmbientLight(0xffffff);
-            this.world.renderScene.add(ambient);
+            //var ambient = new THREE.AmbientLight(0xffffff);
+            //this.world.renderScene.add(ambient);
+
+            //var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            //directionalLight.position.set(0, 1, 0);
+            //this.world.renderScene.add(directionalLight);
 
             // Axes
             var axes = new THREE.AxisHelper(1000);
