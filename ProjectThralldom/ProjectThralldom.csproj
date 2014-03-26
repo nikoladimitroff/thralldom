@@ -101,6 +101,7 @@
       <DependentUpon>StringExtensions.min.js</DependentUpon>
     </Content>
     <None Include="Content\Scripts\RandomStuff.script" />
+    <Content Include="Content\Sounds\dialog.mp3" />
     <Content Include="Content\Sounds\footsteps.mp3" />
     <Content Include="Content\Sounds\forest_background.mp3" />
     <Content Include="Content\Sounds\gunshot.mp3" />
@@ -137,6 +138,7 @@
     <Content Include="packages.config" />
     <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.anim" />
     <Content Include="Content\Subtitles\Liars.srt" />
+    <Content Include="Content\Subtitles\dialog.srt" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

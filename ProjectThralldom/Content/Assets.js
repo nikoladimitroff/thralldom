@@ -39,10 +39,16 @@
             sound: "Soundtrack",
             path: "Content/Sounds/forest_background.mp3",
             // Set background music to low level, else nothing else can't be heard
-            volume: 0.1,
+            volume: 0,
+        },
+        {
+            sound: "dialog",
+            path: "Content/Sounds/dialog.mp3",
+            volume: 1,
         },
     ],
     subtitles: [
         "Content/Subtitles/Liars.srt",
+        "Content/Subtitles/dialog.srt",
     ]
 }

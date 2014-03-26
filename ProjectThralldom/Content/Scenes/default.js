@@ -22,7 +22,7 @@
     },
     // No more settings, scene definition
     terrain: {
-        scale: 250,
+        scale: 600,
         texture: "Grass.jpg",
         repeatTexture: true,
         // If a model is provided, the texture above is ignored

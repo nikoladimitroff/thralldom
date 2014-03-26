@@ -11,14 +11,21 @@ Subs.timer = {
 
 Subs.updateInterval = 100;
 
-Subs.Subtitles = function (text, domElement) {
-    this.text = text;
+Subs.Subtitles = function (domElement, text) {
     this.subCont = domElement;
+    this.text = text;
 
 
     this.showing = false;
     this.active = 0;
     this.currTime = 0;
+}
+
+Subs.fixDomElement = function (domElement) {
+    Subs.FixedSubtitles = Subs.Subtitles.bind(undefined, domElement);
+}
+Subs.FixedSubtitles = function () {
+    throw new Error("You must call Subs.fixdomElement before using fixed subtitles!");
 }
 
 Subs.playSubtitles = function (subtitles) {

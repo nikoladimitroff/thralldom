@@ -15,7 +15,8 @@ module Thralldom {
         private clock: THREE.Clock;
         private cameraController: CharacterControllers.ICharacterController;
         private renderer: THREE.WebGLRenderer;
-        private container: HTMLElement;
+        private webglContainer: HTMLElement;
+        private subtitleContainer: HTMLSpanElement;
 
         // stats
         private stats: Stats;
@@ -52,7 +53,7 @@ module Thralldom {
         private language: Languages.ILanguagePack;
 
         constructor(container: HTMLElement, updateInterval: number) {
-            this.container = container;
+            this.webglContainer = container;
             this.updateInterval = updateInterval;
             this.input = new InputManager(container);
             this.language = new Languages.English();
@@ -77,8 +78,8 @@ module Thralldom {
             this.scripts = <Array<ScriptedEvent>> meta.scripts.map((file) => this.content.getContent(file));
             this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
-            this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
-            this.container.appendChild(this.renderer.domElement);
+            this.renderer.setSize(this.webglContainer.offsetWidth, this.webglContainer.offsetHeight);
+            this.webglContainer.appendChild(this.renderer.domElement);
 
             // Request pointer lock
             if (Thralldom.InputManager.isMouseLockSupported())
@@ -94,7 +95,7 @@ module Thralldom {
             this.hero = <Character> this.world.select("#hero")[0];
             // Camera controller
             this.cameraController = new CharacterControllers.SkyrimCharacterController(
-                this.container.offsetWidth / this.container.offsetHeight,
+                this.webglContainer.offsetWidth / this.webglContainer.offsetHeight,
                 Application.zoomSpeed,
                 this.hero,
                 70,
@@ -126,7 +127,9 @@ module Thralldom {
             // Audio
             this.audio.playSound("Soundtrack", this.cameraController.camera, true, true);
 
-            var subs = new Subs.Subtitles(this.content.getContent("Liars.srt"), <HTMLElement> document.querySelector("#subtitles span"));
+            var subtitleContainer = <HTMLSpanElement> document.querySelector("#subtitles span");
+            Subs.fixDomElement(subtitleContainer);
+            var subs = new Subs.FixedSubtitles(this.content.getContent("Liars.srt"));
             Subs.playSubtitles(subs);
         }
 
@@ -250,7 +253,7 @@ module Thralldom {
         public run(): void {
             this.content.loadMeta(Application.MetaFilePath, (meta: IMetaGameData) => {
                 this.init(meta);
-                window.addEventListener("resize", Utilities.GetOnResizeHandler(this.container, this.renderer, this.cameraController.camera));
+                window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
                 this.loop();
             });
         }
