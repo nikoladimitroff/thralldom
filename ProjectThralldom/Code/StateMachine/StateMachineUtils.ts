@@ -129,7 +129,7 @@ module Thralldom {
 
             var sprintingExit = (next: number, hero: Character): void => {
                 if (next != CharacterStates.Sprinting) {
-                    AudioManager.instance.stopSound("Walking", hero.mesh.id);
+                    AudioManager.instance.stopSound("Sprinting", hero.mesh.id);
                 }
             }
 
