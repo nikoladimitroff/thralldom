@@ -41,5 +41,8 @@
             // Set background music to low level, else nothing else can't be heard
             volume: 0.1,
         },
+    ],
+    subtitles: [
+        "Content/Subtitles/Liars.srt",
     ]
 }

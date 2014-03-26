@@ -15,7 +15,7 @@ module Thralldom {
             return this.objectives.filter((x) => x.group == this.currentGroup);
         }  
 
-        public update(frameInfo: FrameInfo, scene: World): void {
+        public update(frameInfo: FrameInfo, world: World): void {
             for (var i = 0; i < this.objectives.length; i++) {
                 this.objectives[i].update(frameInfo);
             }
@@ -25,11 +25,11 @@ module Thralldom {
             if (active.every((x) => x.isComplete)) {
                 this.currentGroup++;
                 for (var i = 0; i < active.length; i++) {
-                    scene.remove(active[i]);
+                    world.remove(active[i]);
                 }
                 var next = this.getActiveObjectives();
                 for (var i = 0; i < next.length; i++) {
-                    scene.addDrawable(next[i]);
+                    world.addDrawable(next[i]);
                 }
             }
         }

@@ -33,7 +33,7 @@ module Thralldom {
                     var character = scene.selectByDynamicId(name);
                     var controller = scene.aiManager.controllers.filter((controller) => controller.character == character)[0];
                     if (!controller) {
-                        console.log(Utilities.formatString("No matching character with id {0} found when activatin script", name));
+                        console.warn(Utilities.formatString("No matching character with id {0} found when activatin script", name));
                         actors[name].finished = true;
                         continue;
                     }
@@ -45,13 +45,13 @@ module Thralldom {
             return canTrigger;
         }
 
-        public disable(scene: Thralldom.World): void {
+        public disable(world: Thralldom.World): void {
             var actors = this.actors;
             for (var name in actors) {
-                var character = scene.selectByDynamicId(name);
-                var controller = scene.aiManager.controllers.filter((controller) => controller.character == character)[0];
+                var character = world.selectByDynamicId(name);
+                var controller = world.aiManager.controllers.filter((controller) => controller.character == character)[0];
                 if (!controller) {
-                    console.log(Utilities.formatString("No matching character with id {0} found when disabling script", name));
+                    console.warn(Utilities.formatString("No matching character with id {0} found when disabling script", name));
                     continue;
                 }
                 controller.script = null;

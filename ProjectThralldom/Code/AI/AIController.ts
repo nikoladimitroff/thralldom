@@ -18,12 +18,12 @@ module Thralldom {
                 this.character = character;
             }
 
-            public update(delta: number, scene: Thralldom.World): void {
+            public update(delta: number, world: Thralldom.World): void {
                 if (this.script) {
-                    this.script.update(this.character, scene, delta);
+                    this.script.update(this.character, world, delta);
                 }
                 else {
-                    this.updateCallback(delta, scene);
+                    this.updateCallback(delta, world);
                 }
 
 
@@ -33,7 +33,7 @@ module Thralldom {
                 this.character.stateMachine.update(delta);
             }
 
-            public updateCallback(delta: number, scene: Thralldom.World): void {
+            public updateCallback(delta: number, world: Thralldom.World): void {
 
             }
         }

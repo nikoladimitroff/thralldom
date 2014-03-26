@@ -1,8 +1,9 @@
 module Thralldom {
     export interface IMetaGameData {
-        scene: string;
+        world: string;
         quest: string;
         scripts: Array<string>;
+        assets: string;
     }
 
     export class Application {
@@ -35,7 +36,7 @@ module Thralldom {
 
         public static MetaFilePath = "Content/Meta.js";
 
-        public scene: Thralldom.World;
+        public world: Thralldom.World;
         public quest: Thralldom.Quest;
         private scripts: Array<ScriptedEvent>;
         private activeScript: ScriptedEvent;
@@ -71,7 +72,7 @@ module Thralldom {
             this.stats.domElement.style.bottom = '0px';
             document.body.appendChild(this.stats.domElement);
 
-            this.scene = this.content.getContent(meta.scene);
+            this.world = this.content.getContent(meta.world);
             this.quest = this.content.getContent(meta.quest);
             this.scripts = <Array<ScriptedEvent>> meta.scripts.map((file) => this.content.getContent(file));
             this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -88,9 +89,9 @@ module Thralldom {
             //Utilities.setWindowFocusListener((isVisible) => this.isOnFocus = isVisible);
             this.isOnFocus = true;
 
-            // Scene 
+            // World 
 
-            this.hero = <Character> this.scene.select("#hero")[0];
+            this.hero = <Character> this.world.select("#hero")[0];
             // Camera controller
             this.cameraController = new CharacterControllers.SkyrimCharacterController(
                 this.container.offsetWidth / this.container.offsetHeight,
@@ -98,11 +99,11 @@ module Thralldom {
                 this.hero,
                 70,
                 new THREE.Vector3(0, 25, 0),
-                <Skybox>this.scene.select("~skybox")[0]);
+                <Skybox>this.world.select("~skybox")[0]);
 
 
             // npcs
-            this.npcs = <Array<Character>> this.scene.select(".npc");
+            this.npcs = <Array<Character>> this.world.select(".npc");
 
             // ammo
             this.ammunitions = new Array<Ammunition>();
@@ -110,9 +111,9 @@ module Thralldom {
             // Lights
             var pointLight = new THREE.PointLight(0xffffff, 2, 100);
             pointLight.position = new THREE.Vector3(0, 100, 30);
-            this.scene.renderScene.add(pointLight);
+            this.world.renderScene.add(pointLight);
             var ambient = new THREE.AmbientLight(0xffffff);
-            this.scene.renderScene.add(ambient);
+            this.world.renderScene.add(ambient);
 
             // Axes
             var axes = new THREE.AxisHelper(1000);
@@ -120,6 +121,9 @@ module Thralldom {
 
             // Audio
             this.audio.playSound("Soundtrack", this.cameraController.camera, true, true);
+
+            var subs = new Subs.Subtitles(this.content.getContent("Liars.srt"), <HTMLElement> document.querySelector("#subtitles span"));
+            Subs.playSubtitles(subs);
         }
 
         private handleKeyboard(delta: number) {
@@ -148,7 +152,7 @@ module Thralldom {
         private triggerScriptedEvents(): void {
             if (this.activeScript) {
                 if (this.activeScript.finished) {
-                    this.activeScript.disable(this.scene);
+                    this.activeScript.disable(this.world);
 
                     var index = this.scripts.indexOf(this.activeScript);
                     this.scripts[index] = this.scripts[this.scripts.length - 1];
@@ -163,7 +167,7 @@ module Thralldom {
 
             for (var i = 0; i < this.scripts.length; i++) {
                 var script = this.scripts[i];
-                if (script.tryTrigger(this.hero, this.scene)) {
+                if (script.tryTrigger(this.hero, this.world)) {
                     this.activeScript = script;
                     console.log("triggering");
 
@@ -199,13 +203,13 @@ module Thralldom {
                 Utilities.formatString("Current anim time: {0}\n", currentAnimTime.toFixed(6)) + 
                 questText;
 
-            var frameInfo = new FrameInfo(this.scene, this.hero, []);
+            var frameInfo = new FrameInfo(this.world, this.hero, []);
             // Reverse loop so that we can remove elements from the array.
             for (var i = this.npcs.length - 1; i > - 1; i--) {
                 if (this.npcs[i].health <= 0) {
                     frameInfo.killedEnemies.push(this.npcs[i]);
 
-                    this.scene.remove(this.npcs[i]);
+                    this.world.remove(this.npcs[i]);
                     this.npcs.splice(i, 1);
                 }
             }
@@ -213,13 +217,13 @@ module Thralldom {
             for (var i = this.ammunitions.length - 1; i > -1; i--) {
                 var ammo = this.ammunitions[i];
                 if (!ammo.isNeeded()) {
-                    this.scene.remove(ammo);
+                    this.world.remove(ammo);
                     this.ammunitions.splice(i, 1);
                 }
             }
 
-            this.scene.update(delta);
-            this.quest.update(frameInfo, this.scene);
+            this.world.update(delta);
+            this.quest.update(frameInfo, this.world);
 
             THREE.AnimationHandler.update(0.9 * delta);
             this.audio.update(this.cameraController.camera);
@@ -228,7 +232,7 @@ module Thralldom {
         
         private draw() {
             this.stats.begin();
-            this.renderer.render(this.scene.renderScene, this.cameraController.camera);
+            this.renderer.render(this.world.renderScene, this.cameraController.camera);
             this.stats.end();
         }
 

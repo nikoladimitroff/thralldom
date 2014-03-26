@@ -30,10 +30,10 @@ module Thralldom {
                 }
             }
 
-            private scanAround(scene: Thralldom.World, guardToTarget: THREE.Vector3, guardToTargetDist: number): void {
+            private scanAround(world: Thralldom.World, guardToTarget: THREE.Vector3, guardToTargetDist: number): void {
                 var guard = this.character;
 
-                var ray = scene.physicsManager.raycast(guard, this.target);
+                var ray = world.physicsManager.raycast(guard, this.target);
                 if (ray.hasHit()) {
 
                     var guardForward = new THREE.Vector3(0, 0, 1);
@@ -51,11 +51,11 @@ module Thralldom {
                 }
             }
 
-            public updateCallback(delta: number, scene: Thralldom.World): void {
+            public updateCallback(delta: number, world: Thralldom.World): void {
 
                 var guard = this.character;
 
-                this.target = <Character> scene.select("#hero")[0];
+                this.target = <Character> world.select("#hero")[0];
 
                 var guardToTarget = new THREE.Vector3();
                 guardToTarget.subVectors(this.target.mesh.position, guard.mesh.position);
@@ -65,7 +65,7 @@ module Thralldom {
                     this.chaseOrAttack(guardToTarget, guardToTargetDist);
                 }
                 else {
-                    this.scanAround(scene, guardToTarget, guardToTargetDist);
+                    this.scanAround(world, guardToTarget, guardToTargetDist);
                 }
             }
         }

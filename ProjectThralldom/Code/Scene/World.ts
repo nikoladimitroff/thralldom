@@ -110,7 +110,7 @@ module Thralldom {
         }
 
         /*
-         * Adds a static object to the scene. Note that this method does NOT check whether the id of the object already exists. May cause problems later.
+         * Adds a static object to the world. Note that this method does NOT check whether the id of the object already exists. May cause problems later.
         */
         public addStatic(object: LoadableObject): void {
             this.statics.push(object);
@@ -122,7 +122,7 @@ module Thralldom {
         }
 
         /*
-         * Adds a dynamic object to the scene. Note that this method does NOT check whether the id of the object already exists. May cause problems later.
+         * Adds a dynamic object to the world. Note that this method does NOT check whether the id of the object already exists. May cause problems later.
         */
         public addDynamic(object: DynamicObject): void {
             this.dynamics.push(object);
