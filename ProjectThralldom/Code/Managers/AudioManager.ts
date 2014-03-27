@@ -53,6 +53,10 @@ module Thralldom {
             }
         }
 
+        public hasFinished(sound: string, object: THREE.Object3D): boolean {
+            return this.active[sound][object.id] == undefined;
+        }
+
         public update(camera: THREE.Camera): void {
             for (var sound in this.active) {
                 for (var id in this.active[sound]) {

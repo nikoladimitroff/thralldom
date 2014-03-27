@@ -75,7 +75,7 @@ module Thralldom {
             public update(frameInfo: FrameInfo) {
                 var offset = 0;
                 if (this.targetSelector) {
-                    var target = frameInfo.scene.select(this.targetSelector)[0].mesh;
+                    var target = frameInfo.world.select(this.targetSelector)[0].mesh;
                     this.target = target.position;
                     offset = Objective.getMarkerOffset(target);
                 }
@@ -139,7 +139,7 @@ module Thralldom {
                 }
                 var heroPos: THREE.Vector3 = frameInfo.hero.mesh.position;
                 var targets: Array<LoadableObject> =
-                    frameInfo.scene.select(this.targetSelector).sort(KillObjective.getCloserTargetComparer(heroPos));
+                    frameInfo.world.select(this.targetSelector).sort(KillObjective.getCloserTargetComparer(heroPos));
                 if (targets.length == 0) {
                     throw new Error("No enemies of this type alive!");
                 }

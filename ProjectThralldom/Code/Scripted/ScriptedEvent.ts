@@ -1,6 +1,6 @@
 module Thralldom {
     export class ScriptedEvent implements ILoadable {
-        private actions: Map<String, Function> = <Map<String, Function>> [GotoAction, LookAt, WaitFor].reduce((previous: any, current) => {
+        private actions: Map<String, Function> = <Map<String, Function>> [GotoAction, LookAtAction, WaitAction, DialogAction].reduce((previous: any, current) => {
             previous[current.Keyword] = current;
             return previous;
         }, {});
@@ -33,7 +33,7 @@ module Thralldom {
                     var character = scene.selectByDynamicId(name);
                     var controller = scene.aiManager.controllers.filter((controller) => controller.character == character)[0];
                     if (!controller) {
-                        console.log(Utilities.formatString("No matching character with id {0} found when activatin script", name));
+                        console.warn(Utilities.formatString("No matching character with id {0} found when activatin script", name));
                         actors[name].finished = true;
                         continue;
                     }
@@ -45,20 +45,20 @@ module Thralldom {
             return canTrigger;
         }
 
-        public disable(scene: Thralldom.World): void {
+        public disable(world: Thralldom.World): void {
             var actors = this.actors;
             for (var name in actors) {
-                var character = scene.selectByDynamicId(name);
-                var controller = scene.aiManager.controllers.filter((controller) => controller.character == character)[0];
+                var character = world.selectByDynamicId(name);
+                var controller = world.aiManager.controllers.filter((controller) => controller.character == character)[0];
                 if (!controller) {
-                    console.log(Utilities.formatString("No matching character with id {0} found when disabling script", name));
+                    console.warn(Utilities.formatString("No matching character with id {0} found when disabling script", name));
                     continue;
                 }
                 controller.script = null;
             }
         }
 
-        private parseAction(line: string): IScriptedAction {
+        private parseAction(line: string, content: ContentManager): IScriptedAction {
             // Skip if the line contains only whitespace
             if (line.match(/\s*/g)[0] == line) {
                 return;
@@ -69,12 +69,12 @@ module Thralldom {
             for (var i = 0; i < descriptors.length; i++) {
                 var type = descriptors[i].substr(0, descriptors[i].indexOf(' '));
                 var args = descriptors[i].substr(descriptors[i].indexOf(' ') + 1);
-                var action = new this.actions[type](args);
+                var action = new this.actions[type](args, content);
                 actions.push(action);
             }
             if (actions.length == 1) 
                 return actions[0]
-            return new MultiAction(actions);
+            return new MultiAction(actions, content);
         }
 
         public loadFromDescription(script: string, content: ContentManager): void {
@@ -100,7 +100,7 @@ module Thralldom {
                 var actor = lines.shift().replace(hashtag, "").replace(column, "");
                 var sequence = [];
                 for (var j = 0; j < lines.length; j++) {
-                    var action = this.parseAction(lines[j]);
+                    var action = this.parseAction(lines[j], content);
                     sequence.push(action);
                 }
                 this.actors[actor] = new ScriptController(sequence);

@@ -6,7 +6,7 @@ module Thralldom {
                 super(character, graph);
             }
 
-            public updateCallback(delta: number, scene: Thralldom.World): void {
+            public updateCallback(delta: number, world: Thralldom.World): void {
 
                 var character = this.character;
 

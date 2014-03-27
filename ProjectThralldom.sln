@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectThralldom", "Project
 		{C0066C4C-9711-4D06-A54B-5FF3E1B630A6} = {C0066C4C-9711-4D06-A54B-5FF3E1B630A6}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB97F3B6-BF9A-4FD7-9C4F-8A3404DE61A1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thralldom.OfflineTool", "Thralldom.OfflineTool\Thralldom.OfflineTool.csproj", "{C0066C4C-9711-4D06-A54B-5FF3E1B630A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thralldom.Editor", "Thralldom.Editor\Thralldom.Editor.csproj", "{C8EDC26A-B884-4C48-9716-B586C5F73494}"

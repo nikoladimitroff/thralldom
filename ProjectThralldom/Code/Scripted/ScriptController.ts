@@ -16,12 +16,12 @@ module Thralldom {
             this.sequence[this.current].begin();
         }
 
-        public update(character: Character, scene: Thralldom.World, delta: number): void {
+        public update(character: Character, world: Thralldom.World, delta: number): void {
             if (this.finished) {
                 //return;
             }
 
-            this.sequence[this.current].update(character, scene, delta);
+            this.sequence[this.current].update(character, world, delta);
 
             if (this.sequence[this.current].hasCompleted) {
                 this.current++;

@@ -5,7 +5,7 @@ module Thralldom {
     export class FrameInfo {
         private _hero: Character;
         private _killedEnemies: Array<Character>;
-        private _scene: Thralldom.World;
+        private _world: Thralldom.World;
 
         public get hero(): Character {
             return this._hero;
@@ -15,12 +15,12 @@ module Thralldom {
             return this._killedEnemies;
         }
 
-        public get scene(): Thralldom.World {
-            return this._scene;
+        public get world(): Thralldom.World {
+            return this._world;
         }
 
-        constructor(scene: Thralldom.World, hero: Character, enemies: Array<Character>) {
-            this._scene = scene;
+        constructor(world: Thralldom.World, hero: Character, enemies: Array<Character>) {
+            this._world = world;
             this._hero = hero;
             this._killedEnemies = enemies;
         }

@@ -57,9 +57,18 @@ nav {
 }
 
 #subtitles {
-    max-width: 70%;
-    max-height: 40%;
-    margin: auto;
-    margin-top: 35%;
-    border: 1px solid black;
+    font-size: x-large;
+    position: absolute;
+    width: 60%;
+    bottom: 20%;
+    left: 50%;
+    margin: 0 0 0 -30%;
+
+    text-align: center;
+    color: white;
+    z-index: 999999;
+}
+
+#subtitles span {
+    background-color: black;
 }

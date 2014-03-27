@@ -29,6 +29,7 @@ module Thralldom {
                 mesh.scale.set(scale, scale, scale);
                 this.mesh = mesh;
                 this.rigidBody = PhysicsManager.computeTriangleMeshBody(mesh);
+                this.mesh.receiveShadow = true;
             }
             else {
                 throw new Error("Can't load terrain, please provide a texture or a model!");

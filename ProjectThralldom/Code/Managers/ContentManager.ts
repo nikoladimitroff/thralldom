@@ -42,14 +42,21 @@ module Thralldom {
 
         private onLoaded: () => void;
 
-        private loadAudio(soundName: string, path: string, volume: number): void {
-            this.loading++;
+        private ajaxLoad(path: string, callback: (xhr: XMLHttpRequest) => void, isContent: boolean = true, responseType?: string) {
+            if (isContent)
+                this.loading++;
 
             var request = new XMLHttpRequest();
             request.open('GET', path, true);
-            request.responseType = 'arraybuffer';
+            if (responseType)
+                request.responseType = responseType;
 
-            request.onload = () => {
+            request.onload = () => { callback(request); };
+            request.send();
+        }
+
+        private loadAudio(soundName: string, path: string, volume: number): void {
+            this.ajaxLoad(path, (request: XMLHttpRequest) => {
                 this.audioContext.decodeAudioData(request.response, (decoded) => {
                     this.onContentLoaded(soundName, () => {
                         return {
@@ -58,14 +65,18 @@ module Thralldom {
                         };
                     });
                 });
-            };
-            request.send();
+            }, true, "arraybuffer");
+        }
+
+        private loadSubtitles(path: string): void {
+            this.ajaxLoad(path, (request: XMLHttpRequest) => {
+                var subtitles = Subs.parse(request.responseText);
+                this.onContentLoaded(path, () => subtitles);
+            });
         }
 
         private loadTexture(path: string, compressed?: boolean): void {
-            
             this.loading++;
-
             if (compressed) {
                 throw new Error("not supported");
             }
@@ -88,30 +99,17 @@ module Thralldom {
         }
 
         private loadAnimationData(path: string): void {
-            this.loading++;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 404) {
-                        console.log("WARNING: Can't find animations file for model: " + path);
-                        return;
-                    }
-
-                    var animDescription = eval("Object(" + xhr.responseText + ")");
-                    var animationData = [];
-                    for (var animation in animDescription) {
-                        var normalizedName = animation[0].toUpperCase() + animation.substr(1).toLowerCase();    
-                        animationData[CharacterStates[normalizedName]] = animDescription[animation];
-                    }
-
-                    var duplicate = () => animationData;
-                    this.onContentLoaded(path, duplicate);
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var animDescription = eval("Object(" + xhr.responseText + ")");
+                var animationData = [];
+                for (var animation in animDescription) {
+                    var normalizedName = animation[0].toUpperCase() + animation.substr(1).toLowerCase();
+                    animationData[CharacterStates[normalizedName]] = animDescription[animation];
                 }
-            };
-            xhr.send();
+
+                var duplicate = () => animationData;
+                this.onContentLoaded(path, duplicate);
+            });
         }
 
         public getAnimationFilePath(meshPath: string): string {
@@ -151,7 +149,7 @@ module Thralldom {
                 ensureLoop(geometry.animation);
                 geometry.animation.name += path;
                 THREE.AnimationHandler.add(geometry.animation);
-                
+
                 for (var i = 0; i < materials.length; i++) {
 
                     var m = <any> materials[i];
@@ -177,20 +175,20 @@ module Thralldom {
             PhysicsManager.defaultSettings = physicsDescription;
         }
 
-        private parseSettings(sceneDescription: any): void {
+        private parseSettings(worldDescription: any): void {
             // Physics first!
-            this.parsePhysics(sceneDescription.physics);
-            var settings = sceneDescription.settings;
+            this.parsePhysics(worldDescription.physics);
+            var settings = worldDescription.settings;
             PhysicsManager.attachDebuggingVisuals = settings.debugDraw || false;
 
-            var controllerSettings = sceneDescription.controller;
+            var controllerSettings = worldDescription.controller;
             if (!controllerSettings.angularSpeed) {
                 throw new Error("Some or all of character controller settings are missing!");
             }
 
             Thralldom.CharacterControllers.SkyrimCharacterController.defaultSettings = controllerSettings;
 
-            var characterSettings = sceneDescription.character;
+            var characterSettings = worldDescription.character;
             if (!characterSettings.mass || !characterSettings.jumpImpulse || !characterSettings.viewAngle ||
                 !characterSettings.movementSpeed || !characterSettings.sprintMultiplier) {
                 throw new Error("Some or all character settings are missing!");
@@ -214,166 +212,134 @@ module Thralldom {
             }
         }
 
-        private tryAddSingletonDescription(array: Array<any>, sceneDescription: any, type: string): void {
-            if (sceneDescription[type]) {
-                sceneDescription[type].type = type;
-                sceneDescription[type].id = type;
-                array.push(sceneDescription[type]);
+        private tryAddSingletonDescription(array: Array<any>, worldDescription: any, type: string): void {
+            if (worldDescription[type]) {
+                worldDescription[type].type = type;
+                worldDescription[type].id = type;
+                array.push(worldDescription[type]);
             }
         }
 
-        private loadAI(scene: Thralldom.World, graph: Algorithms.IGraph): void {
-            scene.aiManager.graph = graph;
+        private loadAI(world: Thralldom.World, graph: Algorithms.IGraph): void {
+            world.aiManager.graph = graph;
 
             for (var typeName in ContentManager.aiControllerTypes) {
                 var type = ContentManager.aiControllerTypes[typeName];
 
-                var controllers = <Array<AI.AIController>> scene.selectByTag(typeName).map((character) => new type(character, graph));
-                scene.aiManager.controllers = scene.aiManager.controllers.concat(controllers);
+                var controllers = <Array<AI.AIController>> world.selectByTag(typeName).map((character) => new type(character, graph));
+                world.aiManager.controllers = world.aiManager.controllers.concat(controllers);
             }
         }
 
-        private parseScene(path: string, sceneDescription: any): Thralldom.World {
+        private parseWorld(path: string, worldDescription: any): Thralldom.World {
             // Settings first
-            this.parseSettings(sceneDescription);
+            this.parseSettings(worldDescription);
 
-            var scene = new World();
+            var world = new World();
 
-            this.parseCollection(sceneDescription.dynamics, ContentManager.dynamicTypes, scene.addDynamic.bind(scene));
-            this.parseCollection(sceneDescription.statics, ContentManager.staticTypes, scene.addStatic.bind(scene));
+            this.parseCollection(worldDescription.dynamics, ContentManager.dynamicTypes, world.addDynamic.bind(world));
+            this.parseCollection(worldDescription.statics, ContentManager.staticTypes, world.addStatic.bind(world));
 
             var singletons = [];
-            this.tryAddSingletonDescription(singletons, sceneDescription, "skybox");
-            this.tryAddSingletonDescription(singletons, sceneDescription, "terrain");
-            this.parseCollection(singletons, ContentManager.staticTypes, scene.addStatic.bind(scene));
+            this.tryAddSingletonDescription(singletons, worldDescription, "skybox");
+            this.tryAddSingletonDescription(singletons, worldDescription, "terrain");
+            this.parseCollection(singletons, ContentManager.staticTypes, world.addStatic.bind(world));
 
-            if (!sceneDescription.waypoints) {
+            if (!worldDescription.waypoints) {
                 console.error("No pathfinding graph supplied to scene, AI cannot work!");
             }
 
             var graph = {
-                nodes: sceneDescription.waypoints.nodes.map((array) => new Algorithms.Vertex(array[0], array[1])),
-                edges: sceneDescription.waypoints.edges.map((array) => new Algorithms.Edge(array[0], array[1])),
+                nodes: worldDescription.waypoints.nodes.map((array) => new Algorithms.Vertex(array[0], array[1])),
+                edges: worldDescription.waypoints.edges.map((array) => new Algorithms.Edge(array[0], array[1])),
             }
 
-            this.loadAI(scene, graph);
+            this.loadAI(world, graph);
 
-            return scene;
+            return world;
         }
 
-        private loadScene(path: string): void {
-            this.loading++;
+        private loadWorld(path: string): void {
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var worldDescription = eval("Object(" + xhr.responseText + ")");
+                var world = this.parseWorld(path, worldDescription);
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    var sceneDescription = eval("Object(" + xhr.responseText + ")");
-                    var scene = this.parseScene(path, sceneDescription);
-
-                    this.onContentLoaded(path, () => scene);
-                }
-            };
-            xhr.send();
+                this.onContentLoaded(path, () => world);
+            });
         }
 
         private loadQuest(path: string): void {
-            this.loading++;
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var questDescription = eval("Object(" + xhr.responseText + ")");
+                var quest = new Quest();
+                quest.name = quest["name"];
+                this.parseCollection(questDescription.objectives, ContentManager.objectiveTypes, quest.objectives.push.bind(quest.objectives));
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    var questDescription = eval("Object(" + xhr.responseText + ")");
-                    var quest = new Quest();
-                    quest.name = quest["name"];
-                    this.parseCollection(questDescription.objectives, ContentManager.objectiveTypes, quest.objectives.push.bind(quest.objectives));
-
-                    this.onContentLoaded(path, () => quest);
-                }
-            }
-            xhr.send();
+                this.onContentLoaded(path, () => quest);
+            });
         }
 
         private loadScript(path: string): void {
-            this.loading++;
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var scriptDescription = xhr.responseText;
+                var script = new ScriptedEvent();
+                script.loadFromDescription(scriptDescription, this);
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    var scriptDescription = xhr.responseText;
-                    var script = new ScriptedEvent();
-                    script.loadFromDescription(scriptDescription, this);
-
-                    this.onContentLoaded(path, () => script);
-                }
-            }
-            xhr.send();
+                this.onContentLoaded(path, () => script);
+            });
         }
 
         private loadAssets(path: string): void {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    var assets = eval("Object(" + xhr.responseText + ")");
-                    for (var i in assets.textures) {
-                        this.loadTexture(assets.textures[i]);
-                    }
-                    for (var i in assets.skinned) {
-                        this.loadSkinnedModel(assets.skinned[i].path, assets.skinned[i].animationData);
-                    }
-                    for (var i in assets.models) {
-                        this.loadModel(assets.models[i]);
-                    }
-                    for (var i in assets.audio) {
-                        this.loadAudio(assets.audio[i].sound, assets.audio[i].path, assets.audio[i].volume);
-                    }
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var assets = eval("Object(" + xhr.responseText + ")");
+                for (var i in assets.textures) {
+                    this.loadTexture(assets.textures[i]);
                 }
-            }
-            xhr.send();
+                for (var i in assets.skinned) {
+                    this.loadSkinnedModel(assets.skinned[i].path, assets.skinned[i].animationData);
+                }
+                for (var i in assets.models) {
+                    this.loadModel(assets.models[i]);
+                }
+                for (var i in assets.audio) {
+                    this.loadAudio(assets.audio[i].sound, assets.audio[i].path, assets.audio[i].volume);
+                }
+                for (var i in assets.subtitles) {
+                    this.loadSubtitles(assets.subtitles[i]);
+                }
+            }, false);
         }
 
 
         public loadMeta(path: string, callback: (meta: IMetaGameData) => void): void {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path, true);
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
 
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    var meta = eval("Object(" + xhr.responseText + ")");
+                var meta: IMetaGameData = eval("Object(" + xhr.responseText + ")");
 
-                    if (!meta.scene) {
-                        throw new Error("Must provide a scene!");
-                    }
-                    if (!meta.quest) {
-                        throw new Error("Must provide a quest!");
-                    }
-
-                    this.loadAssets(meta.assets);
-                    this.onLoaded = () => {
-
-                        this.loadScene(meta.scene);
-                        this.loadQuest(meta.quest);
-
-                        for (var i = 0; i < meta.scripts.length; i++) {
-                            this.loadScript(meta.scripts[i]);
-                        }
-
-                        this.onLoaded = () => {
-                            this.onContentLoaded(path, () => meta);
-
-                            callback(meta);
-                        }
-                    };
+                if (!meta.world) {
+                    throw new Error("Must provide a World!");
                 }
-            }
-            xhr.send();
+                if (!meta.quest) {
+                    throw new Error("Must provide a quest!");
+                }
+
+                this.loadAssets(meta.assets);
+
+                this.onLoaded = () => {
+                    // Once all the assets have been loaded, load the world and quests since they depend on the assets
+                    this.loadWorld(meta.world);
+                    this.loadQuest(meta.quest);
+                    for (var i = 0; i < meta.scripts.length; i++) {
+                        this.loadScript(meta.scripts[i]);
+                    }
+
+
+                    this.onLoaded = () => {
+                        this.onContentLoaded(path, () => meta);
+                        callback(meta);
+                    }
+                };
+            }, false);
         }
 
         private extractFileName(path: string): string {

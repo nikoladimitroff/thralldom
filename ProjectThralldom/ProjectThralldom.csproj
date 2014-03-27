@@ -91,6 +91,7 @@
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
     <Content Include="Content\Models\Terrain\terrain.js" />
+    <Content Include="Content\Models\Terrain\terrainTextureMicro.jpg" />
     <Content Include="Content\Models\Terrain\terrainTextureSmall.jpg" />
     <Content Include="Content\Quests\default.js" />
     <Content Include="Content\Scenes\default.js" />
@@ -98,6 +99,7 @@
       <DependentUpon>StringExtensions.min.js</DependentUpon>
     </Content>
     <None Include="Content\Scripts\RandomStuff.script" />
+    <Content Include="Content\Sounds\dialog.mp3" />
     <Content Include="Content\Sounds\footsteps.mp3" />
     <Content Include="Content\Sounds\forest_background.mp3" />
     <Content Include="Content\Sounds\gunshot.mp3" />
@@ -120,8 +122,10 @@
     <Content Include="Scripts\implementations\ammo.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
+    <Content Include="Scripts\implementations\subtitles.js" />
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
+    <TypeScriptCompile Include="Scripts\typings\subtitles.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\Three.Plugins\THREE.AudioObject.d.ts" />
     <Content Include="Tests\TestingPage.html" />
     <Content Include="web.config">
@@ -131,6 +135,8 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.anim" />
+    <Content Include="Content\Subtitles\Liars.srt" />
+    <Content Include="Content\Subtitles\dialog.srt" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -173,10 +179,9 @@
     <TypeScriptCompile Include="Code\Managers\InputManager.ts" />
     <TypeScriptCompile Include="Code\Managers\MouseData.ts" />
     <TypeScriptCompile Include="Code\Scene\LoadableObject.ts" />
-    <TypeScriptCompile Include="Code\Scene\Scene.ts" />
+    <TypeScriptCompile Include="Code\Scene\World.ts" />
     <TypeScriptCompile Include="Code\Scene\Skybox.ts" />
     <TypeScriptCompile Include="Code\Scene\Weapon.ts" />
-    <TypeScriptCompile Include="Code\Scripted\ActionParser.ts" />
     <TypeScriptCompile Include="Code\Scripted\ScriptController.ts" />
     <TypeScriptCompile Include="Code\Scripted\ScriptedActions.ts" />
     <TypeScriptCompile Include="Code\Scripted\ScriptedEvent.ts" />
