@@ -1,3 +1,5 @@
+/// <reference path="libs/ui.three.js" />
+/// <reference path="libs/ui.js" />
 var Viewport = function ( editor ) {
 
 	var signals = editor.signals;
@@ -19,14 +21,35 @@ var Viewport = function ( editor ) {
 
 	var objects = [];
 
-	// helpers
+    // helpers
 
 	var grid = new THREE.GridHelper( 500, 25 );
-	sceneHelpers.add( grid );
+	sceneHelpers.add(grid);
+    // THRALLDOM Disable grid:
+	var gridRow = new UI.Panel();
+
+	grid.visible = true;
+	var gridVisible = new UI.Checkbox(true).onChange(function (event) {
+	    grid.visible = event.srcElement.checked;
+	});
+
+
+	gridRow.setPosition('absolute');
+	gridRow.setRight('5px');
+	gridRow.setBottom('20px');
+	gridRow.setFontSize('12px');
+	gridRow.setColor('#ffffff');
+
+	gridRow.add(new UI.Text('Visible Grid?').setWidth('90px'));
+	gridRow.add(gridVisible);
+	container.add(gridRow);
 
 	//
 
-	var camera = new THREE.PerspectiveCamera( 50, 1, 1, 5000 );
+    // THRALLDOM
+	var cameraNear = 1;
+	var cameraFar = 20000;
+	var camera = new THREE.PerspectiveCamera( 50, 1, cameraNear, cameraFar);
 	camera.position.fromArray( editor.config.getKey( 'camera' ).position );
 	camera.lookAt( new THREE.Vector3().fromArray( editor.config.getKey( 'camera' ).target ) );
 
