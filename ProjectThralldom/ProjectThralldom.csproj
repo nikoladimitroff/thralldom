@@ -66,7 +66,6 @@
     <Content Include="Content\Models\Buildings\Houses\oldwarehouse.js" />
     <Content Include="Content\Models\Buildings\Houses\Tavern.js" />
     <Content Include="Content\Models\Buildings\Houses\well.js" />
-    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.js" />
     <Content Include="Content\Models\Buildings\Monastery\monastery_object.js" />
     <Content Include="Content\Models\Buildings\Monastery\monastery_texture.jpg" />
     <Content Include="Content\Models\Buildings\House_01\rooftxt.jpg" />
@@ -80,6 +79,7 @@
     <Content Include="Content\Models\Buildings\House_02\three.jpg" />
     <Content Include="Content\Models\Buildings\House_02\two.jpg" />
     <Content Include="Content\Models\Buildings\House_01\walls.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.js" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Cloth.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Head.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Left_Eye.jpg" />
@@ -88,12 +88,10 @@
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Eye.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Hand.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Tie.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
-    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.js" />
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
     <Content Include="Content\Models\Terrain\terrain.js" />
     <Content Include="Content\Models\Terrain\terrainTextureSmall.jpg" />
-    <Content Include="Content\Models\Terrain\terrainTexture.jpg" />
     <Content Include="Content\Quests\default.js" />
     <Content Include="Content\Scenes\default.js" />
     <Content Include="Code\StringExtensions.min.js.map">

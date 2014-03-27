@@ -2,6 +2,6 @@
 	"Walking": { startFrame: 0, endFrame: 27 },
 	"Sprinting": { startFrame: 30, endFrame: 54 },
 	"Dying": { startFrame: 60, endFrame: 150 },
-	"Idle": { startFrame: 235, endFrame: 390 },
+	"Idle": { startFrame: 235, endFrame: 484 },
 	"Shooting": { startFrame: 161, endFrame: 232 },
 }
