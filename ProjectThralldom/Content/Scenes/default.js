@@ -18,7 +18,7 @@
         restitution: 0,
         linearDamping: 0.7,
         angularDamping: 1,
-        gravity: -500,
+        gravity: -9.8,
     },
     // No more settings, scene definition
     terrain: {
