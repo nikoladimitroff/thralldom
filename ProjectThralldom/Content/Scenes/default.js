@@ -8,7 +8,7 @@
     },
     character: {
         mass: 70,
-        jumpImpulse: 9.8,
+        jumpImpulse: 15,
         viewAngle: Math.PI / 3,
         movementSpeed: 1 * 1e3,
         sprintMultiplier: 2,
@@ -18,7 +18,7 @@
         restitution: 0,
         linearDamping: 0.7,
         angularDamping: 1,
-        gravity: -500,
+        gravity: -9.8,
     },
     // No more settings, scene definition
     terrain: {

@@ -6,7 +6,9 @@ module Thralldom {
         Sprinting,
         Jumping,
         Falling,
-        Shooting,
+        Unsheathing,
+        Attacking,
+        Sheathing,
         Dying
     }
 
@@ -18,6 +20,7 @@ module Thralldom {
     export class Character extends DynamicObject {
 
         public static defaultSettings: ICharacterSettings;
+
 
         public settings: ICharacterSettings;
 
@@ -44,7 +47,7 @@ module Thralldom {
         }
 
         public stateMachine: StateMachine;
-        public animationData: Map<CharacterStates, IAnimationData>;
+        public animationData: Map<string, IAnimationData>;
 
         constructor() {
             super();
@@ -90,6 +93,16 @@ module Thralldom {
             
         }
 
+        public getAnimationName(): string {
+            var weaponAnimations = [CharacterStates.Unsheathing, CharacterStates.Attacking, CharacterStates.Sheathing];
+
+            if (weaponAnimations.indexOf(this.stateMachine.current) != -1) {
+                return this.weapon.characterAnimations[this.stateMachine.current];
+            }
+
+            return CharacterStates[this.stateMachine.current];
+        }
+
         public attack(enemy: Character, hitPoint: THREE.Intersection): Ammunition {
             // Only attack if the viewing angle between the character and the target is less than Character.MaxViewAngle and the character is in range.
             var distance = new THREE.Vector3();
@@ -109,10 +122,6 @@ module Thralldom {
             //return laser;
 
             return undefined;
-        }
-
-        public update(delta: number): void {
-            this.stateMachine.update(delta);
         }
 
         public setWalkingVelocity(delta: number, isSprinting: boolean = false): void {

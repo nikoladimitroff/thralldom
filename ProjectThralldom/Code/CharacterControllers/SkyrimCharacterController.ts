@@ -77,8 +77,10 @@ module Thralldom {
 
             private handleMouseClick(delta: number, input: InputManager): void {
                 if (input.mouse.leftButton) {
-                    this.hero.stateMachine.requestTransitionTo(CharacterStates.Shooting);
+                    if (!this.hero.stateMachine.requestTransitionTo(CharacterStates.Attacking))
+                        this.hero.stateMachine.requestTransitionTo(CharacterStates.Unsheathing);
                 }
+
                 if (input.mouse.rightButton) {
                     this.hero.health = 0;
                 }
@@ -139,6 +141,11 @@ module Thralldom {
                 }
                 if (input.keyboard[keybindings.jump]) {
                     hero.stateMachine.requestTransitionTo(CharacterStates.Jumping);
+                }
+
+
+                if (this.hero.stateMachine.current == CharacterStates.Attacking) {
+                    this.hero.stateMachine.requestTransitionTo(CharacterStates.Sheathing);
                 }
 
 

@@ -17,12 +17,19 @@ module Thralldom {
                 guard.mesh.quaternion.copy(rotation);
 
                 if (guardToTargetDist <= guard.range) {
-                    guard.stateMachine.requestTransitionTo(CharacterStates.Shooting);
+                    if (!guard.stateMachine.requestTransitionTo(CharacterStates.Attacking))
+                        guard.stateMachine.requestTransitionTo(CharacterStates.Unsheathing);
                 }
                 else if (guardToTargetDist >= guard.range * 3) {
                     this.isAlerted = false;
                 }
                 else {
+                    // WARNING: I smell bugs here, what if the target runs away from the guard in time less than the time needed to finish sheathing the weapon?
+                    if (guard.stateMachine.current == CharacterStates.Attacking) {
+                        guard.stateMachine.requestTransitionTo(CharacterStates.Sheathing);
+                        return;
+                    }
+
                     if (!guard.stateMachine.requestTransitionTo(CharacterStates.Sprinting)) {
                         guard.stateMachine.requestTransitionTo(CharacterStates.Walking);
                         guard.stateMachine.requestTransitionTo(CharacterStates.Sprinting);
@@ -57,8 +64,12 @@ module Thralldom {
 
                 this.target = <Character> world.select("#hero")[0];
 
-                var guardToTarget = new THREE.Vector3();
-                guardToTarget.subVectors(this.target.mesh.position, guard.mesh.position);
+                var guardToTarget2d = new THREE.Vector2();
+                guardToTarget2d.subVectors(GeometryUtils.Vector3To2(this.target.mesh.position),
+                                           GeometryUtils.Vector3To2(guard.mesh.position));
+
+                var guardToTarget = GeometryUtils.Vector2To3(guardToTarget2d);
+
                 var guardToTargetDist = guardToTarget.length();
                 
                 if (this.isAlerted) {  

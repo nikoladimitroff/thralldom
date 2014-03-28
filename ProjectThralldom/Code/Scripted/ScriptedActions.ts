@@ -48,6 +48,9 @@ module Thralldom {
         public begin(): void { }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
+            if (this.hasCompleted)
+                return;
+
             var characterPos = GeometryUtils.Vector3To2(character.mesh.position);
             var diff = new THREE.Vector2();
             diff.subVectors(this.destination, characterPos);
