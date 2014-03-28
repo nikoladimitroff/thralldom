@@ -93,7 +93,11 @@ module Thralldom {
         }
 
         public static almostZero(value: number, precision: number = 1e-6): boolean {
-            return Math.abs(value) <= Math.abs(precision);
+            return GeometryUtils.almostEquals(value, 0, precision);
+        }
+
+        public static almostEquals(value1: number, value2: number, precision: number = 1e-6): boolean {
+            return Math.abs(value1 - value2) <= Math.abs(precision);
         }
 
         public static Vector3To2(vec: THREE.Vector3): THREE.Vector2 {

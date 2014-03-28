@@ -1,8 +1,7 @@
 module Thralldom {
     export class StateMachineUtils {
 
-        private static FallingGravityMultiplier = 0.3;
-        private static StopFallingVelocityMultiplier = 0.6;
+        private static FallingGravityMultiplier = 0.5;
         private static JumpingErrorMargin = 1;
 
         private static dummyEventHandler = (state: number, object: DynamicObject) => { };
@@ -23,7 +22,8 @@ module Thralldom {
 
         private static ensureAnimationLoop(character: Character): boolean {
             var animation = character.animation;
-            var animationData = character.animationData[character.stateMachine.current];
+            // WARNING: This will work for now, but once we have multiple weapon animations it will fail
+            var animationData = character.animationData[character.getAnimationName()];
 
             var startTime = Utilities.convertFrameToTime(animationData.startFrame, animation);
             var endTime = Utilities.convertFrameToTime(animationData.endFrame, animation);
@@ -42,7 +42,7 @@ module Thralldom {
 
         private static pauseAnimationAfterEnd(character: Character): boolean {
             var animation = character.animation;
-            var animationData = character.animationData[character.stateMachine.current];
+            var animationData = character.animationData[character.getAnimationName()];
 
             var startTime = Utilities.convertFrameToTime(animationData.startFrame, animation);
             var endTime = Utilities.convertFrameToTime(animationData.endFrame, animation);
@@ -56,11 +56,11 @@ module Thralldom {
             return false;
         }
 
-        private static restartAnimationIfNeeded(character: Character, previousState: number, currentState: number): void {
-            if (previousState != currentState) {
+        private static restartAnimationIfNeeded(character: Character, previousState: number): void {
+            if (previousState != character.stateMachine.current) {
                 character.animation.stop();
                 character.weapon.animation.stop();
-                var startTime = Utilities.convertFrameToTime(character.animationData[currentState].startFrame, character.animation);
+                var startTime = Utilities.convertFrameToTime(character.animationData[character.getAnimationName()].startFrame, character.animation);
                 character.animation.play(startTime);
                 character.weapon.animation.play(startTime);
             }
@@ -76,7 +76,7 @@ module Thralldom {
                     AudioManager.instance.playSound("Walking", hero.mesh, true, false);
                 }
 
-                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Walking);
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous);
                 walking.data.isWalking = true;
             }
 
@@ -113,7 +113,7 @@ module Thralldom {
                     AudioManager.instance.playSound("Sprinting", hero.mesh, true, false);
                 }
 
-                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Sprinting);
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous);
 
                 sprinting.data.isSprinting = true;
             }
@@ -146,38 +146,42 @@ module Thralldom {
         private static getJumpingState(): State {
             var jumping: State;
 
-            var jumpingEntry = (previous: number, object: DynamicObject) => {
-                jumping.data.beforeJumpY = object.mesh.position.y;
+            var jumpingEntry = (previous: number, hero: Character) => {
+                jumping.data.beforeJumpY = hero.mesh.position.y;
                 jumping.data.reachedPeak = false;
                 //object.rigidBody.applyCentralImpulse(StateMachineUtils.JumpingImpulse);
 
-                var velocity = object.rigidBody.getLinearVelocity();
+                var velocity = hero.rigidBody.getLinearVelocity();
                 velocity.setY(Character.defaultSettings.jumpImpulse);
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous);
 
             }
 
-            var jumpingUpdate = (delta: number, object: DynamicObject) => {
-                var velocity = object.rigidBody.getLinearVelocity().y()
+            var jumpingUpdate = (delta: number, hero: Character) => {
+                StateMachineUtils.ensureAnimationLoop(hero);
+
+                var velocity = hero.rigidBody.getLinearVelocity().y()
                 if (!jumping.data.reachedPeak && velocity < 0) {
                     jumping.data.reachedPeak = true;
-                    jumping.data.peak = object.mesh.position.y;
+                    jumping.data.peak = hero.mesh.position.y;
                 }
-                jumping.data.previousY = object.mesh.position.y;
+                jumping.data.previousY = hero.mesh.position.y;
                 jumping.data.previousVelY = velocity;
             }
 
             var jumpingInterupt = (object: DynamicObject): boolean => {
                 var precision = PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingGravityMultiplier;
-                var velocity = object.rigidBody.getLinearVelocity().y();
+
+                var velocityY = object.rigidBody.getLinearVelocity().y();
                 var jumpFinished =
-                    GeometryUtils.almostZero(velocity, precision) &&
+                    GeometryUtils.almostZero(velocityY, precision) &&
                     jumping.data.reachedPeak &&
                     Math.abs(object.mesh.position.y - jumping.data.peak) > StateMachineUtils.JumpingErrorMargin;
                 var samePosition =
-                    object.mesh.position.y == jumping.data.previousY &&
-                    velocity == jumping.data.previousVelY;
+                    GeometryUtils.almostZero(object.mesh.position.y, jumping.data.previousY) &&
+                    GeometryUtils.almostEquals(velocityY, jumping.data.previousVelY);
 
-                return jumpFinished;
+                return jumpFinished || samePosition;
             };
 
             jumping = new State(CharacterStates.Jumping, jumpingUpdate, jumpingEntry, StateMachineUtils.dummyEventHandler, jumpingInterupt);
@@ -212,42 +216,116 @@ module Thralldom {
             return falling;
         }
 
-        private static getShootingState(): State {
-            var shooting: State;
 
-            var shootingEntry = (previous: number, hero: Character): void => {
+        private static getUnsheatingState(): State {
+            var unsheating: State;
 
-                AudioManager.instance.playSound("Shooting", hero.mesh, false, false);
-
-
-                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Shooting);
-                shooting.data.animationFinished = false;
+            var entry = (previous: number, hero: Character): void => {
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous);
+                unsheating.data.animationFinished = false;
             }
 
-            var shootingUpdate = (delta: number, hero: Character): void => {
-                shooting.data.animationFinished =
-                    shooting.data.animationFinished ||
+            var update = (delta: number, hero: Character): void => {
+                unsheating.data.animationFinished =
+                    unsheating.data.animationFinished ||
+                    StateMachineUtils.ensureAnimationLoop(hero);
+
+                if (unsheating.data.animationFinished) {
+                    hero.stateMachine.requestTransitionTo(CharacterStates.Attacking);
+                }
+            }
+
+            var exit = (next: number, hero: Character): void => {
+            }
+
+            var interupt = (hero: Character): boolean => {
+                return unsheating.data.animationFinished;
+            };
+
+            unsheating = new State(CharacterStates.Unsheathing, update, entry, exit, interupt);
+
+            return unsheating;
+        }
+
+        private static getAttackingState(): State {
+            var attacking: State;
+
+            var entry = (previous: number, hero: Character): void => {
+                // Double attack incoming, queue it
+                if (previous == CharacterStates.Attacking) {
+                    attacking.data.doubleAttack = true;
+                }
+                else {
+                    AudioManager.instance.playSound(hero.getAnimationName(), hero.mesh, false, false);
+                }
+
+
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous);
+                attacking.data.animationFinished = false;
+            }
+
+            var update = (delta: number, hero: Character): void => {
+                var animationLooped = StateMachineUtils.ensureAnimationLoop(hero);
+                if (animationLooped && attacking.data.doubleAttack) {
+                    attacking.data.animationFinished = false;
+                    attacking.data.doubleAttack = false;
+                    AudioManager.instance.playSound(hero.getAnimationName(), hero.mesh, false, false);
+                }
+                else {
+                    attacking.data.animationFinished =
+                        attacking.data.animationFinished || animationLooped;
+                }
+
+                if (attacking.data.animationFinished) {
+                    hero.stateMachine.requestTransitionTo(CharacterStates.Sheathing);
+                }
+            }
+
+            var exit = (next: number, hero: Character): void => {
+            }
+
+            var interupt = (hero: Character): boolean => {
+                return attacking.data.animationFinished && !attacking.data.doubleAttack;
+            };
+
+            attacking = new State(CharacterStates.Attacking, update, entry, exit, interupt);
+
+            return attacking;
+        }
+
+
+        private static getSheatingState(): State {
+            var sheating: State;
+
+            var entry = (previous: number, hero: Character): void => {
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous);
+                sheating.data.animationFinished = false;
+            }
+
+            var update = (delta: number, hero: Character): void => {
+                sheating.data.animationFinished =
+                    sheating.data.animationFinished ||
                     StateMachineUtils.ensureAnimationLoop(hero);
             }
 
-            var shootingExit = (next: number, hero: Character): void => {
+            var exit = (next: number, hero: Character): void => {
 
             }
 
-            var shootingInterupt = (hero: Character): boolean => {
-                return shooting.data.animationFinished;
+            var interupt = (hero: Character): boolean => {
+                return sheating.data.animationFinished;
             };
 
-            shooting = new State(CharacterStates.Shooting, shootingUpdate, shootingEntry, shootingExit, shootingInterupt);
+            sheating = new State(CharacterStates.Sheathing, update, entry, exit, interupt);
 
-            return shooting;
+            return sheating;
         }
 
         private static getDyingState(): State {
             var dying: State;
 
             var dyingEntry = (previous: number, hero: Character): void => {
-                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Dying);
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous);
                 dying.data.animationFinished = false;
             }
 
@@ -269,17 +347,19 @@ module Thralldom {
 
         public static getCharacterStateMachine(character: Character): StateMachine {
             var transitions = new Array<Array<number>>();
-            transitions[CharacterStates.Idle] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Shooting, CharacterStates.Sprinting, CharacterStates.Walking];
-            transitions[CharacterStates.Walking] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Shooting, CharacterStates.Walking, CharacterStates.Sprinting];
+            transitions[CharacterStates.Idle] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Unsheathing, CharacterStates.Sprinting, CharacterStates.Walking];
+            transitions[CharacterStates.Walking] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Unsheathing, CharacterStates.Walking, CharacterStates.Sprinting];
             transitions[CharacterStates.Sprinting] = [CharacterStates.Dying, CharacterStates.Jumping, CharacterStates.Falling, CharacterStates.Walking];
-            transitions[CharacterStates.Shooting] = [CharacterStates.Dying];
+            transitions[CharacterStates.Unsheathing] = [CharacterStates.Dying];
+            transitions[CharacterStates.Attacking] = [CharacterStates.Dying, CharacterStates.Attacking];
+            transitions[CharacterStates.Sheathing] = [CharacterStates.Dying];
             transitions[CharacterStates.Dying] = [];
             transitions[CharacterStates.Jumping] = [CharacterStates.Dying];
             transitions[CharacterStates.Falling] = [CharacterStates.Dying];
 
 
             var idleEntry = (previous: number, hero: Character): void => {
-                StateMachineUtils.restartAnimationIfNeeded(hero, previous, CharacterStates.Idle);
+                StateMachineUtils.restartAnimationIfNeeded(hero, previous);
 
                 hero.setWalkingVelocity(0);
             }
@@ -294,10 +374,12 @@ module Thralldom {
             var jumping = StateMachineUtils.getJumpingState();
             var falling = StateMachineUtils.getFallingState();
             var sprinting = StateMachineUtils.getSprintingState();
-            var shooting = StateMachineUtils.getShootingState();
+            var unsheating = StateMachineUtils.getUnsheatingState();
+            var attacking = StateMachineUtils.getAttackingState();
+            var sheating = StateMachineUtils.getSheatingState();
             var dying = StateMachineUtils.getDyingState();
 
-            var states = [idle, sprinting, shooting, dying, jumping, falling, walking].sort((x, y) => x.index - y.index);
+            var states = [idle, sprinting, unsheating, attacking, sheating, dying, jumping, falling, walking].sort((x, y) => x.index - y.index);
 
             return new StateMachine(states, transitions, character);
 

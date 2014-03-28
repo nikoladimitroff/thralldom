@@ -31,7 +31,7 @@
             volume: 1,
         },
         {
-            sound: "Shooting",
+            sound: "PistolShoot",
             path: "Content/Sounds/gunshot.mp3",
             volume: 1,
         },
@@ -39,7 +39,7 @@
             sound: "Soundtrack",
             path: "Content/Sounds/forest_background.mp3",
             // Set background music to low level, else nothing else can't be heard
-            volume: 0,
+            volume: 0.1,
         },
         {
             sound: "dialog",

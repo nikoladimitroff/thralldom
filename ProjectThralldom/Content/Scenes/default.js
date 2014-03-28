@@ -8,7 +8,7 @@
     },
     character: {
         mass: 70,
-        jumpImpulse: 9.8,
+        jumpImpulse: 15,
         viewAngle: Math.PI / 3,
         movementSpeed: 1 * 1e3,
         sprintMultiplier: 2,

@@ -25,7 +25,12 @@ Thralldom.Exporter = function (editor) {
     }
 
     function exportObject(object, index) {
-        if (object.scale.x != object.scale.y || object.scale.x != object.scale.z || object.scale.y != object.scale.z) {
+        var precision = 3;
+        var sx = object.scale.x.toFixed(precision),
+            sy = object.scale.y.toFixed(precision),
+            sz = object.scale.z.toFixed(precision);
+        
+        if (sx != sy || sx != sz || sy != sz) {
             alert("ERROR: " + printObjectInfo(object) + "Different scaling weights per axis");
             isStateValid = false;
             return;

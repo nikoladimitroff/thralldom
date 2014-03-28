@@ -101,11 +101,7 @@ module Thralldom {
         private loadAnimationData(path: string): void {
             this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
                 var animDescription = eval("Object(" + xhr.responseText + ")");
-                var animationData = [];
-                for (var animation in animDescription) {
-                    var normalizedName = animation[0].toUpperCase() + animation.substr(1).toLowerCase();
-                    animationData[CharacterStates[normalizedName]] = animDescription[animation];
-                }
+                var animationData = animDescription;
 
                 var duplicate = () => animationData;
                 this.onContentLoaded(path, duplicate);

@@ -241,7 +241,8 @@ THREE.AudioObject = function (context, buffer, volume, loop, isDirectional) {
     // Setup initial gains
 
     this.masterGainNode.gain.value = volume;
-    this.dryGainNode.gain.value = 3.0;
+    // Magicness
+    this.dryGainNode.gain.value = 30.0;
 
     // Connect dry mix
 
