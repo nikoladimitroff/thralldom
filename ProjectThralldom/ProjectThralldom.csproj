@@ -88,6 +88,9 @@
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Eye.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Hand.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Tie.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Cloth.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Cloths.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Head.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
     <Content Include="Content\Models\Terrain\terrain.js" />
