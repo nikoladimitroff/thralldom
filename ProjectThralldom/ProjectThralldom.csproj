@@ -120,6 +120,12 @@
     <Content Include="Content\Textures\Skybox\negZ.png" />
     <Content Include="default.htm" />
     <Content Include="Content\Fonts\Helvetiker.js" />
+    <Content Include="Docs\Presentation.html">
+      <DependentUpon>Presentation.md</DependentUpon>
+    </Content>
+    <Content Include="Docs\Presentation.min.html">
+      <DependentUpon>Presentation.html</DependentUpon>
+    </Content>
     <Content Include="Scripts\implementations\ammo.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
@@ -138,6 +144,7 @@
     <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.anim" />
     <Content Include="Content\Subtitles\Liars.srt" />
     <Content Include="Content\Subtitles\dialog.srt" />
+    <Content Include="Docs\Presentation.md" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
