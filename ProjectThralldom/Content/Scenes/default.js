@@ -50,7 +50,7 @@
             id: "hero",
             model: "BoychoAnimation.js",
             weapon: "PistolAnimation.js",
-            pos: [0, 0, 0],
+            pos: [0, 200, 0],
             scale: 5,
         },
         {
@@ -59,7 +59,7 @@
             id: "sokolov",
             model: "BoychoAnimation.js",
             weapon: "PistolAnimation.js",
-            pos: [30, 0, 0],
+            pos: [30, 200, 0],
             scale: 5,
         },
     ],

@@ -130,9 +130,16 @@
       <DependentUpon>Presentation.html</DependentUpon>
     </Content>
     <Content Include="Scripts\implementations\ammo.js" />
+    <Content Include="Scripts\implementations\ammo.small.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\subtitles.js" />
+    <Content Include="thralldom.js">
+      <DependentUpon>thralldom.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="thralldom.min.js">
+      <DependentUpon>thralldom.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
     <TypeScriptCompile Include="Scripts\typings\subtitles.d.ts" />
@@ -148,6 +155,13 @@
     <Content Include="Content\Subtitles\Liars.srt" />
     <Content Include="Content\Subtitles\dialog.srt" />
     <Content Include="Docs\Presentation.md" />
+    <None Include="thralldom.js.bundle" />
+    <Content Include="thralldom.min.js.map">
+      <DependentUpon>thralldom.min.js</DependentUpon>
+    </Content>
+    <Content Include="thralldom.min.js.gzip">
+      <DependentUpon>thralldom.min.js</DependentUpon>
+    </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -252,6 +266,7 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)\Thralldom.OfflineTool\bin\Debug\Thralldom.OfflineTool.exe" "$(ProjectDir)Content" "$(ProjectDir)Code\Managers\ContentLibrary.ts"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

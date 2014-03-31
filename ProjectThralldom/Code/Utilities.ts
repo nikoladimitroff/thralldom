@@ -12,6 +12,19 @@ module Thralldom {
             };
         }
 
+        public static AttachCacheUpdatedHandler(): void {
+            // Straight from http://www.html5rocks.com/en/tutorials/appcache/beginner/
+            window.applicationCache.addEventListener('updateready', function (e) {
+                if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                    // Browser downloaded a new app cache.
+                    if (confirm('A new version is available. Refresh?')) {
+                        window.location.reload();
+                    }
+                } else {
+                    // Manifest didn't changed. Nothing new to server.
+                }
+            }, false);
+        }
 
         public static setWindowFocusListener(listener: (isVisible: boolean) => void): void {
             var hidden = "hidden";
