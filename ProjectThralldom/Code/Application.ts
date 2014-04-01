@@ -8,7 +8,6 @@ module Thralldom {
 
     export class Application {
         // Game specific
-        private updateInterval: number;
         private isOnFocus: boolean;
 
         // Three.js variables
@@ -52,9 +51,8 @@ module Thralldom {
         private audio: AudioManager;
         private language: Languages.ILanguagePack;
 
-        constructor(container: HTMLElement, updateInterval: number) {
+        constructor(container: HTMLElement) {
             this.webglContainer = container;
-            this.updateInterval = updateInterval;
             this.input = new InputManager(container);
             this.language = new Languages.English();
             this.content = new ContentManager();
@@ -82,10 +80,6 @@ module Thralldom {
 
             this.renderer.setSize(this.webglContainer.offsetWidth, this.webglContainer.offsetHeight);
             this.webglContainer.appendChild(this.renderer.domElement);
-
-            // Request pointer lock
-            if (Thralldom.InputManager.isMouseLockSupported())
-                this.input.requestPointerLock(document.body);
 
             // Detect going out of focus
             // TODO
@@ -232,12 +226,23 @@ module Thralldom {
             requestAnimationFrame(() => this.loop());
         }
 
-        public run(): void {
-            this.content.loadMeta(Application.MetaFilePath, (meta: IMetaGameData) => {
-                this.init(meta);
-                window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
-                this.loop();
-            });
+        public load(callback: (meta: IMetaGameData) => void): IProgressNotifier {
+            return this.content.loadMeta(Application.MetaFilePath, callback);
+        }
+
+        // Must be called inside a click event
+        public requestPointerLockFullscreen(domElement: HTMLElement): void {
+            // Request pointer lock
+            if (Thralldom.InputManager.isMouseLockSupported())
+                this.input.requestPointerLock(document.body);
+            if (Thralldom.InputManager.isFullScreenSupported())
+                this.input.requestFullscreen(document.body);
+        }
+
+        public run(meta: IMetaGameData): void {
+            this.init(meta);
+            window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
+            this.loop();
         }
     }
 }

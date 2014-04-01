@@ -24,7 +24,7 @@ namespace Thralldom.OfflineTool
         private string Root = "game/";
         private List<string> textFormats = new List<string>() { ".js", ".anim", ".script", ".srt", };
         private int WaitTime = 50;
-        private int connectionLimit = 15;
+        private int connectionLimit = 10;
 
         public AppBuilder(string user, string pass, string domain, string pathToGame, string pathToSite)
         {
@@ -50,13 +50,22 @@ namespace Thralldom.OfflineTool
             Action<string> rootNormalizedDir = FuncExtensions.Partial<Func<string, string>, string>(CreateDirectory, NormalizeFileNameRooted);
             Action<string> rootNormalizedFile = FuncExtensions.Partial<Func<string, string>, string>(UploadFile, NormalizeFileNameRooted);
 
-            TraverseFileSystem(this.pathToGame + "\\Scripts\\implementations", rootNormalizedDir, rootNormalizedFile);
-            TraverseFileSystem(this.pathToGame + "\\Content", rootNormalizedDir, rootNormalizedFile);
-            string[] inroot = { "index.html", "app.css", "thralldom.min.js", "cache.manifest" };
-            foreach (var file in inroot)
-            {
-                rootNormalizedFile(this.pathToGame + "\\" + file);
-            }
+            //TraverseFileSystem(this.pathToGame + "\\Scripts\\implementations", rootNormalizedDir, rootNormalizedFile);
+            //TraverseFileSystem(this.pathToGame + "\\Content", rootNormalizedDir, rootNormalizedFile);
+            //TraverseFileSystem(this.pathToGame + "\\Fonts", rootNormalizedDir, rootNormalizedFile);
+            //TraverseFileSystem(this.pathToGame + "\\Images", rootNormalizedDir, rootNormalizedFile);
+            //string[] inroot = { "index.html", "app.css", "thralldom.min.js", "cache.manifest" };
+            //foreach (var file in inroot)
+            //{
+            //    rootNormalizedFile(this.pathToGame + "\\" + file);
+            //}
+
+            string extensions = "*.html | *.manifest | *.css | *.js | *.png | *.jpg | *.jpeg | *.mp3 | *.tscr | *.anim | *.srt | " + 
+                                "*.otf | *.ttf";
+            string ignored = "Code Docs Tests typings bin obj Properties";
+
+
+            TraverseFileSystem(this.pathToGame, rootNormalizedDir, rootNormalizedFile, extensions, ignored);
         }
 
         private void DeploySite()
@@ -147,6 +156,19 @@ namespace Thralldom.OfflineTool
             this.client.CreateDirectory(normalizationFunction(dir));
         }
 
+        private string ManifestFolder(string path, string folder)
+        {
+            StringBuilder content = new StringBuilder();
+            content.AppendFormat("# {0}\n", folder);
+            string contentFolder = path + string.Format("\\{0}\\", folder);
+            TraverseFileSystem(contentFolder, (dir) => { }, (file) =>
+            {
+                string unixFileName = this.NormalizeFileName(file);
+                content.AppendLine(unixFileName);
+            });
+            return content.ToString();
+        }
+
         private void GenerateManifest(string path)
         {
             string header = "CACHE MANIFEST";
@@ -160,18 +182,13 @@ namespace Thralldom.OfflineTool
             string code = "# Code\nthralldom.min.js";
             code += libs.Select((x) => "/Scripts/implementations/" + x).Aggregate(string.Empty, (previous, current) => previous + "\n" + current);
 
-            // Content
-            StringBuilder content = new StringBuilder();
-            content.AppendLine("# Content");
-            string contentFolder = path + "\\Content\\";
-            TraverseFileSystem(contentFolder, (dir) => { }, (file) =>
-            {
-                string unixFileName = this.NormalizeFileName(file);
-                content.AppendLine(unixFileName);
-            });
+            // Content, images, fonts
+            string content = this.ManifestFolder(path, "Content");
+            string images = this.ManifestFolder(path, "Images");
+            string fonts = this.ManifestFolder(path, "Fonts");
 
             // Build everything
-            string output = String.Format("{0}\n{1}\n\n{2}\n\n{3}\n\n{4}", header, timestamp, pages, code, content.ToString());
+            string output = String.Format("{0}\n{1}\n\n{2}\n\n{3}\n\n{4}\n\n{5}\n\n{6}", header, timestamp, pages, code, content, images, fonts);
             File.WriteAllText(path + "\\cache.manifest", output);
 
         }

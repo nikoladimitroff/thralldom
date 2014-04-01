@@ -1,10 +1,15 @@
 module Thralldom {
+    export interface IProgressNotifier {
+        update(percentage: number, text: string): void;
+    }
+
     export class ContentManager {
 
         private loadedContent: Map<string, any> = <Map<string, any>>{};
 
         private loaded: number = 0;
         private loading: number = 0;
+        private totalQueuedItems: number = 0;
 
         private static dynamicTypes = {
             "character": Character,
@@ -24,6 +29,8 @@ module Thralldom {
             "guard": Thralldom.AI.Guard,
         }
 
+        private progressNotifier: IProgressNotifier;
+
         public audioContext: any;
 
         constructor() {
@@ -34,7 +41,10 @@ module Thralldom {
             this.loaded++;
             this.loadedContent[path] = object;
 
-            console.log("Loading: ", this.loaded / this.loading);
+            if (this.progressNotifier) {
+                this.progressNotifier.update(this.loaded / this.totalQueuedItems, path);
+            }
+
             if (this.loading == this.loaded) {
                 this.onLoaded();
             }
@@ -305,11 +315,17 @@ module Thralldom {
                 for (var i in assets.subtitles) {
                     this.loadSubtitles(assets.subtitles[i]);
                 }
+
+                this.totalQueuedItems += this.loading;
             }, false);
         }
 
 
-        public loadMeta(path: string, callback: (meta: IMetaGameData) => void): void {
+        public loadMeta(path: string, callback: (meta: IMetaGameData) => void): IProgressNotifier {
+            this.progressNotifier = {
+                update: function () { }
+            }
+
             this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
 
                 var meta: IMetaGameData = eval("Object(" + xhr.responseText + ")");
@@ -320,6 +336,9 @@ module Thralldom {
                 if (!meta.quest) {
                     throw new Error("Must provide a quest!");
                 }
+
+                // Compute the total number of items we are to load
+                this.totalQueuedItems = 1 /* world */ + 1 /* quest */ + meta.scripts.length; /* scripts */
 
                 this.loadAssets(meta.assets);
 
@@ -338,6 +357,8 @@ module Thralldom {
                     }
                 };
             }, false);
+
+            return this.progressNotifier;
         }
 
         private extractFileName(path: string): string {

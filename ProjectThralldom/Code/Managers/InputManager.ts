@@ -87,15 +87,23 @@ module Thralldom {
             };
         }
 
-        public requestPointerLock(domElement: HTMLElement) {
-            domElement.addEventListener("click", () => {
-                var element = <any> domElement;
-                element.requestPointerLock = element.requestPointerLock ||
+        public requestPointerLock(domElement: HTMLElement): void {
+            var element = <any> domElement;
+            element.requestPointerLock = element.requestPointerLock ||
                 element.mozRequestPointerLock ||
                 element.webkitRequestPointerLock;
-                // Ask the browser to lock the pointer
-                element.requestPointerLock();
-            }, false);
+            // Ask the browser to lock the pointer
+            element.requestPointerLock();
+        }
+
+        public requestFullscreen(domElement: HTMLElement): void {
+            var element = <any> domElement;
+            element.requestFullscreen = element.requestFullscreen ||
+                element.webkitRequestFullscreen ||
+                element.mozRequestFullScreen ||
+                element.msRequestFullscreen;
+
+            element.requestFullscreen();
         }
 
         public swap(): void {
@@ -128,6 +136,15 @@ module Thralldom {
                 'webkitPointerLockElement' in document;
 
             return hasPointerLock;
+        }
+
+        public static isFullScreenSupported(): boolean {
+            var hasFullscreenApi = "requestFullscreen" in document.body ||
+                "webkitRequestFullscreen" in document.body ||
+                "msRequestFullscreen" in document.body ||
+                "mozRequestFullScreen" in document.body;
+
+            return hasFullscreenApi;
         }
 
         public static keyCodeToKeyName(keyCode: number): string {
