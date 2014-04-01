@@ -61,11 +61,6 @@ body {
         right: 0%;
         bottom: 10%;
     }
-
-    #loading-screen button {
-        min-height: 50px;
-        width: 20%;
-    }
 /* Progress bar below */
 
 progress {

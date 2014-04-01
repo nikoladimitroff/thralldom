@@ -2,8 +2,6 @@
 $(function () {
     var app: Thralldom.Application = new Thralldom.Application(document.getElementById("webGL"));
 
-    var playButton = document.getElementById("play-button");
-    playButton.disabled = true;
 
     var loadingScreen: HTMLDivElement = <any>document.getElementById("loading-screen");
     var imageSources = ["winged.jpg", "levski.jpg", "shipka.jpg", "shipka2.jpg"];
@@ -13,19 +11,26 @@ $(function () {
     var progressBar: HTMLProgressElement = <any>document.getElementById("loading-bar");
     var progressText: HTMLSpanElement = <any>document.getElementById("loading-text");
 
+
     var progressNotifier = app.load((meta: Thralldom.IMetaGameData) => {
-        playButton.disabled = false;
-        playButton.addEventListener("click", () => {
-            loadingScreen.style.display = "none";
+        progressText.innerHTML = "Press any key to continue";
+
+        var hasStarted = false;
+        var clickHandler = () => {
             app.requestPointerLockFullscreen(document.body);
-            app.run(meta);
-        });
+
+            if (!hasStarted) {
+                app.run(meta);
+                loadingScreen.style.display = "none";
+                hasStarted = true;
+            }
+        };
+
+        document.body.addEventListener("click", clickHandler, false);
     });
 
     progressNotifier.update = function (percentage, text) {
         progressBar.value = percentage * 100;
         progressText.innerHTML = (percentage * 100).toFixed(0) + "%" + "&nbsp;&nbsp;&nbsp;&nbsp" + text;
     };
-
-
 });

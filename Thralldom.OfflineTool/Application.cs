@@ -30,6 +30,7 @@ namespace Thralldom.OfflineTool
                 try
                 {
                     builder = new AppBuilder(user, pass, "thralldom.net", gameFolder, sitefolder);
+                    authenticationSuccessful = true;
                 }
                 catch (FtpCommandException)
                 {

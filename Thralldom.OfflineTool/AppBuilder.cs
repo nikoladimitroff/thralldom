@@ -23,6 +23,8 @@ namespace Thralldom.OfflineTool
         private string[] PhysicalRoots =  { "ProjectThralldom", "Thralldom.Web" };
         private string Root = "game/";
         private List<string> textFormats = new List<string>() { ".js", ".anim", ".script", ".srt", };
+        private string allowedExtensions = "*.html | *.manifest | *.css | *.js | *.png | *.jpg | *.jpeg | *.mp3 | *.tscr | *.anim | *.srt | " + 
+                                           "*.otf | *.ttf";
         private int WaitTime = 50;
         private int connectionLimit = 10;
 
@@ -50,29 +52,15 @@ namespace Thralldom.OfflineTool
             Action<string> rootNormalizedDir = FuncExtensions.Partial<Func<string, string>, string>(CreateDirectory, NormalizeFileNameRooted);
             Action<string> rootNormalizedFile = FuncExtensions.Partial<Func<string, string>, string>(UploadFile, NormalizeFileNameRooted);
 
-            //TraverseFileSystem(this.pathToGame + "\\Scripts\\implementations", rootNormalizedDir, rootNormalizedFile);
-            //TraverseFileSystem(this.pathToGame + "\\Content", rootNormalizedDir, rootNormalizedFile);
-            //TraverseFileSystem(this.pathToGame + "\\Fonts", rootNormalizedDir, rootNormalizedFile);
-            //TraverseFileSystem(this.pathToGame + "\\Images", rootNormalizedDir, rootNormalizedFile);
-            //string[] inroot = { "index.html", "app.css", "thralldom.min.js", "cache.manifest" };
-            //foreach (var file in inroot)
-            //{
-            //    rootNormalizedFile(this.pathToGame + "\\" + file);
-            //}
-
-            string extensions = "*.html | *.manifest | *.css | *.js | *.png | *.jpg | *.jpeg | *.mp3 | *.tscr | *.anim | *.srt | " + 
-                                "*.otf | *.ttf";
             string ignored = "Code Docs Tests typings bin obj Properties";
-
-
-            TraverseFileSystem(this.pathToGame, rootNormalizedDir, rootNormalizedFile, extensions, ignored);
+            TraverseFileSystem(this.pathToGame, rootNormalizedDir, rootNormalizedFile, this.allowedExtensions, ignored);
         }
 
         private void DeploySite()
         {
             Action<string> normalizedDir = FuncExtensions.Partial<Func<string, string>, string>(CreateDirectory, NormalizeFileName);
             Action<string> normalizedFile = FuncExtensions.Partial<Func<string, string>, string>(UploadFile, NormalizeFileName);
-            TraverseFileSystem(this.pathToSite, normalizedDir, normalizedFile, "*.html | *.css | *.js | *.png | *.jpg | *.jpeg", "bin obj Properties");
+            TraverseFileSystem(this.pathToSite, normalizedDir, normalizedFile, this.allowedExtensions, "bin obj Properties");
         }
 
         public void Deploy()
