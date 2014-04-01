@@ -11,6 +11,7 @@
     ],
     models: [
         "Content/Models/Terrain/terrain.js",
+        "Content/Models/Terrain/terrain.old.js",
         "Content/Models/Buildings/House_01/objectHouse1.js",
         "Content/Models/Buildings/House_02/objectMarket.js",
     ],

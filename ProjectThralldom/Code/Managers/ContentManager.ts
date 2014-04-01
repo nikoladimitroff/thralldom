@@ -34,6 +34,7 @@ module Thralldom {
             this.loaded++;
             this.loadedContent[path] = object;
 
+            console.log("Loading: ", this.loaded / this.loading);
             if (this.loading == this.loaded) {
                 this.onLoaded();
             }
@@ -89,10 +90,11 @@ module Thralldom {
             this.loading++;
 
             var loader = new THREE.JSONLoader();
-            var mesh: THREE.Object3D;
+
             loader.load(path, (geometry, materials) => {
                 geometry.computeFaceNormals();
                 geometry.computeVertexNormals();
+
                 var duplicate = () => new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
                 this.onContentLoaded(path, duplicate);
             });

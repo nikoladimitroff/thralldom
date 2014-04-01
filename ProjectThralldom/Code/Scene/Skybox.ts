@@ -20,7 +20,8 @@ module Thralldom {
                 vertexShader: shader.vertexShader,
                 uniforms: shader.uniforms,
                 depthWrite: false,
-                side: THREE.BackSide
+                side: THREE.BackSide,
+                
             });
 
             if (!description.scale) {

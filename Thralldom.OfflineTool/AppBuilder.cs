@@ -179,8 +179,8 @@ namespace Thralldom.OfflineTool
             string output = Regex.Replace(content, pattern, replacement);
 
             // Attach the manifest
-            string manifestPlaceholder = "<!--@ThralldomCacheManifest-->";
-            string manifestPath = "manifest='cache.manifest'";
+            string manifestPlaceholder = "<html";
+            string manifestPath = "<html manifest='cache.manifest'";
             output = output.Replace(manifestPlaceholder, manifestPath);
 
             File.WriteAllText(path + "\\index.html", output);

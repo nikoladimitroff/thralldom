@@ -1,6 +1,0 @@
-﻿place trigger at (10, 10) activate at distance of 5
-
-#sokolov:
-goto (20, 40) and say dialog | dialog.srt
-lookat (2, 1) and wait 5000
-goto (0, 0)
