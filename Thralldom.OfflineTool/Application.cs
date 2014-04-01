@@ -17,14 +17,34 @@ namespace Thralldom.OfflineTool
     {
         static void Main(string[] args)
         {
-            string defaultFolder = @"..\..\..\ProjectThralldom";
+            string gameFolder = @"..\..\..\ProjectThralldom";
+            string sitefolder = @"..\..\..\Thralldom.Web";
 
-            Console.Write("User: ");
-            string user = Console.ReadLine();
-            string pass = ReadPassword();
-            var builder = new AppBuilder(user, pass, "thralldom.net");
-            builder.Build(defaultFolder);
-            builder.Deploy(defaultFolder);
+            bool authenticationSuccessful = true;
+            AppBuilder builder = null;
+            do
+            {
+                Console.Write("User: ");
+                string user = Console.ReadLine();
+                string pass = ReadPassword();
+                try
+                {
+                    builder = new AppBuilder(user, pass, "thralldom.net", gameFolder, sitefolder);
+                }
+                catch (FtpCommandException)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Invalid credentials. Try again.");
+                    authenticationSuccessful = false;
+                }
+            }
+            while (!authenticationSuccessful);
+
+            Console.WriteLine("Authentication successful");
+            Console.WriteLine();
+
+            builder.BuildGame();
+            builder.Deploy();
         }
 
         public static string ReadPassword()

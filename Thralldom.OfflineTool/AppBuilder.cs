@@ -14,15 +14,22 @@ namespace Thralldom.OfflineTool
     class AppBuilder
     {
         private FtpClient client;
+        private string pathToGame;
+        private string pathToSite;
 
         private List<Stream> streams;
 
         private string[] DirectoryMasks = { "/ProjectThralldom", "/Content", "/Scripts" };
-        private string PhysicalRoot = "ProjectThralldom";
+        private string[] PhysicalRoots =  { "ProjectThralldom", "Thralldom.Web" };
         private string Root = "game/";
+        private List<string> textFormats = new List<string>() { ".js", ".anim", ".script", ".srt", };
+        private int WaitTime = 50;
+        private int connectionLimit = 15;
 
-        public AppBuilder(string user, string pass, string domain)
+        public AppBuilder(string user, string pass, string domain, string pathToGame, string pathToSite)
         {
+            this.pathToGame = pathToGame;
+            this.pathToSite = pathToSite;
 
             this.streams = new List<Stream>();
 
@@ -32,32 +39,44 @@ namespace Thralldom.OfflineTool
             client.Connect();
         }
 
-        public void Build(string path)
+        public void BuildGame()
         {
-            GenerateManifest(path);
-            BuildIndex(path);
+            GenerateManifest(this.pathToGame);
+            BuildIndex(this.pathToGame);
         }
 
-        public void Deploy(string path)
+        private void DeployGame()
         {
-            TraverseFileSystem(path + "\\Scripts\\implementations", CreateDirectory, UploadFile);
-            TraverseFileSystem(path + "\\Content", CreateDirectory, UploadFile);
+            Action<string> rootNormalizedDir = FuncExtensions.Partial<Func<string, string>, string>(CreateDirectory, NormalizeFileNameRooted);
+            Action<string> rootNormalizedFile = FuncExtensions.Partial<Func<string, string>, string>(UploadFile, NormalizeFileNameRooted);
+
+            TraverseFileSystem(this.pathToGame + "\\Scripts\\implementations", rootNormalizedDir, rootNormalizedFile);
+            TraverseFileSystem(this.pathToGame + "\\Content", rootNormalizedDir, rootNormalizedFile);
             string[] inroot = { "index.html", "app.css", "thralldom.min.js", "cache.manifest" };
             foreach (var file in inroot)
             {
-                this.UploadFile(path + "\\" +  file);
+                rootNormalizedFile(this.pathToGame + "\\" + file);
             }
+        }
+
+        private void DeploySite()
+        {
+            Action<string> normalizedDir = FuncExtensions.Partial<Func<string, string>, string>(CreateDirectory, NormalizeFileName);
+            Action<string> normalizedFile = FuncExtensions.Partial<Func<string, string>, string>(UploadFile, NormalizeFileName);
+            TraverseFileSystem(this.pathToSite, normalizedDir, normalizedFile, "*.html | *.css | *.js | *.png | *.jpg | *.jpeg", "bin obj Properties");
+        }
+
+        public void Deploy()
+        {
+            this.DeployGame();
+            this.DeploySite();
 
 
             while (this.streams.Count != 0)
             {
-                Thread.Sleep(50);
+                Thread.Sleep(this.WaitTime);
             }
-
-            //client.Disconnect();
-            //client.Dispose();
         }
-
         
         private string NormalizeFileName(string file)
         {
@@ -71,7 +90,12 @@ namespace Thralldom.OfflineTool
                 }
 	        }
 
-            return normalized.Replace(PhysicalRoot, ""); ;
+            foreach (var root in this.PhysicalRoots)
+            {
+                normalized = normalized.Replace(root, ""); ;
+            }
+
+            return normalized;
         }
 
         private string NormalizeFileNameRooted(string file)
@@ -79,21 +103,18 @@ namespace Thralldom.OfflineTool
             return this.Root + this.NormalizeFileName(file);
         }
 
-        private int connectionLimit = 15;
-        private void UploadFile(string file)
+        private void UploadFile(Func<string, string> normalizationFunction, string file)
         {
             while (this.streams.Count > this.connectionLimit)
             {
-                Thread.Sleep(50);
+                Thread.Sleep(this.WaitTime);
             }
 
-            string normalized = this.NormalizeFileNameRooted(file);
+            string normalized = normalizationFunction(file);
             Stream stream = client.OpenWrite(normalized, FtpDataType.Binary);
 
-            List<string> textFormats = new List<string>() { ".js", ".anim", ".script", ".srt", };
-
             byte[] bytes;
-            if (textFormats.IndexOf(Path.GetExtension(file)) != -1)
+            if (this.textFormats.IndexOf(Path.GetExtension(file)) != -1)
             {
                 bytes = Encoding.UTF8.GetBytes(File.ReadAllText(file));
             }
@@ -121,9 +142,9 @@ namespace Thralldom.OfflineTool
 
         }
 
-        private void CreateDirectory(string dir)
+        private void CreateDirectory(Func<string, string> normalizationFunction, string dir)
         {
-            this.client.CreateDirectory(this.NormalizeFileNameRooted(dir));
+            this.client.CreateDirectory(normalizationFunction(dir));
         }
 
         private void GenerateManifest(string path)
@@ -155,14 +176,32 @@ namespace Thralldom.OfflineTool
 
         }
 
+        private IEnumerable<string> GetFilteredFiles(string path, string searchPattern)
+        {
+            string[] filters = searchPattern.Split('|');
+            List<string> files = new List<string>();
+            foreach (var filter in filters)
+	        {
+		        files.AddRange(Directory.GetFiles(path, filter.Trim()));
+	        }
+            return files;
+        }
+
         private void TraverseFileSystem(string path, Action<string> dirCallback, Action<string> fileCallback)
         {
-            foreach (var dir in Directory.GetDirectories(path))
+            this.TraverseFileSystem(path, dirCallback, fileCallback, "*", "");
+        }
+        private void TraverseFileSystem(string path, Action<string> dirCallback, Action<string> fileCallback, string searchPattern, string ignoredDirectories)
+        {
+            foreach (var dir in Directory.EnumerateDirectories(path))
             {
-                dirCallback(dir);
-                TraverseFileSystem(dir, dirCallback, fileCallback);
+                if (!ignoredDirectories.Contains(Path.GetFileName(dir)))
+                {
+                    dirCallback(dir);
+                    TraverseFileSystem(dir, dirCallback, fileCallback, searchPattern, ignoredDirectories);
+                }
             }
-            foreach (var file in Directory.GetFiles(path))
+            foreach (var file in GetFilteredFiles(path, searchPattern))
             {
                 fileCallback(file);
             }

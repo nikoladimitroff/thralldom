@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thralldom.OfflineTool", "Th
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thralldom.Editor", "Thralldom.Editor\Thralldom.Editor.csproj", "{C8EDC26A-B884-4C48-9716-B586C5F73494}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thralldom.Web", "Thralldom.Web\Thralldom.Web.csproj", "{3E4C6F6B-B998-448C-9D19-4F6950F22524}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{C8EDC26A-B884-4C48-9716-B586C5F73494}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8EDC26A-B884-4C48-9716-B586C5F73494}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8EDC26A-B884-4C48-9716-B586C5F73494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E4C6F6B-B998-448C-9D19-4F6950F22524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E4C6F6B-B998-448C-9D19-4F6950F22524}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E4C6F6B-B998-448C-9D19-4F6950F22524}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E4C6F6B-B998-448C-9D19-4F6950F22524}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
