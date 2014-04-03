@@ -6,6 +6,13 @@
     overflow-x: hidden; 
     overflow-y: hidden;
 }
+
+@font-face {
+
+  font-family: "Bulgaria Moderna";
+  src: url("Fonts/Bulgaria_Moderna_Pro.otf") format("opentype");
+}
+
 body {
     font-family: 'Segoe UI', sans-serif;
 }
@@ -29,6 +36,62 @@ body {
    */
    -ms-user-select: none;
    user-select: none;
+}
+
+#loading-screen {
+    z-index: 99999;
+    /* Background will be set from JS */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: black;
+
+}
+
+    #loading-screen div {
+        
+        -webkit-text-shadow: 2px 2px 5px white;
+        text-shadow: 2px 2px 5px white;
+
+        text-align: center;
+        color: black;
+        font-family: "Bulgaria Moderna";
+        font-size: 3em;
+        position: absolute;
+        left: 0%;
+        right: 0%;
+        bottom: 10%;
+    }
+/* Progress bar below */
+
+progress {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -appearance: none;
+
+  font-size: .6em;
+  line-height: 0.5em;
+  text-indent: .5em;
+  width: 100%;
+  height: 1.5em;
+  border: none;
+  
+  background-color: #eee;
+  color: darkgoldenrod;
+}
+progress[value]::-webkit-progress-value {
+    background-color: darkgoldenrod;
+    -webkit-background-size: 35px 20px, 100% 100%, 100% 100%;
+    background-size: 35px 20px, 100% 100%, 100% 100%;
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: #eee;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+progress[value]::-moz-progress-bar {
+    background-color: darkgoldenrod;
+    -moz-background-size: 35px 20px, 100% 100%, 100% 100%;
+    background-size: 35px 20px, 100% 100%, 100% 100%;
 }
 
 nav {
@@ -71,4 +134,6 @@ nav {
 
 #subtitles span {
     background-color: black;
+    color: white;
+    z-index: 999;
 }

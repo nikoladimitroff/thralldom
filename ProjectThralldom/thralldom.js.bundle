@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle minify="true" runOnBuild="true" output="thralldom.js" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://vswebessentials.com/schemas/v1/bundle.xsd">
+  <!--The order of the <file> elements determines the order of the file contents when bundled.-->
+  <file>/Scripts/implementations/Three.Plugins/THREE.AudioObject.js</file>
+  <file>/Scripts/implementations/subtitles.js</file>
+  <!--JS Polyfill-->
+  <file >Code/StringExtensions.js</file>
+
+  <!-- Ours -->
+
+  <!-- Constants -->
+  <file >Code/Constants.js</file>
+
+  <!-- Language packs-->
+  <file >Code/LanguagePacks/Bulgarian.js</file>
+  <file >Code/LanguagePacks/English.js</file>
+  <!-- /Language packs-->
+
+  <!-- Algorithms-->
+  <file >Code/Algorithms/GraphDefinitions.js</file>
+  <file >Code/Algorithms/AStar.js</file>
+  <!-- /Algorithms-->
+
+  <!-- Scripted -->
+  <file >Code/Scripted/ScriptedActions.js</file>
+  <file >Code/Scripted/ScriptedEvent.js</file>
+  <file >Code/Scripted/ScriptController.js</file>
+  <!-- /Scripted-->
+
+  <!-- Character controllers & AI -->
+  <file >Code/CharacterControllers/SkyrimCharacterController.js</file>
+  <file >Code/AI/AIController.js</file>
+  <file >Code/AI/Citizen.js</file>
+  <file >Code/AI/Guard.js</file>
+  <!-- /Character controllers & AI -->
+
+  <!-- State machine -->
+  <file >Code/StateMachine/State.js</file>
+  <file >Code/StateMachine/StateMachine.js</file>
+  <file >Code/StateMachine/StateMachineUtils.js</file>
+  <!-- /State machine -->
+
+  <!-- Managers -->
+  <file >Code/Utilities.js</file>
+  <file >Code/GeometryUtils.js</file>
+  <file >Code/Managers/MouseData.js</file>
+  <file >Code/Managers/InputManager.js</file>
+  <file >Code/Managers/PhysicsManager.js</file>
+  <file >Code/Managers/AIManager.js</file>
+  <file >Code/Managers/AudioManager.js</file>
+  <!-- Managers -->
+
+  <!-- Scene -->
+  <file >Code/Scene/World.js</file>
+  <file >Code/Objectives.js</file>
+  <file >Code/Quest.js</file>
+  <file >Code/FrameInfo.js</file>
+  <file >Code/Scene/LoadableObject.js</file>
+  <file >Code/Scene/DynamicObject.js</file>
+  <file >Code/Scene/Terrain.js</file>
+  <file >Code/Scene/Skybox.js</file>
+  <file >Code/Scene/Environment.js</file>
+  <file >Code/Scene/Weapon.js</file>
+  <file >Code/Scene/Character.js</file>
+  <file >Code/Scene/Ammunition.js</file>
+  <file >Code/Scene/LaserOfDeath.js</file>
+  <!-- Scene -->
+
+  <!-- Content -->
+  <file >Code/Managers/ContentManager.js</file>
+  <!-- /Content -->
+
+  <file >Code/Application.js</file>
+  <file >Code/Main.js</file>
+</bundle>

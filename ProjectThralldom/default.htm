@@ -12,29 +12,39 @@
 
 
         <div id="subtitles">
-            <span>THIS IS SOME LOREM IPSUM FUCK THIS FUCK DAT</span>
+            <span></span>
         </div>
     </nav>
+    <div id="loading-screen" class="unselectable maximized">
+        <div class="centered">
+            <span id="loading-text"></span><br>
+            <progress id="loading-bar" max="100" value="0">
+            </progress>
+        </div>
+    </div>
 
     <div id="crosshair"></div>
 
     <!-- External libs -->
     <script src="Scripts/implementations/three.min.js"></script>
-    <script src="Scripts/implementations/Three.Plugins/THREE.AudioObject.js"></script>
+    <script src="Scripts/implementations/ammo.small.js"></script>
     <script src="Scripts/implementations/jquery.documentReady.js"></script>
-    <script src="Scripts/implementations/ammo.js"></script>
     <script src="Scripts/implementations/stats.min.js"></script>
-    <script src="Scripts/implementations/subtitles.js"></script>
+
 
     <!-- Fonts -->
     <script src="Content/Fonts/Helvetiker.js"></script>
     <!-- /Fonts-->
+    <!--@ThralldomCodeBegin-->
+
+    <script src="Scripts/implementations/Three.Plugins/THREE.AudioObject.js"></script>
+    <script src="Scripts/implementations/subtitles.js"></script>
+
 
     <!--JS Polyfill-->
     <script src="Code/StringExtensions.js"></script>
 
     <!-- Ours -->
-
     <!-- Constants -->
     <script src="Code/Constants.js"></script>
 
@@ -42,34 +52,28 @@
     <script src="Code/LanguagePacks/Bulgarian.js"></script>
     <script src="Code/LanguagePacks/English.js"></script>
     <!-- /Language packs-->
-
     <!-- Algorithms-->
     <script src="Code/Algorithms/GraphDefinitions.js"></script>
     <script src="Code/Algorithms/AStar.js"></script>
     <!-- /Algorithms-->
-
     <!-- Scripted -->
     <script src="Code/Scripted/ScriptedActions.js"></script>
     <script src="Code/Scripted/ScriptedEvent.js"></script>
     <script src="Code/Scripted/ScriptController.js"></script>
     <!-- /Scripted-->
-
     <!-- Audio -->
     <!-- /Audio -->
-
     <!-- Character controllers & AI -->
     <script src="Code/CharacterControllers/SkyrimCharacterController.js"></script>
     <script src="Code/AI/AIController.js"></script>
     <script src="Code/AI/Citizen.js"></script>
     <script src="Code/AI/Guard.js"></script>
     <!-- /Character controllers & AI -->
-
     <!-- State machine -->
     <script src="Code/StateMachine/State.js"></script>
     <script src="Code/StateMachine/StateMachine.js"></script>
     <script src="Code/StateMachine/StateMachineUtils.js"></script>
     <!-- /State machine -->
-
     <!-- Managers -->
     <script src="Code/Utilities.js"></script>
     <script src="Code/GeometryUtils.js"></script>
@@ -79,7 +83,6 @@
     <script src="Code/Managers/AIManager.js"></script>
     <script src="Code/Managers/AudioManager.js"></script>
     <!-- Managers -->
-
     <!-- Scene -->
     <script src="Code/Scene/World.js"></script>
     <script src="Code/Objectives.js"></script>
@@ -95,12 +98,13 @@
     <script src="Code/Scene/Ammunition.js"></script>
     <script src="Code/Scene/LaserOfDeath.js"></script>
     <!-- Scene -->
-
     <!-- Content -->
     <script src="Code/Managers/ContentManager.js"></script>
     <!-- /Content -->
 
     <script src="Code/Application.js"></script>
     <script src="Code/Main.js"></script>
+
+    <!--@ThralldomCodeEnd-->
 </body>
 </html>

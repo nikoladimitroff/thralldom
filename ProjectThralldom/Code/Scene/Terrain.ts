@@ -19,7 +19,6 @@ module Thralldom {
                 var planeMaterial = new THREE.MeshPhongMaterial({ map: texture });
                 var plane = new THREE.Mesh(planeGeometry, planeMaterial);
                 plane.rotation.x = -Math.PI / 2;
-                plane.receiveShadow = true;
 
                 this.mesh = plane;
                 this.rigidBody = PhysicsManager.computePlaneBody();
@@ -28,8 +27,8 @@ module Thralldom {
                 var mesh = <THREE.Mesh>content.getContent(description.model);
                 mesh.scale.set(scale, scale, scale);
                 this.mesh = mesh;
+
                 this.rigidBody = PhysicsManager.computeTriangleMeshBody(mesh);
-                this.mesh.receiveShadow = true;
             }
             else {
                 throw new Error("Can't load terrain, please provide a texture or a model!");

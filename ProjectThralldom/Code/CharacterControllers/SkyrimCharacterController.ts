@@ -33,6 +33,7 @@ module Thralldom {
 
             constructor(aspectRatio: number, camSpeed: number, hero: Character, distance: number, bias: THREE.Vector3, skybox: Skybox) {
                 this.camera = new THREE.PerspectiveCamera(60, aspectRatio, 1, 100000);
+
                 this.hero = hero;
                 this.distance = distance;
                 this.bias = bias;
@@ -43,7 +44,6 @@ module Thralldom {
 
                 this.skybox = skybox;
 
-                this.camera.position.y = 20;
 
                 this.settings = SkyrimCharacterController.defaultSettings;
             }

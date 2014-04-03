@@ -26,6 +26,14 @@ TestResults
 !ProjectThralldom/Scripts/**
 !Thralldom.Editor/**
 
+# Build files
+*/Docs/*.html
+ProjectThralldom/*.manifest
+ProjectThralldom/index.html
+ProjectThralldom/thralldom.*
+*.map
+
+
 # Build results
 [Dd]ebug/
 [Rr]elease/

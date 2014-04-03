@@ -8,7 +8,6 @@ module Thralldom {
 
     export class Application {
         // Game specific
-        private updateInterval: number;
         private isOnFocus: boolean;
 
         // Three.js variables
@@ -52,9 +51,8 @@ module Thralldom {
         private audio: AudioManager;
         private language: Languages.ILanguagePack;
 
-        constructor(container: HTMLElement, updateInterval: number) {
+        constructor(container: HTMLElement) {
             this.webglContainer = container;
-            this.updateInterval = updateInterval;
             this.input = new InputManager(container);
             this.language = new Languages.English();
             this.content = new ContentManager();
@@ -77,13 +75,11 @@ module Thralldom {
             this.quest = this.content.getContent(meta.quest);
             this.scripts = <Array<ScriptedEvent>> meta.scripts.map((file) => this.content.getContent(file));
             this.renderer = new THREE.WebGLRenderer({ antialias: true });
+            this.renderer.shadowMapEnabled = true;
+            this.renderer.shadowMapSoft = true;
 
             this.renderer.setSize(this.webglContainer.offsetWidth, this.webglContainer.offsetHeight);
             this.webglContainer.appendChild(this.renderer.domElement);
-
-            // Request pointer lock
-            if (Thralldom.InputManager.isMouseLockSupported())
-                this.input.requestPointerLock(document.body);
 
             // Detect going out of focus
             // TODO
@@ -110,27 +106,20 @@ module Thralldom {
             this.ammunitions = new Array<Ammunition>();
 
             // Lights
-            var pointLight = new THREE.PointLight(0xffffff, 2, 5000);
-            pointLight.position = new THREE.Vector3(0, 0, 30);
-            this.world.renderScene.add(pointLight);
-            //var ambient = new THREE.AmbientLight(0xffffff);
-            //this.world.renderScene.add(ambient);
 
-            //var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            //directionalLight.position.set(0, 1, 0);
-            //this.world.renderScene.add(directionalLight);
+            var ambient = new THREE.AmbientLight(0x999999);
+            this.world.renderScene.add(ambient);
 
-            // Axes
-            var axes = new THREE.AxisHelper(1000);
-            //  this.scene.renderScene.add(axes);
+            var directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+            directionalLight.position.set(1, 1, 1);
+
+            this.world.renderScene.add(directionalLight);
 
             // Audio
             this.audio.playSound("Soundtrack", this.cameraController.camera, true, true);
 
             var subtitleContainer = <HTMLSpanElement> document.querySelector("#subtitles span");
             Subs.fixDomElement(subtitleContainer);
-            var subs = new Subs.FixedSubtitles(this.content.getContent("Liars.srt"));
-            Subs.playSubtitles(subs);
         }
 
         private handleKeyboard(delta: number) {
@@ -140,19 +129,6 @@ module Thralldom {
 
         private handleMouse(delta: number) {
             this.cameraController.handleMouse(delta, this.input);
-
-            var pos = this.cameraController.position;
-            var dir = this.cameraController.target;
-
-
-
-            //if (this.ray.hasHit()) {
-            //    var distance = this.ray.get_m_hitPointWorld().distance(this.fromWorldVec);
-
-            //    var pos = this.cameraController.position;
-            //    var dir = this.cameraController.target;
-            //    this.cameraController.distance -= distance * 1.05;
-            //}
 
         }
 
@@ -250,12 +226,23 @@ module Thralldom {
             requestAnimationFrame(() => this.loop());
         }
 
-        public run(): void {
-            this.content.loadMeta(Application.MetaFilePath, (meta: IMetaGameData) => {
-                this.init(meta);
-                window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
-                this.loop();
-            });
+        public load(callback: (meta: IMetaGameData) => void): IProgressNotifier {
+            return this.content.loadMeta(Application.MetaFilePath, callback);
+        }
+
+        // Must be called inside a click event
+        public requestPointerLockFullscreen(domElement: HTMLElement): void {
+            // Request pointer lock
+            if (Thralldom.InputManager.isMouseLockSupported())
+                this.input.requestPointerLock(document.body);
+            if (Thralldom.InputManager.isFullScreenSupported())
+                this.input.requestFullscreen(document.body);
+        }
+
+        public run(meta: IMetaGameData): void {
+            this.init(meta);
+            window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
+            this.loop();
         }
     }
 }
