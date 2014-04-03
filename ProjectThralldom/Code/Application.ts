@@ -31,7 +31,7 @@ module Thralldom {
 
         public hero: Character;
 
-        public npcs: Array<Character>;
+        public enemies: Array<Character>;
         public ammunitions: Array<Ammunition>;
 
         public static MetaFilePath = "Content/Meta.js";
@@ -49,7 +49,12 @@ module Thralldom {
         private input: InputManager;
         private content: ContentManager;
         private audio: AudioManager;
+        private combat: CombatManager;
         private language: Languages.ILanguagePack;
+
+
+        // Debug settings
+        private debugDraw: boolean = false;
 
         constructor(container: HTMLElement) {
             this.webglContainer = container;
@@ -75,8 +80,6 @@ module Thralldom {
             this.quest = this.content.getContent(meta.quest);
             this.scripts = <Array<ScriptedEvent>> meta.scripts.map((file) => this.content.getContent(file));
             this.renderer = new THREE.WebGLRenderer({ antialias: true });
-            this.renderer.shadowMapEnabled = true;
-            this.renderer.shadowMapSoft = true;
 
             this.renderer.setSize(this.webglContainer.offsetWidth, this.webglContainer.offsetHeight);
             this.webglContainer.appendChild(this.renderer.domElement);
@@ -100,26 +103,30 @@ module Thralldom {
 
 
             // npcs
-            this.npcs = <Array<Character>> this.world.select(".npc");
+            this.enemies = <Array<Character>> this.world.select(".guard");
 
             // ammo
             this.ammunitions = new Array<Ammunition>();
 
             // Lights
 
-            var ambient = new THREE.AmbientLight(0x999999);
+            var ambient = new THREE.AmbientLight(0x5C5C5C);
             this.world.renderScene.add(ambient);
 
-            var directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+            var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
             directionalLight.position.set(1, 1, 1);
 
             this.world.renderScene.add(directionalLight);
 
+            // Combat
+            this.combat = new CombatManager(this.world, this.hero, this.enemies);
+
             // Audio
             this.audio.playSound("Soundtrack", this.cameraController.camera, true, true);
-
             var subtitleContainer = <HTMLSpanElement> document.querySelector("#subtitles span");
             Subs.fixDomElement(subtitleContainer);
+
+            this.toggleDebugDraw(false);
         }
 
         private handleKeyboard(delta: number) {
@@ -179,31 +186,17 @@ module Thralldom {
 
             var currentAnimTime = this.hero.animation.currentTime;
 
+            var sokolov = <any>this.world.select("#sokolov")[0];
             node.innerText = this.language.welcome + "\n" +
+                Utilities.formatString("Boycho's hp: {0}\n", this.hero.health) +
+                Utilities.formatString("Sokolov's hp: {0}\n", sokolov.health) +
                 Utilities.formatString("Velocity: {0}\n", Utilities.formatVector(this.hero.rigidBody.getLinearVelocity(), 7)) +
                 Utilities.formatString("Current pos: {0}\n", Utilities.formatVector(this.hero.mesh.position, 5)) +
                 Utilities.formatString("State: {0}\n", StateMachineUtils.translateState(this.hero.stateMachine.current)) +
                 Utilities.formatString("Current anim time: {0}\n", currentAnimTime.toFixed(6)) + 
                 questText;
 
-            var frameInfo = new FrameInfo(this.world, this.hero, []);
-            // Reverse loop so that we can remove elements from the array.
-            for (var i = this.npcs.length - 1; i > - 1; i--) {
-                if (this.npcs[i].health <= 0) {
-                    frameInfo.killedEnemies.push(this.npcs[i]);
-
-                    this.world.remove(this.npcs[i]);
-                    this.npcs.splice(i, 1);
-                }
-            }
-
-            for (var i = this.ammunitions.length - 1; i > -1; i--) {
-                var ammo = this.ammunitions[i];
-                if (!ammo.isNeeded()) {
-                    this.world.remove(ammo);
-                    this.ammunitions.splice(i, 1);
-                }
-            }
+            var frameInfo = this.combat.update(this.debugDraw);
 
             this.world.update(delta);
             this.quest.update(frameInfo, this.world);
@@ -243,6 +236,26 @@ module Thralldom {
             this.init(meta);
             window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
             this.loop();
+        }
+
+        // Debugging tools below
+        public toggleDebugDraw(debugDraw?: boolean) {
+            if (debugDraw !== undefined) {
+                this.debugDraw = debugDraw;
+            }
+            else {
+                this.debugDraw = !this.debugDraw;
+            }
+
+            var allObjects = this.world.dynamics.concat(this.world.statics);
+            for (var index in allObjects) {
+                var boundingShape = allObjects[index].mesh.children.filter((x) => x instanceof THREE.Mesh && !(x instanceof THREE.SkinnedMesh))[0];
+                if (boundingShape) {
+                    boundingShape.visible = this.debugDraw;
+                }
+            }
+            var debuggingLines = this.world.renderScene.children.filter((x) => x.name == "debug");
+            debuggingLines.forEach((x) => this.world.renderScene.remove(x));
         }
     }
 }

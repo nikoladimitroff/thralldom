@@ -1,6 +1,9 @@
 /// <reference path="application.ts" />
 $(function () {
     var app: Thralldom.Application = new Thralldom.Application(document.getElementById("webGL"));
+    // Make the game visible for easier debuggin
+    var w = <any> window;
+    w.game = app;
 
 
     var loadingScreen: HTMLDivElement = <any>document.getElementById("loading-screen");

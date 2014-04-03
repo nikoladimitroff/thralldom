@@ -145,6 +145,7 @@
     </Content>
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
+    <TypeScriptCompile Include="Code\Managers\CombatManager.ts" />
     <TypeScriptCompile Include="Scripts\typings\subtitles.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\Three.Plugins\THREE.AudioObject.d.ts" />
     <Content Include="Tests\TestingPage.html" />

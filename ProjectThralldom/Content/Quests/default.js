@@ -29,7 +29,7 @@
         {
             type: "kill",
             target: ".npc",
-            killCount: 2
+            killCount: 1
         }
     ]
 }

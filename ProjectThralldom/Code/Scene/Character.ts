@@ -32,7 +32,7 @@ module Thralldom {
         public range: number;
 
         private hp: number;
-        private damage: number;
+        public damage: number;
 
         public get health(): number {
             return this.hp;
@@ -54,7 +54,7 @@ module Thralldom {
 
             this.hp = 100;
             this.range = 100;
-            this.damage = 1;
+            this.damage = 5;
             this.settings = Character.defaultSettings;
 
         }

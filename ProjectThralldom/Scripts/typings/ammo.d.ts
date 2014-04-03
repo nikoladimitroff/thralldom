@@ -4,6 +4,10 @@ declare module Ammo {
 
     export class AsmJsObject {
         ptr: number;
+        /*
+         * Use this instead of ptr with the minified version
+        */
+        a: number;
     }
 
     export class btDefaultCollisionConfiguration extends AsmJsObject {

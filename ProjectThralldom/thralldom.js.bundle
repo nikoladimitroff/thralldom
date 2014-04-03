@@ -46,6 +46,7 @@
   <file >Code/Managers/MouseData.js</file>
   <file >Code/Managers/InputManager.js</file>
   <file >Code/Managers/PhysicsManager.js</file>
+  <file >Code/Managers/CombatManager.js</file>
   <file >Code/Managers/AIManager.js</file>
   <file >Code/Managers/AudioManager.js</file>
   <!-- Managers -->

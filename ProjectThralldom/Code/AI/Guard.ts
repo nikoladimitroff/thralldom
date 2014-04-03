@@ -16,13 +16,16 @@ module Thralldom {
                 var rotation = GeometryUtils.quaternionFromVectors(Const.ForwardVector, guardToTarget);
                 guard.mesh.quaternion.copy(rotation);
 
+                // If in attack range, attack
                 if (guardToTargetDist <= guard.range) {
                     if (!guard.stateMachine.requestTransitionTo(CharacterStates.Attacking))
                         guard.stateMachine.requestTransitionTo(CharacterStates.Unsheathing);
                 }
+                // If out of range, let him go
                 else if (guardToTargetDist >= guard.range * 3) {
                     this.isAlerted = false;
                 }
+                // Chase
                 else {
                     // WARNING: I smell bugs here, what if the target runs away from the guard in time less than the time needed to finish sheathing the weapon?
                     if (guard.stateMachine.current == CharacterStates.Attacking) {
@@ -40,7 +43,7 @@ module Thralldom {
             private scanAround(world: Thralldom.World, guardToTarget: THREE.Vector3, guardToTargetDist: number): void {
                 var guard = this.character;
 
-                var ray = world.physicsManager.raycast(guard, this.target);
+                var ray = world.physicsManager.raycastCharacters(guard, this.target);
                 if (ray.hasHit()) {
 
                     var guardForward = new THREE.Vector3(0, 0, 1);
@@ -50,7 +53,7 @@ module Thralldom {
                         ray.get_m_collisionObject().ptr == this.target.rigidBody.ptr &&
                         guardForward.angleTo(guardToTarget) <= guard.settings.viewAngle;
 
-                    var isCloseEnough = guardToTargetDist < guard.range * 0.2;
+                    var isCloseEnough = guardToTargetDist < guard.range * 0.5;
 
                     if (inLineOfSight && isCloseEnough) {
                         this.isAlerted = true;

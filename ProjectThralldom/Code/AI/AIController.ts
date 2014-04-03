@@ -19,17 +19,20 @@ module Thralldom {
             }
 
             public update(delta: number, world: Thralldom.World): void {
-                if (this.script) {
-                    this.script.update(this.character, world, delta);
+                if (this.character.isDead) {
+                    this.character.stateMachine.requestTransitionTo(CharacterStates.Dying);
                 }
                 else {
-                    this.updateCallback(delta, world);
+                    if (this.script) {
+                        this.script.update(this.character, world, delta);
+                    }
+                    else {
+                        this.updateCallback(delta, world);
+                    }
+
+                    this.character.stateMachine.requestTransitionTo(CharacterStates.Falling);
+                    this.character.stateMachine.requestTransitionTo(CharacterStates.Idle);
                 }
-
-
-                this.character.stateMachine.requestTransitionTo(CharacterStates.Falling);
-                this.character.stateMachine.requestTransitionTo(CharacterStates.Idle);
-
                 this.character.stateMachine.update(delta);
             }
 

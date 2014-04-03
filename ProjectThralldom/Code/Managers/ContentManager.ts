@@ -187,7 +187,7 @@ module Thralldom {
             // Physics first!
             this.parsePhysics(worldDescription.physics);
             var settings = worldDescription.settings;
-            PhysicsManager.attachDebuggingVisuals = settings.debugDraw || false;
+            PhysicsManager.attachDebuggingVisuals = settings.attachDebuggingVisuals || false;
 
             var controllerSettings = worldDescription.controller;
             if (!controllerSettings.angularSpeed) {

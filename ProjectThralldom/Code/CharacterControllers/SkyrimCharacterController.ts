@@ -82,7 +82,7 @@ module Thralldom {
                 }
 
                 if (input.mouse.rightButton) {
-                    this.hero.health = 0;
+                    //this.hero.health = 0;
                 }
             }
 
@@ -116,7 +116,7 @@ module Thralldom {
                 var hero = this.hero;
 
                 // See if we are still alive
-                if (this.hero.health <= 0) {
+                if (this.hero.isDead) {
                     this.hero.stateMachine.requestTransitionTo(CharacterStates.Dying);
                 }
 

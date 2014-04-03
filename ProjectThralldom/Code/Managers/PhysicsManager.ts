@@ -33,15 +33,25 @@ module Thralldom {
         private cachedRay = new Ammo.ClosestRayResultCallback(this.cachedFromWorld, this.cachedToWorld);
         private cachedRaycastTransform = new Ammo.btTransform();
 
-        public raycast(fromCharacter: Character, toCharacter: Character): Ammo.ClosestRayResultCallback {
+        public raycastCharacters(fromCharacter: Character, toCharacter: Character): Ammo.ClosestRayResultCallback {
             var from = new THREE.Vector3();
             from.subVectors(fromCharacter.mesh.position, fromCharacter.rigidBody.centerToMesh);
 
             var to = new THREE.Vector3();
             to.subVectors(toCharacter.mesh.position, toCharacter.rigidBody.centerToMesh);
 
+            return this.raycast(from, to);
+        }
+
+        public raycast(from: THREE.Vector3, to: THREE.Vector3): Ammo.ClosestRayResultCallback {
+
+            this.cachedFromWorld = new Ammo.btVector3();
+            this.cachedToWorld = new Ammo.btVector3();
+            this.cachedRay = new Ammo.ClosestRayResultCallback(this.cachedFromWorld, this.cachedToWorld);
+
             this.cachedFromWorld.setValue(from.x, from.y, from.z);
             this.cachedToWorld.setValue(to.x, to.y, to.z);
+
             this.cachedRay.set_m_rayFromWorld(this.cachedFromWorld);
             this.cachedRay.set_m_rayToWorld(this.cachedToWorld);
             this.world.rayTest(this.cachedFromWorld, this.cachedToWorld, this.cachedRay);

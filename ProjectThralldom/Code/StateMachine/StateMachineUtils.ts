@@ -1,7 +1,8 @@
 module Thralldom {
     export class StateMachineUtils {
 
-        private static FallingGravityMultiplier = 0.5;
+        private static FallingExitMultiplier = 0.6;
+        private static FallingEntranceMultiplier = 0.45;
         private static JumpingErrorMargin = 1;
 
         private static dummyEventHandler = (state: number, object: DynamicObject) => { };
@@ -170,7 +171,7 @@ module Thralldom {
             }
 
             var jumpingInterupt = (object: DynamicObject): boolean => {
-                var precision = PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingGravityMultiplier;
+                var precision = PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingExitMultiplier;
 
                 var velocityY = object.rigidBody.getLinearVelocity().y();
                 var jumpFinished =
@@ -193,7 +194,7 @@ module Thralldom {
             var falling: State;
 
             var fallingInterupt = (object: DynamicObject): boolean => {
-                var precision = PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingGravityMultiplier
+                var precision = PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingExitMultiplier;
                 var velocityY = object.rigidBody.getLinearVelocity().y();
                 // Negative velocity that is close to zero
                 return velocityY < 0 &&
@@ -202,8 +203,8 @@ module Thralldom {
 
             var fallingEntranceCondition = (object: DynamicObject): boolean => {
                 var velocityY = object.rigidBody.getLinearVelocity().y();
-                // Negative velocity bigger than gravity * gravityMultiplier (0.6 looks ok)
-                return velocityY < 0 && velocityY < PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingGravityMultiplier;
+                // Negative velocity bigger than gravity * gravityMultiplier
+                return velocityY < 0 && velocityY < PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingEntranceMultiplier;
             }
 
             falling = new State(CharacterStates.Falling,
@@ -247,6 +248,16 @@ module Thralldom {
             return unsheating;
         }
 
+        private static shootBullet(hero: Character): void {
+            var forward = new THREE.Vector3(0, 0, 1);
+            forward.transformDirection(hero.mesh.matrix);
+            var worldFrom = new THREE.Vector3();
+            worldFrom.applyMatrix4((<any>hero.weapon.mesh).matrixWorld);
+            worldFrom.sub(hero.rigidBody.centerToMesh);
+
+            hero.weapon.attack(worldFrom, forward);
+        }
+
         private static getAttackingState(): State {
             var attacking: State;
 
@@ -256,6 +267,7 @@ module Thralldom {
                     attacking.data.doubleAttack = true;
                 }
                 else {
+                    StateMachineUtils.shootBullet(hero);
                     AudioManager.instance.playSound(hero.getAnimationName(), hero.mesh, false, false);
                 }
 
@@ -269,6 +281,7 @@ module Thralldom {
                 if (animationLooped && attacking.data.doubleAttack) {
                     attacking.data.animationFinished = false;
                     attacking.data.doubleAttack = false;
+                    StateMachineUtils.shootBullet(hero);
                     AudioManager.instance.playSound(hero.getAnimationName(), hero.mesh, false, false);
                 }
                 else {

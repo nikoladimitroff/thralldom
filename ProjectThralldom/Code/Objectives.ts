@@ -136,6 +136,7 @@ module Thralldom {
                 this.achievedKills += count;
                 if (this.achievedKills >= this.requiredKills) {
                     this.isComplete = true;
+                    return;
                 }
                 var heroPos: THREE.Vector3 = frameInfo.hero.mesh.position;
                 var targets: Array<LoadableObject> =
