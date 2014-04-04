@@ -1,3 +1,4 @@
+/// <reference path="Editor.js" />
 var Toolbar = function ( editor ) {
 
 	var signals = editor.signals;
@@ -28,7 +29,24 @@ var Toolbar = function ( editor ) {
 		signals.transformModeChanged.dispatch( 'scale' );
 
 	} );
-	buttons.add( scale );
+	buttons.add(scale);
+
+    // THRALLDOM KEYBINDINGS
+	window.addEventListener("keyup", function (args) {
+	    var key = String.fromCharCode(args.which).toUpperCase();
+	    switch (key) {
+	        case "W":
+	            signals.transformModeChanged.dispatch("translate");
+	            break;
+            case "E":
+                signals.transformModeChanged.dispatch("rotate");
+                break;
+            case "R":
+                signals.transformModeChanged.dispatch("scale");
+                break;
+
+	    }
+	}, false);
 
 	// grid
 
