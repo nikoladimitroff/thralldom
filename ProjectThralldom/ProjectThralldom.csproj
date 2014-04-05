@@ -128,11 +128,18 @@
     <Content Include="Docs\Presentation.min.html">
       <DependentUpon>Presentation.html</DependentUpon>
     </Content>
+    <Content Include="Images\Oudated\black_glass.jpg" />
     <Content Include="Images\blank.cur" />
+    <Content Include="Images\Oudated\chrome.png" />
+    <Content Include="Images\Oudated\firefox.png" />
+    <Content Include="Images\Oudated\iexplorer.png" />
     <Content Include="Images\levski.jpg" />
+    <Content Include="Images\Oudated\opera.png" />
+    <Content Include="Images\Oudated\safari.png" />
     <Content Include="Images\shipka.jpg" />
     <Content Include="Images\shipka2.jpg" />
     <Content Include="Images\winged.jpg" />
+    <Content Include="outdated.html" />
     <Content Include="Scripts\implementations\ammo.js" />
     <Content Include="Scripts\implementations\ammo.small.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
