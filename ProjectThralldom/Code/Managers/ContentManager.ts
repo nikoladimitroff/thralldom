@@ -40,6 +40,7 @@ module Thralldom {
         private onContentLoaded(path: string, object: any) {
             this.loaded++;
             this.loadedContent[path] = object;
+            console.log("loaded: ", path);
 
             if (this.progressNotifier) {
                 this.progressNotifier.update(this.loaded / this.totalQueuedItems, path);
@@ -56,6 +57,7 @@ module Thralldom {
         private ajaxLoad(path: string, callback: (xhr: XMLHttpRequest) => void, isContent: boolean = true, responseType?: string) {
             if (isContent)
                 this.loading++;
+            console.log(path);
 
             var request = new XMLHttpRequest();
             request.open('GET', path, true);
@@ -67,6 +69,17 @@ module Thralldom {
         }
 
         private loadAudio(soundName: string, path: string, volume: number): void {
+            if (this.audioContext.isDummy) {
+                this.loaded--;
+                this.onContentLoaded(soundName, () => {
+                    return {
+                        buffer: "Web Audio not supported",
+                        volume: volume
+                    };
+                });
+                return;
+            }
+
             this.ajaxLoad(path, (request: XMLHttpRequest) => {
                 this.audioContext.decodeAudioData(request.response, (decoded) => {
                     this.onContentLoaded(soundName, () => {

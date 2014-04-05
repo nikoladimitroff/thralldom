@@ -41,6 +41,7 @@ module Thralldom {
                     var worldFrom = this.enemies[i].weapon.attackWorldFrom;
                     var worldTo = this.enemies[i].weapon.attackForward;
                     worldTo.multiplyScalar(this.enemies[i].range).add(worldFrom);
+                    // There's a small chance this causes a MEMLEAK
                     var raycast = this.world.physicsManager.raycast(worldFrom, worldTo);
                     if (raycast.hasHit()) {
                         var collisionObject = raycast.get_m_collisionObject();

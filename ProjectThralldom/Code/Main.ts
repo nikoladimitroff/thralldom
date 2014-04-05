@@ -16,7 +16,7 @@ $(function () {
 
 
     var progressNotifier = app.load((meta: Thralldom.IMetaGameData) => {
-        progressText.innerHTML = "Press any key to continue";
+        progressText.innerHTML = "Click to continue";
 
         var hasStarted = false;
         var clickHandler = () => {

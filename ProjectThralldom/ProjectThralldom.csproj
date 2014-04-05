@@ -128,13 +128,16 @@
     <Content Include="Docs\Presentation.min.html">
       <DependentUpon>Presentation.html</DependentUpon>
     </Content>
+    <Content Include="Images\blank.cur" />
     <Content Include="Images\levski.jpg" />
     <Content Include="Images\shipka.jpg" />
     <Content Include="Images\shipka2.jpg" />
     <Content Include="Images\winged.jpg" />
     <Content Include="Scripts\implementations\ammo.js" />
     <Content Include="Scripts\implementations\ammo.small.js" />
+    <Content Include="Scripts\implementations\ie.xhr.polyfill.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
+    <Content Include="Scripts\implementations\polyfills.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\subtitles.js" />
     <Content Include="thralldom.js">

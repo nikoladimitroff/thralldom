@@ -166,6 +166,8 @@ module Thralldom {
                 var cube = new THREE.CubeGeometry(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
 
                 var drawableMesh = new THREE.Mesh(cube, new THREE.MeshLambertMaterial({ wireframe: true }));
+                //drawableMesh.quaternion.copy(mesh.quaternion);
+                //drawableMesh.quaternion = drawableMesh.quaternion.inverse();
                 return drawableMesh;
             };
 

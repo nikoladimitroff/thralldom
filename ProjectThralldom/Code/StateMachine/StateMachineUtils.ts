@@ -179,7 +179,7 @@ module Thralldom {
                     jumping.data.reachedPeak &&
                     Math.abs(object.mesh.position.y - jumping.data.peak) > StateMachineUtils.JumpingErrorMargin;
                 var samePosition =
-                    GeometryUtils.almostZero(object.mesh.position.y, jumping.data.previousY) &&
+                    GeometryUtils.almostEquals(object.mesh.position.y, jumping.data.previousY, 0.1) &&
                     GeometryUtils.almostEquals(velocityY, jumping.data.previousVelY);
 
                 return jumpFinished || samePosition;

@@ -5,6 +5,7 @@
   <file>/Scripts/implementations/subtitles.js</file>
   <!--JS Polyfill-->
   <file >Code/StringExtensions.js</file>
+  <file >/Scripts/implementations/polyfills.js</file>
 
   <!-- Ours -->
 

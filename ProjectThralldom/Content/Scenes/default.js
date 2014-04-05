@@ -22,7 +22,7 @@
     },
     // No more settings, scene definition
     terrain: {
-        scale: 500,
+        scale: 1000,
         texture: "Grass.jpg",
         repeatTexture: true,
         // If a model is provided, the texture above is ignored
@@ -50,7 +50,7 @@
             id: "hero",
             model: "BoychoAnimation.js",
             weapon: "PistolAnimation.js",
-            pos: [0, 300, 0],
+            pos: [2400, 500, 1600],
             scale: 5,
         },
         {

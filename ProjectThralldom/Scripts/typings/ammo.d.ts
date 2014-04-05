@@ -48,6 +48,7 @@ declare module Ammo {
 
         addRigidBody(body: btRigidBody): void;
         addRigidBody(body: btRigidBody, bodyType: number, collisionMask: number): void;
+        removeRigidBody(body: btRigidBody): void;
     }
 
     export class btVector3 extends AsmJsObject {

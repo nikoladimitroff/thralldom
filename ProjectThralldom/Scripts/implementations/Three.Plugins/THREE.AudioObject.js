@@ -119,6 +119,7 @@ OscillatorNode.setWaveTable() is aliased to setPeriodicWave().
             fixSetTarget(node.Q);
             fixSetTarget(node.gain);
             var enumValues = ['LOWPASS', 'HIGHPASS', 'BANDPASS', 'LOWSHELF', 'HIGHSHELF', 'PEAKING', 'NOTCH', 'ALLPASS'];
+            node.prototype = node.__proto__.prototype;
             for (var i = 0; i < enumValues.length; ++i) {
                 var enumValue = enumValues[i];
                 var newEnumValue = enumValue.toLowerCase();
@@ -140,6 +141,7 @@ OscillatorNode.setWaveTable() is aliased to setPeriodicWave().
                 fixSetTarget(node.frequency);
                 fixSetTarget(node.detune);
                 var enumValues = ['SINE', 'SQUARE', 'SAWTOOTH', 'TRIANGLE', 'CUSTOM'];
+                node.prototype = node.__proto__.prototype;
                 for (var i = 0; i < enumValues.length; ++i) {
                     var enumValue = enumValues[i];
                     var newEnumValue = enumValue.toLowerCase();
@@ -164,6 +166,7 @@ OscillatorNode.setWaveTable() is aliased to setPeriodicWave().
                 'INVERSE_DISTANCE': 'inverse',
                 'EXPONENTIAL_DISTANCE': 'exponential',
             };
+            node.prototype = node.constructor.prototype;
             for (var enumValue in enumValues) {
                 var newEnumValue = enumValues[enumValue];
                 if (!node.prototype.hasOwnProperty(enumValue)) {
@@ -184,7 +187,60 @@ OscillatorNode.setWaveTable() is aliased to setPeriodicWave().
     }
 }(window));
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
+window.AudioContext = window.AudioContext || window.webkitAudioContext || function DummyAudioContext() {
+    this.decodeAudioData = function () { return "Web Audio is not supported" };
+    this.isDummy = true;
+};
+
+// Thralldom Test
+//(function () {
+//    "use strict";
+
+//    if (window.AudioContext) {
+//        return;
+//    }
+
+//    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
+//    function updatePrototype(type, prototypeMappings) {
+//        for (var i in prototypeMappings) {
+//            var mapping = prototypeMappings[i];
+//            type.prototype[mapping[0]] = type.prototype[mapping[0]] || type.prototype[mapping[1]];
+//        }
+
+//    }
+
+//    var contextMappings = [
+//        ["createGain", "createGainNode"],
+//        ["createDelay", "createDelayNode"],
+//        ["createScriptProcessor", "createJavaScriptNode"],
+//        ["createPeriodicWave", "createWaveTable"]
+//    ]
+
+//    window.AudioPannerNode = window.AudioPannerNode || window.webkitAudioPannerNode;
+    
+//    var bufferSourceMappings = [
+//        ["start", "noteOn"],
+//        ["start", "noteGrainOn"],
+//        ["noteOff", "stop"],
+//    ]
+
+//    var oscillatorMappings = [
+//        ["start", "noteOn"],
+//        ["stop", "noteOff"],
+//        ["setPeriodicWave", "setWaveTable"]
+//    ]
+    
+
+//    AudioParam.setTargetValueAtTime() is aliased to setTargetAtTime()
+//    OscillatorNode's old enum values are aliased to the Web IDL enum values.
+//    BiquadFilterNode's old enum values are aliased to the Web IDL enum values.
+//    PannerNode's old enum values are aliased to the Web IDL enum values.
+
+
+
+
+//})();
 
 /* THREE.AudioObject BELOW */
 

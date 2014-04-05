@@ -55,6 +55,7 @@ module Thralldom {
 
         // Debug settings
         private debugDraw: boolean = false;
+        private noClip: boolean = false;
 
         constructor(container: HTMLElement) {
             this.webglContainer = container;
@@ -126,7 +127,7 @@ module Thralldom {
             var subtitleContainer = <HTMLSpanElement> document.querySelector("#subtitles span");
             Subs.fixDomElement(subtitleContainer);
 
-            this.toggleDebugDraw(false);
+            this.toggleDebugDraw(true);
         }
 
         private handleKeyboard(delta: number) {
@@ -225,17 +226,21 @@ module Thralldom {
 
         // Must be called inside a click event
         public requestPointerLockFullscreen(domElement: HTMLElement): void {
-            // Request pointer lock
-            if (Thralldom.InputManager.isMouseLockSupported())
-                this.input.requestPointerLock(document.body);
             if (Thralldom.InputManager.isFullScreenSupported())
                 this.input.requestFullscreen(document.body);
+
+            if (Thralldom.InputManager.isMouseLockSupported())
+                this.input.requestPointerLock(document.body);
         }
 
         public run(meta: IMetaGameData): void {
             this.init(meta);
             window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
             this.loop();
+        }
+
+        private selectBoundingVisual(mesh: THREE.Mesh): THREE.Mesh {
+            return <THREE.Mesh> mesh.children.filter((x) => x instanceof THREE.Mesh && !(x instanceof THREE.SkinnedMesh))[0];;
         }
 
         // Debugging tools below
@@ -249,13 +254,40 @@ module Thralldom {
 
             var allObjects = this.world.dynamics.concat(this.world.statics);
             for (var index in allObjects) {
-                var boundingShape = allObjects[index].mesh.children.filter((x) => x instanceof THREE.Mesh && !(x instanceof THREE.SkinnedMesh))[0];
+                var boundingShape = this.selectBoundingVisual(allObjects[index].mesh);
                 if (boundingShape) {
                     boundingShape.visible = this.debugDraw;
                 }
             }
             var debuggingLines = this.world.renderScene.children.filter((x) => x.name == "debug");
             debuggingLines.forEach((x) => this.world.renderScene.remove(x));
+        }
+
+        public toggleNoClip(noClip?: boolean) {
+            if (noClip !== undefined) {
+                this.noClip = noClip;
+            }
+            else {
+                this.noClip = !this.noClip;
+            }
+            var sizeCoefficientAbsolute = 1 / 100;
+            var sizeCoefficient = this.noClip ? sizeCoefficientAbsolute : 1 / sizeCoefficientAbsolute;
+
+            var staticBodies = this.world.statics.filter((x) => !(x instanceof Terrain) && !(x instanceof Skybox));
+            var physWorld = this.world.physicsManager.world;
+            for (var i in staticBodies) {
+                var rigidBody = staticBodies[i].rigidBody;
+                var mesh = staticBodies[i].mesh;
+                physWorld.removeRigidBody(rigidBody);
+
+                Ammo.destroy(rigidBody);
+                mesh.scale.multiplyScalar(sizeCoefficient);
+                rigidBody = PhysicsManager.computeStaticBoxBody(mesh);
+                mesh.scale.divideScalar(sizeCoefficient);
+                this.selectBoundingVisual(mesh).scale.multiplyScalar(sizeCoefficient);
+                staticBodies[i].rigidBody = rigidBody;
+                physWorld.addRigidBody(rigidBody);
+            }
         }
     }
 }

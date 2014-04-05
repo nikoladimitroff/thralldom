@@ -54,7 +54,7 @@ body {
 
         text-align: center;
         color: black;
-        font-family: "Bulgaria Moderna";
+        font-family: "Bulgaria Moderna", "Segoe UI", sans-serif;
         font-size: 3em;
         position: absolute;
         left: 0%;
@@ -136,4 +136,8 @@ nav {
     background-color: black;
     color: white;
     z-index: 999;
+}
+
+.cursor-hidden {
+    cursor: url(Images/blank.cur), default;
 }
