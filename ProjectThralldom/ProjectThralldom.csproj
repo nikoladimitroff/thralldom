@@ -24,25 +24,6 @@
     </Content>
     <Content Include="Content\Assets.js" />
     <Content Include="Content\Meta.js" />
-    <Content Include="Content\Models\bore\house_two.js" />
-    <Content Include="Content\Models\bore\Lightmap.png" />
-    <Content Include="Content\Models\bore\monastery_object.js" />
-    <Content Include="Content\Models\bore\monastery_texture.jpg" />
-    <Content Include="Content\Models\bore\rooftxt.jpg" />
-    <Content Include="Content\Models\bore\barrelsUV.jpg" />
-    <Content Include="Content\Models\bore\barrels_one.js" />
-    <Content Include="Content\Models\bore\barrels_two.js" />
-    <Content Include="Content\Models\bore\four.jpg" />
-    <Content Include="Content\Models\bore\Lightmap.png" />
-    <Content Include="Content\Models\bore\objectHouse1.js" />
-    <Content Include="Content\Models\bore\objectMarket.js" />
-    <Content Include="Content\Models\bore\one.jpg" />
-    <Content Include="Content\Models\bore\rooftxt.jpg" />
-    <Content Include="Content\Models\bore\objectTerrain.js" />
-    <Content Include="Content\Models\bore\terraintextr.jpg" />
-    <Content Include="Content\Models\bore\three.jpg" />
-    <Content Include="Content\Models\bore\two.jpg" />
-    <Content Include="Content\Models\bore\walls.jpg" />
     <Content Include="Content\Models\Buildings\Houses\0a565e37.jpg" />
     <Content Include="Content\Models\Buildings\Houses\146b809b.png" />
     <Content Include="Content\Models\Buildings\Houses\1738d9fa.jpg" />
@@ -79,6 +60,10 @@
     <Content Include="Content\Models\Buildings\House_02\three.jpg" />
     <Content Include="Content\Models\Buildings\House_02\two.jpg" />
     <Content Include="Content\Models\Buildings\House_01\walls.jpg" />
+    <Content Include="Content\Models\Buildings\Rocks\rock.jpg" />
+    <Content Include="Content\Models\Buildings\Rocks\rock_big.js" />
+    <Content Include="Content\Models\Buildings\Rocks\rock_medium.js" />
+    <Content Include="Content\Models\Buildings\Rocks\rock_small.js" />
     <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.js" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Cloth.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Head.jpg" />
@@ -94,8 +79,7 @@
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
     <Content Include="Content\Models\Terrain\terrain.js" />
-    <Content Include="Content\Models\Terrain\terrainTextureMicro.jpg" />
-    <Content Include="Content\Models\Terrain\terrainTextureSmall.jpg" />
+    <Content Include="Content\Models\Terrain\terrainTexture.jpg" />
     <Content Include="Content\Quests\default.js" />
     <Content Include="Content\Scenes\default.js" />
     <Content Include="Code\StringExtensions.min.js.map">
@@ -128,22 +112,13 @@
     <Content Include="Docs\Presentation.min.html">
       <DependentUpon>Presentation.html</DependentUpon>
     </Content>
-    <Content Include="Images\Outdated\black_glass.jpg" />
-    <Content Include="Images\blank.cur" />
-    <Content Include="Images\Outdated\chrome.png" />
-    <Content Include="Images\Outdated\firefox.png" />
-    <Content Include="Images\Outdated\iexplorer.png" />
     <Content Include="Images\levski.jpg" />
-    <Content Include="Images\Outdated\opera.png" />
-    <Content Include="Images\Outdated\safari.png" />
     <Content Include="Images\shipka.jpg" />
     <Content Include="Images\shipka2.jpg" />
     <Content Include="Images\winged.jpg" />
-    <Content Include="outdated.html" />
     <Content Include="Scripts\implementations\ammo.js" />
     <Content Include="Scripts\implementations\ammo.small.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
-    <Content Include="Scripts\implementations\polyfills.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\subtitles.js" />
     <Content Include="thralldom.js">
@@ -154,8 +129,6 @@
     </Content>
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
-    <TypeScriptCompile Include="Code\Managers\CombatManager.ts" />
-    <TypeScriptCompile Include="Code\Managers\UIManager.ts" />
     <TypeScriptCompile Include="Scripts\typings\subtitles.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\Three.Plugins\THREE.AudioObject.d.ts" />
     <Content Include="Tests\TestingPage.html" />
