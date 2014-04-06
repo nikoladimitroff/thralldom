@@ -82,7 +82,7 @@ module Thralldom {
                 }
 
                 if (input.mouse.rightButton) {
-                    this.hero.health = 0;
+                    //this.hero.health = 0;
                 }
             }
 
@@ -101,7 +101,6 @@ module Thralldom {
                 this.yaw -= turnSpeed
                 this.pitch = THREE.Math.clamp(this.pitch + movement.x * speed, THREE.Math.degToRad(75), THREE.Math.degToRad(150));
 
-
                 if (!this.hero.isDead)
                     this.hero.mesh.quaternion.setFromAxisAngle(Const.UpVector, this.yaw);
 
@@ -116,7 +115,7 @@ module Thralldom {
                 var hero = this.hero;
 
                 // See if we are still alive
-                if (this.hero.health <= 0) {
+                if (this.hero.isDead) {
                     this.hero.stateMachine.requestTransitionTo(CharacterStates.Dying);
                 }
 

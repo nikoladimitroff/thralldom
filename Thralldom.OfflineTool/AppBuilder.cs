@@ -26,7 +26,7 @@ namespace Thralldom.OfflineTool
         private string allowedExtensions = "*.html | *.manifest | *.css | *.js | *.png | *.jpg | *.jpeg | *.mp3 | *.tscr | *.anim | *.srt | " + 
                                            "*.otf | *.ttf";
         private int WaitTime = 50;
-        private int connectionLimit = 10;
+        private int connectionLimit = 7;
 
         public AppBuilder(string user, string pass, string domain, string pathToGame, string pathToSite)
         {

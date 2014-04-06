@@ -8,6 +8,7 @@ module Thralldom {
             public markerYaw: number = 0;
             public markerBiasY: number = 0;
             public markerStep: number = 0.025;
+            public text: string;
 
             constructor() {
                 this.isComplete = false;
@@ -49,6 +50,8 @@ module Thralldom {
             private target: THREE.Vector3;
             private radius: number;
 
+            private static DefaultText = "";
+
             public loadFromDescription(description: any, content: ContentManager): void {
                 if (!description.target) {
                     throw new Error("A reach objective must have a target!");
@@ -65,6 +68,10 @@ module Thralldom {
                 else {
                     this.targetSelector = description.target;
                 }
+                if (ReachObjective.DefaultText != description.text) {
+                    ReachObjective.DefaultText = description.text;
+                }
+                this.text = description.ReachObjective.DefaultText;
 
                 this.radius = description.radius || 0;
                 this.isComplete = false;
@@ -96,10 +103,10 @@ module Thralldom {
                 var output: string;
 
                 if (this.targetSelector) {
-                    output = Utilities.formatString("Reach {0}", this.targetSelector);
+                    output = Utilities.formatString("{0} {1}", this.text, this.targetSelector);
                 }
                 else {
-                    output = Utilities.formatString("Reach ({0}, {1}, {2})", this.target.x, this.target.y, this.target.z);
+                    output = Utilities.formatString("{0} ({1}, {2}, {3})", this.text, this.target.x, this.target.y, this.target.z);
                 }
 
                 return super.toString(output);
@@ -112,11 +119,19 @@ module Thralldom {
             private achievedKills: number;
             private requiredKills: number;
 
+            private static DefaultText = "";
+
             public loadFromDescription(description: any, content: ContentManager): void {
                 if (!description.target) {
-                    throw new Error("A reach objective must have a target!");
+                    throw new Error("A kill objective must have a target!");
                 }
                 super.loadFromDescription(description, content);
+
+
+                if (KillObjective.DefaultText != description.text) {
+                    KillObjective.DefaultText = KillObjective.DefaultText;
+                }
+                this.text = description.text;
 
                 this.targetSelector = description.target;
                 this.requiredKills = description.killCount || 1;
@@ -136,6 +151,7 @@ module Thralldom {
                 this.achievedKills += count;
                 if (this.achievedKills >= this.requiredKills) {
                     this.isComplete = true;
+                    return;
                 }
                 var heroPos: THREE.Vector3 = frameInfo.hero.mesh.position;
                 var targets: Array<LoadableObject> =
@@ -153,7 +169,7 @@ module Thralldom {
             }
 
             public toString(): string {
-                var output = Utilities.formatString("Kill {0}. ({1}/{2})", this.targetSelector.substr(1), this.achievedKills, this.requiredKills);
+                var output = Utilities.formatString("{0} {1}. ({2}/{3})", this.text, this.targetSelector.substr(1), this.achievedKills, this.requiredKills);
 
                 return super.toString(output);
             }

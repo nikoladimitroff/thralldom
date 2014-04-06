@@ -70,14 +70,19 @@ module Thralldom {
                 this.mouse.ndc.x = (args.x / widthOver2 - 1);
                 this.mouse.ndc.y = ((height - args.y) / heightOverTwo - 1);
 
+                this.mouse.absolute.x = args.x;
+                this.mouse.absolute.y = args.y;
+
                 this.mouse.relative.x = args["movementX"] ||
-                    args["mozMovementX"] ||
-                    args["webkitMovementX"] ||
-                    0,
+                        args["mozMovementX"] ||
+                        args["webkitMovementX"] ||
+                        (this.mouse.absolute.x - this.previousMouse.absolute.x) / 10 ||
+                        0,
 
                 this.mouse.relative.y = args["movementY"] ||
                         args["mozMovementY"] ||
                         args["webkitMovementY"] ||
+                        (this.previousMouse.absolute.y - this.mouse.absolute.y) / 10 ||
                         0;
             }, false);
 

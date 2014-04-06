@@ -4,6 +4,10 @@ declare module Ammo {
 
     export class AsmJsObject {
         ptr: number;
+        /*
+         * Use this instead of ptr with the minified version
+        */
+        a: number;
     }
 
     export class btDefaultCollisionConfiguration extends AsmJsObject {
@@ -44,6 +48,7 @@ declare module Ammo {
 
         addRigidBody(body: btRigidBody): void;
         addRigidBody(body: btRigidBody, bodyType: number, collisionMask: number): void;
+        removeRigidBody(body: btRigidBody): void;
     }
 
     export class btVector3 extends AsmJsObject {

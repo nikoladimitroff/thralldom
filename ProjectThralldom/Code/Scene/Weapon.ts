@@ -14,6 +14,23 @@ module Thralldom {
         public animationData: Map<WeaponStates, IAnimationData>;
         public characterAnimations: Map<WeaponStates, string>;
 
+        public get attackWaiting(): boolean {
+            return this._attackWorldFrom != null;
+        }
+        public get attackWorldFrom(): THREE.Vector3 {
+            var result = this._attackWorldFrom;
+            this._attackWorldFrom = null;
+            return result;
+        }
+        public get attackForward(): THREE.Vector3 {
+            var result = this._attackForward;
+            this._attackForward = null;
+            return result;
+        }
+
+        public _attackWorldFrom: THREE.Vector3;
+        public _attackForward: THREE.Vector3;
+
         public loadFromDescription(description: any, content: ContentManager): void {
             this.mesh = content.getContent(description.model);
             this.animation = new THREE.Animation(this.mesh, this.mesh.geometry.animation.name, THREE.AnimationHandler.LINEAR);
@@ -25,6 +42,11 @@ module Thralldom {
             this.characterAnimations[CharacterStates.Attacking] = "PistolShoot";
             this.characterAnimations[CharacterStates.Unsheathing] = "PistolUnsheath";
 
+        }
+
+        public attack(worldFrom: THREE.Vector3, forward: THREE.Vector3): void {
+            this._attackWorldFrom = worldFrom;
+            this._attackForward = forward;
         }
     }
 } 

@@ -14,18 +14,25 @@ module Thralldom {
         private active: Map<string, Map<number, THREE.AudioObject>>;
         private silent: Map<string, Map<number, THREE.AudioObject>>;
 
+        private isDisabled: boolean = false;
+
         private content: ContentManager;
         constructor(content: ContentManager) {
             this.content = content;
             AudioManager._instance = this;
 
             this.context = content.audioContext;
+            if (this.context.isDummy) {
+                this.isDisabled = true;
+            }
 
             this.active = <Map<string, Map<number, THREE.AudioObject>>> {};
             this.silent = <Map<string, Map<number, THREE.AudioObject>>> {};
         }
 
         public playSound(sound: string, object: THREE.Object3D, loop: boolean, isDirectional: boolean): void {
+            if (this.isDisabled) return;
+
             if (!this.active[sound]) {
                 this.active[sound] = {};
             }
@@ -44,6 +51,8 @@ module Thralldom {
         }
 
         public stopSound(sound: string, objectId: number): void {
+            if (this.isDisabled) return;
+
             var audio = <THREE.AudioObject> this.active[sound][objectId];
             if (audio) {
                 audio.stop();
@@ -54,10 +63,14 @@ module Thralldom {
         }
 
         public hasFinished(sound: string, object: THREE.Object3D): boolean {
+            if (this.isDisabled) return true;
+
             return this.active[sound][object.id] == undefined;
         }
 
         public update(camera: THREE.Camera): void {
+            if (this.isDisabled) return;
+
             for (var sound in this.active) {
                 for (var id in this.active[sound]) {
                     var audio = <THREE.AudioObject> this.active[sound][id];

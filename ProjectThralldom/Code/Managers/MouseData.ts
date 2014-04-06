@@ -7,6 +7,7 @@ module Thralldom {
           * Gets the normalized device coordinates of the mouse. X is in the range [-1, 1], Y is in the range [1, -1].
           */
         public ndc: THREE.Vector2;
+        public absolute: THREE.Vector2;
         public relative: THREE.Vector2;
         /**
           * Gets the scroll level of the mouse.
@@ -17,6 +18,7 @@ module Thralldom {
         public rightButton: Boolean;
 
         constructor() {
+            this.absolute = new THREE.Vector2();
             this.ndc = new THREE.Vector2();
             this.relative = new THREE.Vector2();
             this.scroll = 0;
@@ -24,6 +26,8 @@ module Thralldom {
         }
 
         public cloneFrom(data: MouseData): void {
+            this.absolute.x = data.absolute.x;
+            this.absolute.y = data.absolute.y;
             this.ndc.x = data.ndc.x;
             this.ndc.y = data.ndc.y;
             this.relative.x = data.relative.x;

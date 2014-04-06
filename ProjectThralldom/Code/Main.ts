@@ -1,6 +1,9 @@
 /// <reference path="application.ts" />
 $(function () {
     var app: Thralldom.Application = new Thralldom.Application(document.getElementById("webGL"));
+    // Make the game visible for easier debuggin
+    var w = <any> window;
+    w.game = app;
 
 
     var loadingScreen: HTMLDivElement = <any>document.getElementById("loading-screen");
@@ -13,7 +16,7 @@ $(function () {
 
 
     var progressNotifier = app.load((meta: Thralldom.IMetaGameData) => {
-        progressText.innerHTML = "Press any key to continue";
+        progressText.innerHTML = "Click to continue";
 
         var hasStarted = false;
         var clickHandler = () => {

@@ -13,6 +13,8 @@
         "Content/Models/Terrain/terrain.js",
         "Content/Models/Buildings/House_01/objectHouse1.js",
         "Content/Models/Buildings/House_02/objectMarket.js",
+        "Content/Models/Buildings/Houses/Tavern.js",
+        "Content/Models/Buildings/Houses/oldwarehouse.js",
     ],
     textures: [
         "Content/Textures/Grass.jpg",
