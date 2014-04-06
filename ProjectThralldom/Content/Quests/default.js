@@ -4,7 +4,8 @@
         {
             type: "reach",
             target: [-393.82, 0, 51.73],
-            radius: 5
+            radius: 5,
+            text: "Reach ",
         },
         {
             type: "reach",
@@ -29,7 +30,8 @@
         {
             type: "kill",
             target: ".npc",
-            killCount: 1
+            killCount: 1,
+            text: "Murder ",
         }
     ]
 }

@@ -29,7 +29,7 @@
         model: "terrain.js",
     },
     skybox: {
-        scale: 10000,
+        scale: 30000,
         textures: [
                 "Content/Textures/Skybox/posX.png", 
                 "Content/Textures/Skybox/negX.png", 
@@ -50,7 +50,7 @@
             id: "hero",
             model: "BoychoAnimation.js",
             weapon: "PistolAnimation.js",
-            pos: [2400, 500, 1600],
+            pos: [0, 5, 0],
             scale: 5,
         },
         {
@@ -59,7 +59,7 @@
             id: "sokolov",
             model: "BoychoAnimation.js",
             weapon: "PistolAnimation.js",
-            pos: [20, 300, 20],
+            pos: [20, 5, 20],
             scale: 5,
         },
     ],

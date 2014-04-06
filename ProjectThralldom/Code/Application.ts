@@ -47,6 +47,7 @@ module Thralldom {
 
         // Managers
         private input: InputManager;
+        private ui: UIManager;
         private content: ContentManager;
         private audio: AudioManager;
         private combat: CombatManager;
@@ -60,6 +61,7 @@ module Thralldom {
         constructor(container: HTMLElement) {
             this.webglContainer = container;
             this.input = new InputManager(container);
+            this.ui = new UIManager();
             this.language = new Languages.English();
             this.content = new ContentManager();
             this.audio = new AudioManager(this.content);
@@ -124,7 +126,7 @@ module Thralldom {
 
             // Audio
             this.audio.playSound("Soundtrack", this.cameraController.camera, true, true);
-            var subtitleContainer = <HTMLSpanElement> document.querySelector("#subtitles span");
+            var subtitleContainer = this.ui.subtitles;
             Subs.fixDomElement(subtitleContainer);
 
             this.toggleDebugDraw(true);
@@ -179,7 +181,6 @@ module Thralldom {
 
             this.triggerScriptedEvents();
 
-            var node = document.getElementsByTagName("nav").item(0).getElementsByTagName("p").item(0);
             var questComplete = this.quest.getActiveObjectives().length == 0;
             var questText = questComplete ?
                 "Quest complete!" :
@@ -188,7 +189,8 @@ module Thralldom {
             var currentAnimTime = this.hero.animation.currentTime;
 
             var sokolov = <any>this.world.select("#sokolov")[0];
-            node.innerText = this.language.welcome + "\n" +
+            this.ui.text.innerHTML =
+                this.language.welcome + "\n" +
                 Utilities.formatString("Boycho's hp: {0}\n", this.hero.health) +
                 Utilities.formatString("Sokolov's hp: {0}\n", sokolov.health) +
                 Utilities.formatString("Velocity: {0}\n", Utilities.formatVector(this.hero.rigidBody.getLinearVelocity(), 7)) +
