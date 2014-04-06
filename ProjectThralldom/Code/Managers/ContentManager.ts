@@ -40,7 +40,6 @@ module Thralldom {
         private onContentLoaded(path: string, object: any) {
             this.loaded++;
             this.loadedContent[path] = object;
-            console.log("loaded: ", path);
 
             if (this.progressNotifier) {
                 this.progressNotifier.update(this.loaded / this.totalQueuedItems, path);
@@ -57,7 +56,6 @@ module Thralldom {
         private ajaxLoad(path: string, callback: (xhr: XMLHttpRequest) => void, isContent: boolean = true, responseType?: string) {
             if (isContent)
                 this.loading++;
-            console.log(path);
 
             var request = new XMLHttpRequest();
             request.open('GET', path, true);
@@ -210,11 +208,7 @@ module Thralldom {
             Thralldom.CharacterControllers.SkyrimCharacterController.defaultSettings = controllerSettings;
 
             var characterSettings = worldDescription.character;
-            if (!characterSettings.mass || !characterSettings.jumpImpulse || !characterSettings.viewAngle ||
-                !characterSettings.movementSpeed || !characterSettings.sprintMultiplier) {
-                throw new Error("Some or all character settings are missing!");
-            }
-            Thralldom.Character.defaultSettings = characterSettings;
+            Thralldom.Character.Settings = characterSettings;
 
         }
 

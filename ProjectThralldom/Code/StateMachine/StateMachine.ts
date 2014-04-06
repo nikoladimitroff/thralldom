@@ -27,7 +27,6 @@ module Thralldom {
                 this.currentState = nextState;
                 this.states[previous].onExit(this.currentState, this.target);
                 this.states[this.currentState].onEntry(previous, this.target);
-                console.log(CharacterStates[previous], " -> ", CharacterStates[this.currentState]);
             }
 
             return canTransit;

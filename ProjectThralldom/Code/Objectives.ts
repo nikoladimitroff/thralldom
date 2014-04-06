@@ -68,10 +68,10 @@ module Thralldom {
                 else {
                     this.targetSelector = description.target;
                 }
-                if (ReachObjective.DefaultText != description.text) {
+                if (description.text && ReachObjective.DefaultText != description.text) {
                     ReachObjective.DefaultText = description.text;
                 }
-                this.text = description.ReachObjective.DefaultText;
+                this.text = ReachObjective.DefaultText;
 
                 this.radius = description.radius || 0;
                 this.isComplete = false;
@@ -147,7 +147,7 @@ module Thralldom {
 
             public update(frameInfo: FrameInfo) {
                 // Detect all killing blows on the target.
-                var count = Thralldom.World.match(this.targetSelector, frameInfo.killedEnemies);
+                var count = Thralldom.World.countMatches(this.targetSelector, frameInfo.killedEnemies);
                 this.achievedKills += count;
                 if (this.achievedKills >= this.requiredKills) {
                     this.isComplete = true;

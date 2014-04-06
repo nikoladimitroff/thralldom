@@ -19,7 +19,7 @@ module Thralldom {
 
     export class Character extends DynamicObject {
 
-        public static defaultSettings: ICharacterSettings;
+        public static Settings: Map<string, ICharacterSettings>;
 
 
         public settings: ICharacterSettings;
@@ -55,12 +55,24 @@ module Thralldom {
             this.hp = 100;
             this.range = 100;
             this.damage = 5;
-            this.settings = Character.defaultSettings;
 
+        }
+
+        private applySettings(settings: ICharacterSettings): void {
+            for (var setting in settings) {
+                this.settings[setting] = settings[setting];
+            }
         }
 
         public loadFromDescription(description: any, content: ContentManager): void {
             super.loadFromDescription(description, content);
+
+            this.settings = <ICharacterSettings> {};
+            for (var selector in Character.Settings) {
+                if (World.matches(selector, this)) {
+                    this.applySettings(Character.Settings[selector]);
+                }
+            }
 
             if (description.model) {
                 this.mesh = content.getContent(description["model"]);
@@ -87,7 +99,7 @@ module Thralldom {
                 this.mesh.scale.set(scale, scale, scale);
             }
 
-            this.rigidBody = PhysicsManager.computeCapsuleBody(this.mesh, Character.defaultSettings.mass);
+            this.rigidBody = PhysicsManager.computeCapsuleBody(this.mesh, this.settings.mass);
 
             this.stateMachine = StateMachineUtils.getCharacterStateMachine(this);
             
@@ -101,27 +113,6 @@ module Thralldom {
             }
 
             return CharacterStates[this.stateMachine.current];
-        }
-
-        public attack(enemy: Character, hitPoint: THREE.Intersection): Ammunition {
-            // Only attack if the viewing angle between the character and the target is less than Character.MaxViewAngle and the character is in range.
-            var distance = new THREE.Vector3();
-            distance.subVectors(enemy.mesh.position, this.mesh.position);
-            var forwardVector = new THREE.Vector3(0, 0, 1);
-            forwardVector.transformDirection(this.mesh.matrix);
-
-            if (distance.length() < this.range && distance.angleTo(forwardVector) < Character.defaultSettings.viewAngle) {
-                enemy.health -= this.damage;
-
-            }
-
-            // For now, always shoot a laser.
-            var startPoint = new THREE.Vector3();
-            startPoint.copy(this.mesh.position).y = 10;
-            var laser = new LaserOfDeath(startPoint, hitPoint.point);
-            //return laser;
-
-            return undefined;
         }
 
         public setWalkingVelocity(delta: number, isSprinting: boolean = false): void {
