@@ -10,11 +10,8 @@ module Thralldom {
 
         // MEMLEAK
         private static _jumpingImpulse: Ammo.btVector3;
-        private static get JumpingImpulse(): Ammo.btVector3 {
-            if (!StateMachineUtils._jumpingImpulse) {
-                StateMachineUtils._jumpingImpulse = new Ammo.btVector3(0, Character.defaultSettings.jumpImpulse, 0);
-            }
-            return StateMachineUtils._jumpingImpulse;
+        private static GetJumpingImpulse(vector: Ammo.btVector3, hero: Character): void {
+            vector.setValue(0, hero.settings.jumpImpulse, 0);
         }
 
         private static getDummyState(index: number): State {
@@ -150,12 +147,14 @@ module Thralldom {
             var jumpingEntry = (previous: number, hero: Character) => {
                 jumping.data.beforeJumpY = hero.mesh.position.y;
                 jumping.data.reachedPeak = false;
-                //object.rigidBody.applyCentralImpulse(StateMachineUtils.JumpingImpulse);
+                var impulse = new Ammo.btVector3();
+                StateMachineUtils.GetJumpingImpulse(impulse, hero);
+                hero.rigidBody.applyCentralImpulse(impulse);
+                Ammo.destroy(impulse);
 
-                var velocity = hero.rigidBody.getLinearVelocity();
-                velocity.setY(Character.defaultSettings.jumpImpulse);
+                //var velocity = hero.rigidBody.getLinearVelocity();
+                //velocity.setY(StateMachineUtils.JumpingImpulse);
                 StateMachineUtils.restartAnimationIfNeeded(hero, previous);
-
             }
 
             var jumpingUpdate = (delta: number, hero: Character) => {

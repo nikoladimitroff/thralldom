@@ -79,7 +79,7 @@ module Thralldom {
         /*
          * Returns the number of objects that the specified selector matches
         */
-        public static match(selector: string, objects: Array<LoadableObject>): number {
+        public static countMatches(selector: string, objects: Array<ISelectableObject>): number {
             var count = 0;
 
             selector = selector.toLowerCase();
@@ -87,6 +87,8 @@ module Thralldom {
             var text = selector.substr(1);
 
             switch (first) {
+                case '*':
+                    return objects.length;
                 case '#':
                 case '~':
                     for (var i = 0; i < objects.length; i++) {
@@ -107,6 +109,24 @@ module Thralldom {
             };
 
             return count;
+        }
+
+        public static matches(selector: string, object: ISelectableObject): boolean {
+            selector = selector.toLowerCase();
+            var first = selector.charAt(0);
+            var text = selector.substr(1);
+
+            switch (first) {
+                case '*':
+                    return true;
+                case '#':
+                case '~':
+                    return text == object.id;
+                case '.':
+                    return object.tags.indexOf(text) != -1;
+                default:
+                    throw new Error("Invalid selector!");
+            };
         }
 
         /*

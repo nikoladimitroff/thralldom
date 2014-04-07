@@ -14,9 +14,9 @@ module Thralldom {
             camera: THREE.PerspectiveCamera;
             zoomSpeed: number;
             distance: number;
-            target: THREE.Vector3;
             position: THREE.Vector3;
 
+            getTarget(): THREE.Vector3;
             handleMouse(delta: number, input: InputManager): void;
             handleKeyboard(delta: number, input: InputManager, keybindings: IKeybindings): void;
         }

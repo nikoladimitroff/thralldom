@@ -14,6 +14,8 @@ module Thralldom {
         private static CachedVector = new Ammo.btVector3();
         private static CachedQuat = new Ammo.btQuaternion();
 
+        private static BoundingScaling = 1;
+
         constructor() {
             var collisionConfiguration= new Ammo.btDefaultCollisionConfiguration();
             var dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration);
@@ -25,13 +27,6 @@ module Thralldom {
 
             this.world.setGravity(new Ammo.btVector3(0, this.settings.gravity, 0));
         }
-
-
-        // MEMLEAK
-        private cachedFromWorld = new Ammo.btVector3();
-        private cachedToWorld = new Ammo.btVector3();
-        private cachedRay = new Ammo.ClosestRayResultCallback(this.cachedFromWorld, this.cachedToWorld);
-        private cachedRaycastTransform = new Ammo.btTransform();
 
         public raycastCharacters(fromCharacter: Character, toCharacter: Character): Ammo.ClosestRayResultCallback {
             var from = new THREE.Vector3();
@@ -45,18 +40,16 @@ module Thralldom {
 
         public raycast(from: THREE.Vector3, to: THREE.Vector3): Ammo.ClosestRayResultCallback {
 
-            this.cachedFromWorld = new Ammo.btVector3();
-            this.cachedToWorld = new Ammo.btVector3();
-            this.cachedRay = new Ammo.ClosestRayResultCallback(this.cachedFromWorld, this.cachedToWorld);
+            var fromWorld = new Ammo.btVector3();
+            var toWorld = new Ammo.btVector3();
+            var ray = new Ammo.ClosestRayResultCallback(fromWorld, toWorld);
 
-            this.cachedFromWorld.setValue(from.x, from.y, from.z);
-            this.cachedToWorld.setValue(to.x, to.y, to.z);
+            fromWorld.setValue(from.x, from.y, from.z);
+            toWorld.setValue(to.x, to.y, to.z);
 
-            this.cachedRay.set_m_rayFromWorld(this.cachedFromWorld);
-            this.cachedRay.set_m_rayToWorld(this.cachedToWorld);
-            this.world.rayTest(this.cachedFromWorld, this.cachedToWorld, this.cachedRay);
+            this.world.rayTest(fromWorld, toWorld, ray);
 
-            return this.cachedRay;
+            return ray;
         }
 
         private static computeInitialMotionState(mesh: THREE.Mesh, bias: THREE.Vector3 = Const.ZeroVector) {
@@ -92,7 +85,7 @@ module Thralldom {
             halfExtents.subVectors(box.max, box.min).multiplyScalar(mesh.scale.x / 2);
             var localInertia = Const.btZeroVector;
 
-            var motionState = PhysicsManager.computeInitialMotionState(mesh, new THREE.Vector3(0, halfExtents.y, 0));
+            var motionState = PhysicsManager.computeInitialMotionState(mesh, new THREE.Vector3(0, halfExtents.y * PhysicsManager.BoundingScaling, 0));
 
             // Call the shapeGen
             var shapeResult = shapeGenerator(halfExtents);
@@ -154,18 +147,23 @@ module Thralldom {
         } 
 
         public static computeStaticBoxBody(mesh: THREE.Mesh): Ammo.btRigidBody {
+            var scaling = PhysicsManager.BoundingScaling;
             var shapeGen = (halfExtents: THREE.Vector3) => {
-                var shape = new Ammo.btBoxShape(new Ammo.btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
                 var centerToMesh = new THREE.Vector3(0, -halfExtents.y, 0);
+                halfExtents.multiplyScalar(scaling);
+                var shape = new Ammo.btBoxShape(new Ammo.btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
 
                 return { shape: shape, centerToMesh: centerToMesh };
             }
 
             var visualGen = (halfExtents: THREE.Vector3) => {
                 // Multiply by two to get the full width/height/depth
+                var bias = new THREE.Vector3(0, -halfExtents.y, 0);
+                halfExtents.multiplyScalar(scaling);
                 var cube = new THREE.CubeGeometry(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
 
                 var drawableMesh = new THREE.Mesh(cube, new THREE.MeshLambertMaterial({ wireframe: true }));
+                drawableMesh.position.copy(bias);
                 //drawableMesh.quaternion.copy(mesh.quaternion);
                 //drawableMesh.quaternion = drawableMesh.quaternion.inverse();
                 return drawableMesh;

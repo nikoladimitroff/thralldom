@@ -113,15 +113,24 @@
     <Content Include="Docs\Presentation.min.html">
       <DependentUpon>Presentation.html</DependentUpon>
     </Content>
+    <Content Include="Images\blank.cur" />
     <Content Include="Images\levski.jpg" />
+    <Content Include="Images\Outdated\black_glass.jpg" />
+    <Content Include="Images\Outdated\chrome.png" />
+    <Content Include="Images\Outdated\firefox.png" />
+    <Content Include="Images\Outdated\iexplorer.png" />
+    <Content Include="Images\Outdated\opera.png" />
+    <Content Include="Images\Outdated\safari.png" />
     <Content Include="Images\shipka.jpg" />
     <Content Include="Images\shipka2.jpg" />
     <Content Include="Images\winged.jpg" />
+    <Content Include="outdated.html" />
     <Content Include="Scripts\implementations\ammo.js" />
     <Content Include="Scripts\implementations\ammo.small.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\subtitles.js" />
+    <Content Include="Scripts\implementations\polyfills.js" />
     <Content Include="thralldom.js">
       <DependentUpon>thralldom.js.bundle</DependentUpon>
     </Content>
@@ -130,6 +139,8 @@
     </Content>
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
+    <TypeScriptCompile Include="Code\Managers\CombatManager.ts" />
+    <TypeScriptCompile Include="Code\Managers\UIManager.ts" />
     <TypeScriptCompile Include="Scripts\typings\subtitles.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\Three.Plugins\THREE.AudioObject.d.ts" />
     <Content Include="Tests\TestingPage.html" />
