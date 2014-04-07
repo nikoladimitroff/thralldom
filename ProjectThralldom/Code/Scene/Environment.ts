@@ -37,7 +37,7 @@ module Thralldom {
                 this.mesh.scale.set(scale, scale, scale);
             }
 
-            this.rigidBody = PhysicsManager.computeStaticBoxBody(this.mesh);
+            this.rigidBody = PhysicsManager.computeTriangleMeshBody(this.mesh); // PhysicsManager.computeStaticBoxBody(this.mesh);
         }
     }
 } 

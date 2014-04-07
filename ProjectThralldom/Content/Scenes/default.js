@@ -15,7 +15,7 @@
             sprintMultiplier: 2,
         },
         ".guard": {
-            movementSpeed: 0.5 * 1e2,
+            movementSpeed: 0.5 * 1e3,
         },
     },
     physics: {
@@ -34,7 +34,7 @@
         model: "terrain.js",
     },
     skybox: {
-        scale: 30000,
+        scale: 50000,
         textures: [
                 "Content/Textures/Skybox/posX.png", 
                 "Content/Textures/Skybox/negX.png", 
@@ -55,7 +55,7 @@
             id: "hero",
             model: "BoychoAnimation.js",
             weapon: "PistolAnimation.js",
-            pos: [2400, 5, 1600],
+            pos: [1000, 20, 1000],
             scale: 5,
         },
         {

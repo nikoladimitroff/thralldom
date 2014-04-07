@@ -129,7 +129,7 @@ module Thralldom {
             var subtitleContainer = this.ui.subtitles;
             Subs.fixDomElement(subtitleContainer);
 
-            this.toggleDebugDraw(true);
+            this.toggleDebugDraw(false);
         }
 
         private handleKeyboard(delta: number) {
@@ -138,9 +138,45 @@ module Thralldom {
         }
 
         private handleMouse(delta: number) {
+
             this.cameraController.handleMouse(delta, this.input);
 
+            var pos = this.cameraController.position;
+            var target = (new THREE.Vector3).subVectors(this.hero.mesh.position, this.hero.rigidBody.centerToMesh);
+
+            var ray = this.world.physicsManager.raycast(pos, target);
+
+            if (ray.hasHit() && ray.get_m_collisionObject().a != this.hero.rigidBody.a) {
+
+                // Magic Number
+                var mult = 1 - 2.5 * delta;
+                this.cameraController.distance *= mult;
+                return;
+                //var distance = this.ray.get_m_hitPointWorld().distance(this.fromWorldVec);
+
+                var hpammo = ray.get_m_hitPointWorld();
+                var hitPoint = new THREE.Vector3(hpammo.x(), hpammo.y(), hpammo.z());
+
+                var ab = (new THREE.Vector3()).subVectors(target, pos).normalize();
+                var bc = (new THREE.Vector3()).subVectors(target, hitPoint).normalize();
+                var ac = (new THREE.Vector3()).subVectors(hitPoint, pos).normalize();
+
+                this.ui.text.innerHTML =
+                    "Pos: " + Utilities.formatVector(pos, 3) + "\n" +
+                    "Target: " + Utilities.formatVector(target, 3) + "\n" +
+                    "Boycho: " + Utilities.formatVector(this.hero.mesh.position, 3) + "\n" +
+                    "Hit point: " + Utilities.formatVector(hitPoint, 3) + "\n" +
+                    "AB: " + Utilities.formatVector(ab, 3) + "\n" +
+                    "BC: " + Utilities.formatVector(bc, 3) + "\n" +
+                    "AC: " + Utilities.formatVector(ac, 3) + "\n" +
+                    Utilities.formatString("Pointers: {0}  {1}  {2}\n", ray.get_m_collisionObject().a, this.hero.rigidBody.a, this.world.statics.filter((x) => x instanceof Terrain)[0].rigidBody.a) +
+                    "";
+                
+                //this.cameraController.distance -= distance * 1.05;
+                //console.log(distance);
+            }
         }
+
 
         private triggerScriptedEvents(): void {
             if (this.activeScript) {

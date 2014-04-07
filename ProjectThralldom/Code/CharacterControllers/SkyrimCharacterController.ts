@@ -16,7 +16,7 @@ module Thralldom {
                 return this.camera.position;
             }
 
-            public get target() {
+            public getTarget() {
                 var mesh = this.hero.mesh;
                 var midY = mesh.scale.y * (mesh.geometry.boundingBox.max.y - mesh.geometry.boundingBox.min.y) / 2;
                 var target = new THREE.Vector3();
@@ -68,11 +68,7 @@ module Thralldom {
                 cameraToCharacter.add(this.hero.mesh.position).y += midY;
                 this.camera.position.copy(cameraToCharacter);
 
-                var target = new THREE.Vector3();
-                target.add(this.hero.mesh.position);
-                // The camera should look a little bit over him (2.25 looks good)
-                target.y += 2.25 * midY;
-                this.camera.lookAt(target);
+                this.camera.lookAt(this.getTarget());
             }
 
             private handleMouseClick(delta: number, input: InputManager): void {
