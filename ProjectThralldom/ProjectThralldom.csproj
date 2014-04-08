@@ -17,7 +17,12 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="app.css" />
+    <Content Include="app.css">
+      <DependentUpon>app.less</DependentUpon>
+    </Content>
+    <Content Include="app.min.css">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
     <Content Include="Code\StringExtensions.js" />
     <Content Include="Code\StringExtensions.min.js">
       <DependentUpon>StringExtensions.js</DependentUpon>
@@ -155,6 +160,7 @@
     <Content Include="Docs\Presentation.md" />
     <Content Include="Content\ScriptedEvents\RandomStuff.tscr" />
     <Content Include="Fonts\Bulgaria_Moderna_Pro.otf" />
+    <Content Include="app.less" />
     <None Include="thralldom.js.bundle" />
     <Content Include="thralldom.min.js.map">
       <DependentUpon>thralldom.min.js</DependentUpon>
