@@ -38,13 +38,25 @@ body {
    user-select: none;
 }
 
+#paused-screen {
+    z-index: 99999;
+    background-color: rgba(255, 255, 255, 0.35);
+    display: none;
+    color: black;
+}
+
+#paused-screen h1 {
+    text-align: center;
+    margin-top: 15%;
+    font-family: 'Bulgaria Moderna', 'Segoe UI', sans-serif;
+}
+
 #loading-screen {
     z-index: 99999;
     /* Background will be set from JS */
     background-repeat: no-repeat;
     background-position: center;
     background-color: black;
-
 }
 
     #loading-screen div {
@@ -78,21 +90,25 @@ progress {
   background-color: #eee;
   color: darkgoldenrod;
 }
-progress[value]::-webkit-progress-value {
-    background-color: darkgoldenrod;
-    -webkit-background-size: 35px 20px, 100% 100%, 100% 100%;
-    background-size: 35px 20px, 100% 100%, 100% 100%;
-}
+    progress[value]::-webkit-progress-value {
+        background-color: darkgoldenrod;
+        -webkit-background-size: 35px 20px, 100% 100%, 100% 100%;
+        -moz-background-size: 35px 20px, 100% 100%, 100% 100%;
+        -o-background-size: 35px 20px, 100% 100%, 100% 100%;
+        background-size: 35px 20px, 100% 100%, 100% 100%;
+    }
 
 progress[value]::-webkit-progress-bar {
   background-color: #eee;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
-progress[value]::-moz-progress-bar {
-    background-color: darkgoldenrod;
-    -moz-background-size: 35px 20px, 100% 100%, 100% 100%;
-    background-size: 35px 20px, 100% 100%, 100% 100%;
-}
+    progress[value]::-moz-progress-bar {
+        background-color: darkgoldenrod;
+        -moz-background-size: 35px 20px, 100% 100%, 100% 100%;
+        -o-background-size: 35px 20px, 100% 100%, 100% 100%;
+        -webkit-background-size: 35px 20px, 100% 100%, 100% 100%;
+        background-size: 35px 20px, 100% 100%, 100% 100%;
+    }
 
 nav {
     color: white;
