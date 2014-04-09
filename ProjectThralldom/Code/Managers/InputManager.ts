@@ -111,6 +111,28 @@ module Thralldom {
             element.requestFullscreen();
         }
 
+        public attachCancelFullscreenListener(listener: () => void): void {
+
+            var handler = () => {
+                var doc = <any> document;
+                if (doc.fullscreenElement ||
+                    doc.webkitFullscreenElement ||
+                    doc.mozFullScreenElement ||
+                    doc.msFullscreenElement) {
+                    // Fullscreen, do nothing
+                }
+                else {
+                    // Not full screen, call callback
+                    listener();
+                }
+            }
+
+            document.addEventListener("fullscreenchange", handler);
+            document.addEventListener("webkitfullscreenchange", handler);
+            document.addEventListener("mozfullscreenchange", handler);
+            document.addEventListener("MSFullscreenChange", handler);
+        }
+
         public swap(): void {
             this.previousKeyboard = Array.apply(Array, this.keyboard);
             //this.mouse.leftButton = this.mouse.rightButton = false;

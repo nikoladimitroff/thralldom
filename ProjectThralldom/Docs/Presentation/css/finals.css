@@ -1,0 +1,167 @@
+
+@font-face {
+  font-family: "Franchise";
+  src: url("Franchise-Bold-hinted.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Assassin";
+  src: url("Assassin$.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Free Sans";
+  src: url("FreeSans.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Bulgaria Moderna";
+  src: url(Bulgaria_Moderna_Pro.otf) format("opentype");
+}
+
+
+html, body {
+	color: white;
+	background: black;
+    font-family: "Segoe UI";
+    font-size: 140%;
+}
+* {
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+div {
+    display: block;
+    min-width: 90%;
+}
+
+h1 {
+    font-size: 400%;
+}
+h2 {
+    font-size: 200%;
+}
+
+
+.heading {
+    font-family: "Bulgaria Moderna";
+}
+
+.body {
+    font-family: "Body font";
+}
+
+.special {
+    font-family: "Semiheading font";
+}
+
+.image-container {
+    width: 100%;
+}
+
+.columnated {
+	/*list-style-type: circle;*/
+	-webkit-columns: 2;
+	-moz-columns: 2;
+    -o-columns: 2;
+    -ms-columns: 2;
+	columns:2;
+    width: 100%;
+}
+
+.columnated .col1 {
+    float: left;
+    width: 100%;
+}
+.columnated .col2 {
+    float: right;
+    width: 100%;
+}
+
+
+.columnated3 {
+	/*list-style-type: circle;*/
+	-webkit-columns: 3;
+	-moz-columns: 3;
+    -o-columns: 3;
+    -ms-columns: 3;
+	columns: 3;
+    width: 100%;
+}
+
+.columnated3 .col1 {
+    float: left;
+    width: 100%;
+}
+.columnated3 .col2 {
+    float: center;
+    width: 100%;
+}
+.columnated3 .col3 {
+    float: right;
+    width: 50%;
+}
+
+
+.columnated4 {
+	/*list-style-type: circle;*/
+	-webkit-columns: 4;
+	-moz-columns: 4;
+    -o-columns: 4;
+    -ms-columns: 4;
+	columns: 4;
+    width: 100%;
+}
+
+.big {
+    font-size: 300%;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.move-left {
+    margin-right: 20%;
+}
+
+.enlarged {
+ width: 120%;
+ height: 120%;
+}
+
+.scribbled {
+    text-decoration: line-through;
+}
+
+#vs {
+    margin: 0 5% 15% 5%;
+}
+
+ul,
+ol {
+    margin-left: 50px;
+}
+
+hr {
+    color: white;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    color: goldenrod;
+}
+
+a:visited {
+    color: #aaa;
+}

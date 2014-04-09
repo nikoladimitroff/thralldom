@@ -89,8 +89,14 @@ module Thralldom {
 
             // Detect going out of focus
             // TODO
-            //Utilities.setWindowFocusListener((isVisible) => this.isOnFocus = isVisible);
+            Utilities.setWindowFocusListener((isVisible) => {
+                if (!isVisible) {
+                    this.pause();
+                }
+            });
             this.isOnFocus = true;
+
+            this.input.attachCancelFullscreenListener(this.pause.bind(this));
 
             // World 
 
@@ -207,9 +213,11 @@ module Thralldom {
 
         private update(): void {
             var delta = this.clock.getDelta();
+
             // Pause the game if we are out of focus
             if (!this.isOnFocus) {
                 delta = 0;
+                return;
             }
 
             this.handleKeyboard(delta);
@@ -264,6 +272,11 @@ module Thralldom {
 
         // Must be called inside a click event
         public requestPointerLockFullscreen(domElement: HTMLElement): void {
+            
+            this.ui.pausedScreen.style.display = "none";
+            this.isOnFocus = true;
+            
+
             if (Thralldom.InputManager.isFullScreenSupported())
                 this.input.requestFullscreen(document.body);
 
@@ -281,8 +294,13 @@ module Thralldom {
             return <THREE.Mesh> mesh.children.filter((x) => x instanceof THREE.Mesh && !(x instanceof THREE.SkinnedMesh))[0];;
         }
 
-        // Debugging tools below
-        public toggleDebugDraw(debugDraw?: boolean) {
+        // Debugging tools and utilities below
+        public pause(): void {
+            this.ui.pausedScreen.style.display = "block";
+            this.isOnFocus = false; 
+        }
+
+        public toggleDebugDraw(debugDraw?: boolean): void {
             if (debugDraw !== undefined) {
                 this.debugDraw = debugDraw;
             }
@@ -301,7 +319,7 @@ module Thralldom {
             debuggingLines.forEach((x) => this.world.renderScene.remove(x));
         }
 
-        public toggleNoClip(noClip?: boolean) {
+        public toggleNoClip(noClip?: boolean): void {
             if (noClip !== undefined) {
                 this.noClip = noClip;
             }
