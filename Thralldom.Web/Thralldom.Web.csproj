@@ -90,6 +90,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="help.html" />
     <Content Include="img\shipka.jpg" />
     <Content Include="img\weapons-sharpened.png" />
     <Content Include="img\freedom-or-death.jpg" />
@@ -98,6 +99,8 @@
     </Content>
     <Content Include="less\grayscale.less" />
     <Content Include="fonts\Bulgaria_Moderna_Pro.otf" />
+    <Content Include="fonts\Franchise-Bold-hinted.ttf" />
+    <Content Include="fonts\nevis.ttf" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
