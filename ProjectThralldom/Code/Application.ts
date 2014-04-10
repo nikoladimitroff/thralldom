@@ -141,7 +141,7 @@ module Thralldom {
         }
 
         private beforeRun(): void {
-            this.audio.playSound("Soundtrack", this.cameraController.camera, true, true);
+            this.audio.playSound("Crickets", this.cameraController.camera, true, true);
             this.clock.start();
         }
 

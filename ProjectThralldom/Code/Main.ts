@@ -7,7 +7,7 @@ $(function () {
 
 
     var loadingScreen: HTMLDivElement = <any>document.getElementById("loading-screen");
-    var imageSources = ["winged.jpg", "levski.jpg", "shipka.jpg", "shipka2.jpg"];
+    var imageSources = ["loading-screen.jpg"];//["winged.jpg", "levski.jpg", "shipka.jpg", "shipka2.jpg"];
 
     loadingScreen.style.backgroundImage = "url('Images/" + imageSources[~~(Math.random() * (imageSources.length - 1))] + "')";
 

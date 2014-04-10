@@ -85,6 +85,7 @@
     <Content Include="Code\StringExtensions.min.js.map">
       <DependentUpon>StringExtensions.min.js</DependentUpon>
     </Content>
+    <Content Include="Content\Sounds\crickets.mp3" />
     <Content Include="Content\Sounds\dialog.mp3" />
     <Content Include="Content\Sounds\footsteps.mp3" />
     <Content Include="Content\Sounds\forest_background.mp3" />
@@ -154,6 +155,7 @@
     <Content Include="Images\Outdated\iexplorer.png" />
     <Content Include="Images\Outdated\opera.png" />
     <Content Include="Images\Outdated\safari.png" />
+    <Content Include="Images\loading-screen.jpg" />
     <Content Include="Images\shipka.jpg" />
     <Content Include="Images\shipka2.jpg" />
     <Content Include="Images\winged.jpg" />

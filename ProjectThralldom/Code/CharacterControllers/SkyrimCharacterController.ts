@@ -88,7 +88,7 @@ module Thralldom {
                 var movement = new THREE.Vector3;
                 movement.y = (input.mouse.relative.x) * delta;
                 movement.x = (input.mouse.relative.y) * delta;
-                movement.z = (input.mouse.scroll - input.previousMouse.scroll) / 120;
+                movement.z = input.mouse.scroll - input.previousMouse.scroll;
                 var speed = delta * this.settings.angularSpeed;
 
                 // TODO: replace magic numbers! 
