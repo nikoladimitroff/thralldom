@@ -185,6 +185,7 @@ module Thralldom {
                 throw new Error("invalid");
             }
         }
+
         public update(delta: number): void {
             for (var i = 0; i < this.dynamics.length; i++) {
                 this.dynamics[i].update(delta);

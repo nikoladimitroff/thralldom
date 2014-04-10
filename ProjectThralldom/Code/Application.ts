@@ -68,9 +68,8 @@ module Thralldom {
             this.clock = new THREE.Clock();
         }
 
-        private init(meta: IMetaGameData): void {
+        public init(meta: IMetaGameData): void {
 
-            this.clock.start();
 
             this.stats = new Stats();
             this.stats.setMode(StatsModes.Fps);
@@ -86,6 +85,8 @@ module Thralldom {
 
             this.renderer.setSize(this.webglContainer.offsetWidth, this.webglContainer.offsetHeight);
             this.webglContainer.appendChild(this.renderer.domElement);
+
+
 
             // Detect going out of focus
             // TODO
@@ -111,6 +112,8 @@ module Thralldom {
                 <Skybox>this.world.select("~skybox")[0]);
 
 
+            window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
+
             // npcs
             this.enemies = <Array<Character>> this.world.select(".guard");
 
@@ -131,11 +134,15 @@ module Thralldom {
             this.combat = new CombatManager(this.world, this.hero, this.enemies);
 
             // Audio
-            this.audio.playSound("Soundtrack", this.cameraController.camera, true, true);
             var subtitleContainer = this.ui.subtitles;
             Subs.fixDomElement(subtitleContainer);
 
             this.toggleDebugDraw(false);
+        }
+
+        private beforeRun(): void {
+            this.audio.playSound("Soundtrack", this.cameraController.camera, true, true);
+            this.clock.start();
         }
 
         private handleKeyboard(delta: number) {
@@ -182,7 +189,6 @@ module Thralldom {
                 //console.log(distance);
             }
         }
-
 
         private triggerScriptedEvents(): void {
             if (this.activeScript) {
@@ -234,7 +240,8 @@ module Thralldom {
 
             var sokolov = <any>this.world.select("#sokolov")[0];
             this.ui.text.innerHTML =
-                this.language.welcome + "\n" +
+            this.language.welcome + "\n" +
+                Utilities.formatString("Jumping: {0}\n", this.hero.settings.jumpImpulse) +
                 Utilities.formatString("Boycho's hp: {0}\n", this.hero.health) +
                 Utilities.formatString("Sokolov's hp: {0}\n", sokolov.health) +
                 Utilities.formatString("Velocity: {0}\n", Utilities.formatVector(this.hero.rigidBody.getLinearVelocity(), 7)) +
@@ -284,9 +291,8 @@ module Thralldom {
                 this.input.requestPointerLock(document.body);
         }
 
-        public run(meta: IMetaGameData): void {
-            this.init(meta);
-            window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
+        public run(): void {
+            this.beforeRun();
             this.loop();
         }
 

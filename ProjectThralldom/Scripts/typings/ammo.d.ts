@@ -16,6 +16,21 @@ declare module Ammo {
 
     export class btCollisionDispatcher extends AsmJsObject {
         constructor(config: btDefaultCollisionConfiguration);
+        getNumManifolds(): number;
+        getManifoldByInternalIndex(index: number): btPersistentManifold;
+    }
+
+    export class btPersistentManifold extends AsmJsObject {
+        getNumContacts(): number;
+        getBody0(): btCollisionObject;
+        getBody1(): btCollisionObject;
+        getContactPoint(index: number): btManifoldPoint;
+    }
+
+    export class btManifoldPoint extends AsmJsObject {
+        getPositionWorldOnA(): btVector3;
+        getPositionWorldOnB(): btVector3;
+        get_m_normalWorldOnB(): btVector3;
     }
 
     export class btDbvtBroadphase extends AsmJsObject {
@@ -39,6 +54,7 @@ declare module Ammo {
 
     export class btCollisionWorld extends AsmJsObject {
         rayTest(fromWorld: btVector3, toWorld: btVector3, callback: ClosestRayResultCallback): void;
+        getDispatcher(): btCollisionDispatcher;
     }
 
     export class btDiscreteDynamicsWorld extends btCollisionWorld {

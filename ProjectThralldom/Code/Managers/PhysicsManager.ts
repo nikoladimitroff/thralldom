@@ -16,6 +16,11 @@ module Thralldom {
 
         private static BoundingScaling = 1;
 
+        private static _instance: PhysicsManager;
+        public static get instance(): PhysicsManager {
+            return PhysicsManager._instance;
+        }
+
         constructor() {
             var collisionConfiguration= new Ammo.btDefaultCollisionConfiguration();
             var dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration);
@@ -26,6 +31,7 @@ module Thralldom {
             this.settings = PhysicsManager.defaultSettings;
 
             this.world.setGravity(new Ammo.btVector3(0, this.settings.gravity, 0));
+            PhysicsManager._instance = this;
         }
 
         public raycastCharacters(fromCharacter: Character, toCharacter: Character): Ammo.ClosestRayResultCallback {

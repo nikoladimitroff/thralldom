@@ -15,15 +15,20 @@ $(function () {
     var progressText: HTMLSpanElement = <any>document.getElementById("loading-text");
 
 
+    var hasStarted = false;
     var progressNotifier = app.load((meta: Thralldom.IMetaGameData) => {
+        if (!hasStarted) {
+            app.init(meta);
+        }
+
+        progressNotifier.update(1.2, "");
         progressText.innerHTML = "Click to continue";
 
-        var hasStarted = false;
         var clickHandler = () => {
             app.requestPointerLockFullscreen(document.body);
 
             if (!hasStarted) {
-                app.run(meta);
+                app.run();
                 loadingScreen.style.display = "none";
                 hasStarted = true;
             }
@@ -33,7 +38,7 @@ $(function () {
     });
 
     progressNotifier.update = function (percentage, text) {
-        progressBar.value = percentage * 100;
-        progressText.innerHTML = (percentage * 100).toFixed(0) + "%" + "&nbsp;&nbsp;&nbsp;&nbsp" + text;
+        progressBar.value = (percentage - 0.2)* 100;
+        progressText.innerHTML = progressBar.value.toFixed(0) + "%" + "&nbsp;&nbsp;&nbsp;&nbsp" + text;
     };
 });

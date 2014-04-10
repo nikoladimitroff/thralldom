@@ -91,6 +91,11 @@ progress[value]::-moz-progress-bar {
 nav {
   color: white;
 }
+nav pre {
+  margin: 5% 0% 0% 3%;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 120%;
+}
 #crosshair {
   background-image: url(Content/Textures/Crosshair.png);
   background-position: center center;

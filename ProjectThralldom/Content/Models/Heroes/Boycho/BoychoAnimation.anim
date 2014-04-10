@@ -1,7 +1,8 @@
 ﻿{
 	"Walking": { startFrame: 0, endFrame: 27 },
 	"Sprinting": { startFrame: 30, endFrame: 54 },
-	"Jumping": { startFrame: 400, endFrame: 435 },
+	"Jumping": { startFrame: 410, endFrame: 435 },
+	"Falling": { startFrame: 420, endFrame: 435 },
 	"Dying": { startFrame: 60, endFrame: 150 },
 	"Idle": { startFrame: 235, endFrame: 395 },
 	"PistolUnsheath": { startFrame: 161, endFrame: 171 },
