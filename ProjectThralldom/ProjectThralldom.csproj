@@ -111,6 +111,9 @@
     <Content Include="Content\Textures\Skybox\negZ.png" />
     <Content Include="default.htm" />
     <Content Include="Content\Fonts\Helvetiker.js" />
+    <Content Include="Docs\PresentationText.html">
+      <DependentUpon>PresentationText.md</DependentUpon>
+    </Content>
     <Content Include="Docs\Presentation\css\finals.css" />
     <Content Include="Docs\Presentation\favicon.png" />
     <Content Include="Docs\Presentation\images\bejeweled.jpg" />
