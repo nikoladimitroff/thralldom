@@ -17,18 +17,14 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="app.css">
-      <DependentUpon>app.less</DependentUpon>
-    </Content>
-    <Content Include="app.min.css">
-      <DependentUpon>app.css</DependentUpon>
-    </Content>
+    <Content Include="app.css" />
     <Content Include="Code\StringExtensions.js" />
     <Content Include="Code\StringExtensions.min.js">
       <DependentUpon>StringExtensions.js</DependentUpon>
     </Content>
     <Content Include="Content\Assets.js" />
     <Content Include="Content\Meta.js" />
+    <Content Include="Content\Models\Buildings\Barrels\barrelsUV.jpg" />
     <Content Include="Content\Models\Buildings\Houses\0a565e37.jpg" />
     <Content Include="Content\Models\Buildings\Houses\146b809b.png" />
     <Content Include="Content\Models\Buildings\Houses\1738d9fa.jpg" />
@@ -53,9 +49,7 @@
     <Content Include="Content\Models\Buildings\Houses\Tavern.js" />
     <Content Include="Content\Models\Buildings\Houses\well.js" />
     <Content Include="Content\Models\Buildings\Monastery\monastery_object.js" />
-    <Content Include="Content\Models\Buildings\Monastery\monastery_texture.jpg" />
     <Content Include="Content\Models\Buildings\House_01\rooftxt.jpg" />
-    <Content Include="Content\Models\Buildings\Barrels\barrelsUV.jpg" />
     <Content Include="Content\Models\Buildings\Barrels\barrels_one.js" />
     <Content Include="Content\Models\Buildings\Barrels\barrels_two.js" />
     <Content Include="Content\Models\Buildings\House_02\four.jpg" />
@@ -65,10 +59,14 @@
     <Content Include="Content\Models\Buildings\House_02\three.jpg" />
     <Content Include="Content\Models\Buildings\House_02\two.jpg" />
     <Content Include="Content\Models\Buildings\House_01\walls.jpg" />
+    <Content Include="Content\Models\Buildings\Monastery\monastery_texture.jpg" />
     <Content Include="Content\Models\Buildings\Rocks\rock.jpg" />
     <Content Include="Content\Models\Buildings\Rocks\rock_big.js" />
     <Content Include="Content\Models\Buildings\Rocks\rock_medium.js" />
     <Content Include="Content\Models\Buildings\Rocks\rock_small.js" />
+    <Content Include="Content\Models\Buildings\SmallMarket\Small_Market.js" />
+    <Content Include="Content\Models\Buildings\SmallMarket\Small_Market_01.jpg" />
+    <Content Include="Content\Models\Buildings\SmallMarket\Small_Market_02.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.js" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Cloth.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Head.jpg" />
@@ -78,11 +76,6 @@
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Eye.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Hand.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Tie.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\Cloth.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\Cloths.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\ClothSkin.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\Head.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\k98.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
     <Content Include="Content\Models\Terrain\terrain.js" />
@@ -125,6 +118,12 @@
     <Content Include="Content\Textures\Skyboxes\Day\negZ.png" />
     <Content Include="default.htm" />
     <Content Include="Content\Fonts\Helvetiker.js" />
+    <Content Include="Docs\Presentation.html">
+      <DependentUpon>Presentation.md</DependentUpon>
+    </Content>
+    <Content Include="Docs\Presentation.min.html">
+      <DependentUpon>Presentation.html</DependentUpon>
+    </Content>
     <Content Include="Docs\PresentationText.html">
       <DependentUpon>PresentationText.md</DependentUpon>
     </Content>
@@ -187,11 +186,9 @@
     <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.anim" />
     <Content Include="Content\Subtitles\Liars.srt" />
     <Content Include="Content\Subtitles\dialog.srt" />
+    <Content Include="Docs\Presentation.md" />
     <Content Include="Content\ScriptedEvents\RandomStuff.tscr" />
     <Content Include="Fonts\Bulgaria_Moderna_Pro.otf" />
-    <Content Include="app.less" />
-    <Content Include="Docs\PresentationText.md" />
-    <Content Include="Docs\Presentation\css\Bulgaria_Moderna_Pro.otf" />
     <None Include="thralldom.js.bundle" />
     <Content Include="thralldom.min.js.map">
       <DependentUpon>thralldom.min.js</DependentUpon>
