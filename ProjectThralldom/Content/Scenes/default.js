@@ -9,7 +9,7 @@
     character: {
         "*": {
             mass: 70,
-            jumpImpulse: 15,
+            jumpImpulse: 2500,
             viewAngle: Math.PI / 3,
             movementSpeed: 1 * 1e3,
             sprintMultiplier: 2,
@@ -36,12 +36,12 @@
     skybox: {
         scale: 50000,
         textures: [
-                "Content/Textures/Skybox/posX.png", 
-                "Content/Textures/Skybox/negX.png", 
-                "Content/Textures/Skybox/posY.png", 
-                "Content/Textures/Skybox/negY.png", 
-                "Content/Textures/Skybox/posZ.png",
-                "Content/Textures/Skybox/negZ.png", 
+                "Content/Textures/Skyboxes/Night/posX.png", 
+                "Content/Textures/Skyboxes/Night/negX.png", 
+                "Content/Textures/Skyboxes/Night/posY.png", 
+                "Content/Textures/Skyboxes/Night/negY.png", 
+                "Content/Textures/Skyboxes/Night/posZ.png",
+                "Content/Textures/Skyboxes/Night/negZ.png", 
         ],
     },
     waypoints: {

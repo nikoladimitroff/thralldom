@@ -86,10 +86,15 @@ module Thralldom {
                         0;
             }, false);
 
-
-            window.onmousewheel = (args) => {
-                this.mouse.scroll += args.wheelDelta;
+            var onscroll = (args) => {
+                // formula due to http://www.sitepoint.com/html5-javascript-mouse-wheel/
+                this.mouse.scroll += Math.max(-1, Math.min(1, (args.wheelDelta || -args.detail)));
             };
+
+            // Chrome, IE
+            window.addEventListener("mousewheel", onscroll);
+            // FF
+            window.addEventListener("DOMMouseScroll", onscroll);
         }
 
         public requestPointerLock(domElement: HTMLElement): void {

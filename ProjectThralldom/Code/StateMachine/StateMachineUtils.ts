@@ -1,9 +1,8 @@
 module Thralldom {
     export class StateMachineUtils {
-
-        private static FallingExitMultiplier = 0.6;
-        private static FallingEntranceMultiplier = 0.45;
-        private static JumpingErrorMargin = 1;
+        private static FallingExitMultiplier = 1 + 1e-4;
+        private static FallingEntranceMultiplier = 0.4;
+        private static JumpingErrorMargin = 3;
 
         private static dummyEventHandler = (state: number, object: DynamicObject) => { };
         private static dummyPredicate = (object: DynamicObject) => false;
@@ -146,42 +145,34 @@ module Thralldom {
 
             var jumpingEntry = (previous: number, hero: Character) => {
                 jumping.data.beforeJumpY = hero.mesh.position.y;
+                jumping.data.previous = previous;
                 jumping.data.reachedPeak = false;
                 var impulse = new Ammo.btVector3();
                 StateMachineUtils.GetJumpingImpulse(impulse, hero);
                 hero.rigidBody.applyCentralImpulse(impulse);
                 Ammo.destroy(impulse);
 
-                //var velocity = hero.rigidBody.getLinearVelocity();
-                //velocity.setY(StateMachineUtils.JumpingImpulse);
                 StateMachineUtils.restartAnimationIfNeeded(hero, previous);
             }
 
             var jumpingUpdate = (delta: number, hero: Character) => {
-                StateMachineUtils.ensureAnimationLoop(hero);
+                StateMachineUtils.pauseAnimationAfterEnd(hero);
 
-                var velocity = hero.rigidBody.getLinearVelocity().y()
-                if (!jumping.data.reachedPeak && velocity < 0) {
-                    jumping.data.reachedPeak = true;
-                    jumping.data.peak = hero.mesh.position.y;
-                }
-                jumping.data.previousY = hero.mesh.position.y;
-                jumping.data.previousVelY = velocity;
+                if (jumping.data.previous == CharacterStates.Walking || jumping.data.previous == CharacterStates.Sprinting)
+                    hero.setWalkingVelocity(delta, jumping.data.previous == CharacterStates.Sprinting);
+
             }
 
             var jumpingInterupt = (object: DynamicObject): boolean => {
-                var precision = PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingExitMultiplier;
 
-                var velocityY = object.rigidBody.getLinearVelocity().y();
-                var jumpFinished =
-                    GeometryUtils.almostZero(velocityY, precision) &&
-                    jumping.data.reachedPeak &&
-                    Math.abs(object.mesh.position.y - jumping.data.peak) > StateMachineUtils.JumpingErrorMargin;
-                var samePosition =
-                    GeometryUtils.almostEquals(object.mesh.position.y, jumping.data.previousY, 0.1) &&
-                    GeometryUtils.almostEquals(velocityY, jumping.data.previousVelY);
+                var from = (new THREE.Vector3()).subVectors(object.mesh.position, object.rigidBody.centerToMesh);
 
-                return jumpFinished || samePosition;
+                var to = (new THREE.Vector3())
+                    .copy(Const.DownVector)
+                    .multiplyScalar(Math.abs(object.rigidBody.centerToMesh.y * StateMachineUtils.FallingExitMultiplier))
+                    .add(from);
+                var ray = PhysicsManager.instance.raycast(from, to);
+                return ray.hasHit();
             };
 
             jumping = new State(CharacterStates.Jumping, jumpingUpdate, jumpingEntry, StateMachineUtils.dummyEventHandler, jumpingInterupt);
@@ -192,23 +183,35 @@ module Thralldom {
         private static getFallingState(): State {
             var falling: State;
 
+            var fallingEntry = (previous: number, hero: DynamicObject): void => {
+                StateMachineUtils.restartAnimationIfNeeded(<any>hero, previous);
+            }
+
+            var fallingUpdate = (delta: number, hero: Character): void => {
+                StateMachineUtils.pauseAnimationAfterEnd(hero);
+            }
+
+
             var fallingInterupt = (object: DynamicObject): boolean => {
-                var precision = PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingExitMultiplier;
-                var velocityY = object.rigidBody.getLinearVelocity().y();
-                // Negative velocity that is close to zero
-                return velocityY < 0 &&
-                    GeometryUtils.almostZero(velocityY, precision);
+                var from = (new THREE.Vector3()).subVectors(object.mesh.position, object.rigidBody.centerToMesh);
+
+                var to = (new THREE.Vector3())
+                    .copy(Const.DownVector)
+                    .multiplyScalar(Math.abs(object.rigidBody.centerToMesh.y * StateMachineUtils.FallingExitMultiplier))
+                    .add(from);
+                var ray = PhysicsManager.instance.raycast(from, to);
+                return ray.hasHit();
             };
 
             var fallingEntranceCondition = (object: DynamicObject): boolean => {
                 var velocityY = object.rigidBody.getLinearVelocity().y();
                 // Negative velocity bigger than gravity * gravityMultiplier
-                return velocityY < 0 && velocityY < PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingEntranceMultiplier;
+                return velocityY < 0 && Math.abs(velocityY) > Math.abs(PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingEntranceMultiplier);
             }
 
             falling = new State(CharacterStates.Falling,
-                State.emptyUpdate,
-                StateMachineUtils.dummyEventHandler,
+                fallingUpdate,
+                fallingEntry,
                 StateMachineUtils.dummyEventHandler,
                 fallingInterupt,
                 fallingEntranceCondition);
