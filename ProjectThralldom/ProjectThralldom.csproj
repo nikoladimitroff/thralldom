@@ -142,6 +142,7 @@
     <Content Include="Images\Outdated\iexplorer.png" />
     <Content Include="Images\Outdated\opera.png" />
     <Content Include="Images\Outdated\safari.png" />
+    <Content Include="Images\ProgressScreenV3.jpg" />
     <Content Include="Images\shipka.jpg" />
     <Content Include="Images\shipka2.jpg" />
     <Content Include="Images\winged.jpg" />
