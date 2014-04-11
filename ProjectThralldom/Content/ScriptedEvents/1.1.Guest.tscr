@@ -1,0 +1,7 @@
+﻿place trigger at (1000, 1000) at radius 10
+
+#sokolov:
+say boycho-sokolov | boycho-sokolov.srt
+lookat (1, 1) and wait 3000
+goto (20, 30)
+goto (20, 30)

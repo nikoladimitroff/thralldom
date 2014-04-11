@@ -85,6 +85,7 @@
     <Content Include="Code\StringExtensions.min.js.map">
       <DependentUpon>StringExtensions.min.js</DependentUpon>
     </Content>
+    <Content Include="Content\Sounds\boycho-sokolov.mp3" />
     <Content Include="Content\Sounds\crickets.mp3" />
     <Content Include="Content\Sounds\dialog.mp3" />
     <Content Include="Content\Sounds\footsteps.mp3" />
@@ -119,14 +120,11 @@
     <Content Include="Content\Textures\Skyboxes\Day\negZ.png" />
     <Content Include="default.htm" />
     <Content Include="Content\Fonts\Helvetiker.js" />
-    <Content Include="Docs\Presentation.html">
-      <DependentUpon>Presentation.md</DependentUpon>
-    </Content>
-    <Content Include="Docs\Presentation.min.html">
-      <DependentUpon>Presentation.html</DependentUpon>
-    </Content>
     <Content Include="Docs\PresentationText.html">
       <DependentUpon>PresentationText.md</DependentUpon>
+    </Content>
+    <Content Include="Docs\PresentationText.min.html">
+      <DependentUpon>PresentationText.html</DependentUpon>
     </Content>
     <Content Include="Docs\Presentation\css\finals.css" />
     <Content Include="Docs\Presentation\favicon.png" />
@@ -188,9 +186,11 @@
     <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.anim" />
     <Content Include="Content\Subtitles\Liars.srt" />
     <Content Include="Content\Subtitles\dialog.srt" />
-    <Content Include="Docs\Presentation.md" />
     <Content Include="Content\ScriptedEvents\RandomStuff.tscr" />
     <Content Include="Fonts\Bulgaria_Moderna_Pro.otf" />
+    <Content Include="Docs\PresentationText.md" />
+    <Content Include="Content\ScriptedEvents\1.1.Guest.tscr" />
+    <Content Include="Content\Subtitles\sokolov-boycho.srt" />
     <None Include="thralldom.js.bundle" />
     <Content Include="thralldom.min.js.map">
       <DependentUpon>thralldom.min.js</DependentUpon>

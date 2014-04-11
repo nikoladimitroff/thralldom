@@ -54,9 +54,15 @@
             path: "Content/Sounds/dialog.mp3",
             volume: 1,
         },
+        {
+            sound: "boycho-sokolov",
+            path: "Content/Sounds/dialog.mp3",
+            volume: 1,
+        },
     ],
     subtitles: [
         "Content/Subtitles/Liars.srt",
         "Content/Subtitles/dialog.srt",
+        "Content/Subtitles/boycho-sokolov.srt",
     ]
 }

@@ -50,6 +50,10 @@ so I asked them to have their students fill a small form I made. Some of my coll
 
 Would you play a game based on 'Under the yoke'?
 **play diagram**
+
+Suprisingly, almost 90% said they're at least willing to give it a try. Mind you, the participants are as random as it can get - pupils aged from 13 to 19, undergraduates,
+and only a few graduates.
+
 Gamer percentage:
 **gamers**
 
