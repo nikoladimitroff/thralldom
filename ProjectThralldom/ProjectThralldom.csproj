@@ -46,8 +46,13 @@
     <Content Include="Content\Models\Buildings\Houses\mill.js" />
     <Content Include="Content\Models\Buildings\Houses\mint.js" />
     <Content Include="Content\Models\Buildings\Houses\oldwarehouse.js" />
+    <Content Include="Content\Models\Buildings\Houses\Restaurant_one.js" />
+    <Content Include="Content\Models\Buildings\Houses\Restaurant_two.js" />
     <Content Include="Content\Models\Buildings\Houses\Tavern.js" />
     <Content Include="Content\Models\Buildings\Houses\well.js" />
+    <Content Include="Content\Models\Buildings\Houses\Workshop.js" />
+    <Content Include="Content\Models\Buildings\MarketCart\cart.js" />
+    <Content Include="Content\Models\Buildings\MarketCart\Wagen_1.jpg" />
     <Content Include="Content\Models\Buildings\Monastery\monastery_object.js" />
     <Content Include="Content\Models\Buildings\House_01\rooftxt.jpg" />
     <Content Include="Content\Models\Buildings\Barrels\barrels_one.js" />
@@ -60,6 +65,14 @@
     <Content Include="Content\Models\Buildings\House_02\two.jpg" />
     <Content Include="Content\Models\Buildings\House_01\walls.jpg" />
     <Content Include="Content\Models\Buildings\Monastery\monastery_texture.jpg" />
+    <Content Include="Content\Models\Buildings\OldHouse\Door_Def.jpg" />
+    <Content Include="Content\Models\Buildings\OldHouse\Floor.jpg" />
+    <Content Include="Content\Models\Buildings\OldHouse\Frame_Def.jpg" />
+    <Content Include="Content\Models\Buildings\OldHouse\Glasses.jpg" />
+    <Content Include="Content\Models\Buildings\OldHouse\oldhouse.js" />
+    <Content Include="Content\Models\Buildings\OldHouse\Roof_Def.jpg" />
+    <Content Include="Content\Models\Buildings\OldHouse\Steel_Def.jpg" />
+    <Content Include="Content\Models\Buildings\OldHouse\Wall_Def.jpg" />
     <Content Include="Content\Models\Buildings\Rocks\rock.jpg" />
     <Content Include="Content\Models\Buildings\Rocks\rock_big.js" />
     <Content Include="Content\Models\Buildings\Rocks\rock_medium.js" />
@@ -67,7 +80,7 @@
     <Content Include="Content\Models\Buildings\SmallMarket\Small_Market.js" />
     <Content Include="Content\Models\Buildings\SmallMarket\Small_Market_01.jpg" />
     <Content Include="Content\Models\Buildings\SmallMarket\Small_Market_02.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.js" />
+    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimatioNNN.js" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Cloth.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Head.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Left_Eye.jpg" />
@@ -76,8 +89,11 @@
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Eye.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Hand.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Tie.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\ClothSkin.jpg" />
+    <Content Include="Content\Models\Heroes\Boycho\Head.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
+    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.js" />
     <Content Include="Content\Models\Terrain\terrain.js" />
     <Content Include="Content\Models\Terrain\terrainTexture.jpg" />
     <Content Include="Content\Quests\default.js" />
@@ -85,24 +101,11 @@
     <Content Include="Code\StringExtensions.min.js.map">
       <DependentUpon>StringExtensions.min.js</DependentUpon>
     </Content>
-    <Content Include="Content\Sounds\crickets.mp3" />
     <Content Include="Content\Sounds\dialog.mp3" />
     <Content Include="Content\Sounds\footsteps.mp3" />
     <Content Include="Content\Sounds\forest_background.mp3" />
     <Content Include="Content\Sounds\gunshot.mp3" />
     <Content Include="Content\Sounds\heavy_song.mp3" />
-    <Content Include="Content\Textures\Skyboxes\Night\negX.png" />
-    <Content Include="Content\Textures\Skyboxes\Night\negY.png" />
-    <Content Include="Content\Textures\Skyboxes\Night\negZ.png" />
-    <Content Include="Content\Textures\Skyboxes\Night\posX.png" />
-    <Content Include="Content\Textures\Skyboxes\Night\posY.png" />
-    <Content Include="Content\Textures\Skyboxes\Night\posZ.png" />
-    <Content Include="Content\Textures\Skyboxes\Sunset\negX.png" />
-    <Content Include="Content\Textures\Skyboxes\Sunset\negZ.png" />
-    <Content Include="Content\Textures\Skyboxes\Sunset\posZ.png" />
-    <Content Include="Content\Textures\Skyboxes\Sunset\negY.png" />
-    <Content Include="Content\Textures\Skyboxes\Sunset\posY.png" />
-    <Content Include="Content\Textures\Skyboxes\Sunset\posX.png" />
     <Content Include="Docs\info.txt" />
     <Content Include="Content\Sounds\running.mp3" />
     <Content Include="Content\Textures\BlackWhiteChecker.jpg" />
@@ -111,12 +114,12 @@
     <Content Include="Content\Textures\Grass.jpg" />
     <Content Include="Content\Textures\RedChecker.png" />
     <Content Include="Content\Textures\DirtTexture.jpg" />
-    <Content Include="Content\Textures\Skyboxes\Day\negX.png" />
-    <Content Include="Content\Textures\Skyboxes\Day\negY.png" />
-    <Content Include="Content\Textures\Skyboxes\Day\posZ.png" />
-    <Content Include="Content\Textures\Skyboxes\Day\posX.png" />
-    <Content Include="Content\Textures\Skyboxes\Day\posY.png" />
-    <Content Include="Content\Textures\Skyboxes\Day\negZ.png" />
+    <Content Include="Content\Textures\Skybox\negX.png" />
+    <Content Include="Content\Textures\Skybox\negY.png" />
+    <Content Include="Content\Textures\Skybox\posZ.png" />
+    <Content Include="Content\Textures\Skybox\posX.png" />
+    <Content Include="Content\Textures\Skybox\posY.png" />
+    <Content Include="Content\Textures\Skybox\negZ.png" />
     <Content Include="default.htm" />
     <Content Include="Content\Fonts\Helvetiker.js" />
     <Content Include="Docs\Presentation.html">
@@ -156,7 +159,6 @@
     <Content Include="Images\Outdated\opera.png" />
     <Content Include="Images\Outdated\safari.png" />
     <Content Include="Images\ProgressScreenV3.jpg" />
-    <Content Include="Images\loading-screen.jpg" />
     <Content Include="Images\shipka.jpg" />
     <Content Include="Images\shipka2.jpg" />
     <Content Include="Images\winged.jpg" />
@@ -261,7 +263,9 @@
     <TypeScriptCompile Include="Scripts\typings\three.d.ts" />
     <TypeScriptCompile Include="Tests\Tests.ts" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\Models\Heroes\Sokolov\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
