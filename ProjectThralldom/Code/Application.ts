@@ -122,7 +122,7 @@ module Thralldom {
 
             // Lights
 
-            var ambient = new THREE.AmbientLight(0x5C5C5C);
+            var ambient = new THREE.AmbientLight(0xFFFFFF);
             this.world.renderScene.add(ambient);
 
             var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
