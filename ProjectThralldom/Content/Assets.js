@@ -7,6 +7,10 @@
         {
             path: "Content/Models/Heroes/Boycho/PistolAnimation.js",
             animationData: false,
+        },
+        {
+            path: "Content/Models/Heroes/Sokolov/SokolovAnimation.js",
+            animationData: true,
         }
     ],
     models: [
@@ -26,7 +30,7 @@
         "Content/Models/Buildings/Houses/House_03.js",
         "Content/Models/Buildings/SmallMarket/Small_Market.js",
         "Content/Models/Buildings/MarketCart/cart.js",
-        "Content/Models/Buildings/OdlHouse/oldhouse.js",
+        "Content/Models/Buildings/OldHouse/oldhouse.js",
         "Content/Models/Buildings/Rocks/rock_big.js",
         "Content/Models/Buildings/Monastery/monastery_object.js",
         "Content/Models/Buildings/Rocks/rock_medium.js",
@@ -63,7 +67,7 @@
             sound: "Crickets",
             path: "Content/Sounds/crickets.mp3",
             // Set background music to low level, else nothing else can't be heard
-            volume: 0.1,
+            volume: 0.01,
         },
         {
             sound: "dialog",
@@ -75,10 +79,16 @@
             path: "Content/Sounds/dialog.mp3",
             volume: 1,
         },
+        {
+            sound: "sokolov-boycho",
+            path: "Content/Sounds/dialog.mp3",
+            volume: 1,
+        },
     ],
     subtitles: [
         "Content/Subtitles/Liars.srt",
         "Content/Subtitles/dialog.srt",
         "Content/Subtitles/boycho-sokolov.srt",
+        "Content/Subtitles/sokolov-boycho.srt",
     ]
 }

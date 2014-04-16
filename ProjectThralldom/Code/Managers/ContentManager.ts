@@ -27,6 +27,7 @@ module Thralldom {
         private static aiControllerTypes = {
             "citizen": Thralldom.AI.Citizen,
             "guard": Thralldom.AI.Guard,
+            "statue": Thralldom.AI.Statue,
         }
 
         private progressNotifier: IProgressNotifier;

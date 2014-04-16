@@ -41,7 +41,7 @@ module Thralldom {
 
         private destination: THREE.Vector2;
 
-        constructor(args, content: ContentManager) {
+        constructor(args: string, content: ContentManager) {
             this.destination = Utilities.parseVector2(args);
         }
 
@@ -75,7 +75,7 @@ module Thralldom {
 
         private lookat: THREE.Vector2;
 
-        constructor(args, content: ContentManager) {
+        constructor(args: string, content: ContentManager) {
             this.lookat = Utilities.parseVector2(args);
         }
 
@@ -106,7 +106,7 @@ module Thralldom {
         private delay: number;
         private startTime: number;
 
-        constructor(args, content: ContentManager) {
+        constructor(args: string, content: ContentManager) {
             this.delay = parseFloat(args);
 
         }
@@ -128,6 +128,7 @@ module Thralldom {
         public hasCompleted: boolean;
 
         private hasStarted = false;
+        private completeImmediately = false;
 
         private delay: number;
         private startTime: number;
@@ -136,8 +137,11 @@ module Thralldom {
         private audio: string;
         private content: ContentManager;
 
-        constructor(args: any, content: ContentManager) {
-            var files = args.split("|");
+        private static nowKeyword = "now";
+        constructor(args: string, content: ContentManager) {
+            this.completeImmediately = args.indexOf(DialogAction.nowKeyword) != -1;
+
+            var files = args.replace(DialogAction.nowKeyword, "").trim().split("|");
             this.audio = files[0].trim();
             this.subtitles = files[1].trim();
 
@@ -159,7 +163,7 @@ module Thralldom {
 
             character.stateMachine.requestTransitionTo(CharacterStates.Idle);
 
-            this.hasCompleted = AudioManager.instance.hasFinished(this.audio, character.mesh);
+            this.hasCompleted = this.hasCompleted || this.completeImmediately || AudioManager.instance.hasFinished(this.audio, character.mesh);
         }
     }
 } 

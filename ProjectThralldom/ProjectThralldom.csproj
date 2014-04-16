@@ -78,6 +78,8 @@
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Tie.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
+    <Content Include="Content\Models\Heroes\Sokolov\ClothSkin.jpg" />
+    <Content Include="Content\Models\Heroes\Sokolov\SokolovAnimation.js" />
     <Content Include="Content\Models\Terrain\terrain.js" />
     <Content Include="Content\Models\Terrain\terrainTexture.jpg" />
     <Content Include="Content\Quests\default.js" />
@@ -85,7 +87,6 @@
     <Content Include="Code\StringExtensions.min.js.map">
       <DependentUpon>StringExtensions.min.js</DependentUpon>
     </Content>
-    <Content Include="Content\Sounds\boycho-sokolov.mp3" />
     <Content Include="Content\Sounds\crickets.mp3" />
     <Content Include="Content\Sounds\dialog.mp3" />
     <Content Include="Content\Sounds\footsteps.mp3" />
@@ -173,6 +174,7 @@
     </Content>
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
+    <TypeScriptCompile Include="Code\AI\Statue.ts" />
     <TypeScriptCompile Include="Code\Managers\CombatManager.ts" />
     <TypeScriptCompile Include="Code\Managers\UIManager.ts" />
     <TypeScriptCompile Include="Scripts\typings\subtitles.d.ts" />
@@ -191,6 +193,8 @@
     <Content Include="Fonts\Bulgaria_Moderna_Pro.otf" />
     <Content Include="Docs\PresentationText.md" />
     <Content Include="Content\ScriptedEvents\1.1.Guest.tscr" />
+    <Content Include="Content\Subtitles\boycho-sokolov.srt" />
+    <Content Include="Content\Models\Heroes\Sokolov\SokolovAnimation.anim" />
     <Content Include="Content\Subtitles\sokolov-boycho.srt" />
     <None Include="thralldom.js.bundle" />
     <Content Include="thralldom.min.js.map">

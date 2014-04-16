@@ -122,11 +122,11 @@ module Thralldom {
 
             // Lights
 
-            var ambient = new THREE.AmbientLight(0xFFFFFF);
+            var ambient = new THREE.AmbientLight(0x606060);
             this.world.renderScene.add(ambient);
 
-            var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-            directionalLight.position.set(1, 1, 1);
+            var directionalLight = new THREE.DirectionalLight(0x505050, 0.5);
+            directionalLight.position.set(0.51, 0.1, 1);
 
             this.world.renderScene.add(directionalLight);
 
@@ -138,6 +138,8 @@ module Thralldom {
             Subs.fixDomElement(subtitleContainer);
 
             this.toggleDebugDraw(false);
+            this.toggleDebugDraw();
+            this.toggleDebugDraw();
         }
 
         private beforeRun(): void {
@@ -239,16 +241,7 @@ module Thralldom {
             var currentAnimTime = this.hero.animation.currentTime;
 
             var sokolov = <any>this.world.select("#sokolov")[0];
-            this.ui.text.innerHTML =
-            this.language.welcome + "\n" +
-                Utilities.formatString("Jumping: {0}\n", this.hero.settings.jumpImpulse) +
-                Utilities.formatString("Boycho's hp: {0}\n", this.hero.health) +
-                Utilities.formatString("Sokolov's hp: {0}\n", sokolov.health) +
-                Utilities.formatString("Velocity: {0}\n", Utilities.formatVector(this.hero.rigidBody.getLinearVelocity(), 7)) +
-                Utilities.formatString("Current pos: {0}\n", Utilities.formatVector(this.hero.mesh.position, 5)) +
-                Utilities.formatString("State: {0}\n", StateMachineUtils.translateState(this.hero.stateMachine.current)) +
-                Utilities.formatString("Current anim time: {0}\n", currentAnimTime.toFixed(6)) + 
-                questText;
+            this.ui.text.innerHTML =  questText;
 
             var frameInfo = this.combat.update(this.debugDraw);
 

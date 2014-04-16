@@ -33,6 +33,7 @@
   <file >Code/AI/AIController.js</file>
   <file >Code/AI/Citizen.js</file>
   <file >Code/AI/Guard.js</file>
+  <file >Code/AI/Statue.js</file>
   <!-- /Character controllers & AI -->
 
   <!-- State machine -->

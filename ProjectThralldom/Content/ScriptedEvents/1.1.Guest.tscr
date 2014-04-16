@@ -1,7 +1,8 @@
-﻿place trigger at (1000, 1000) at radius 10
+﻿place trigger at (-520, 383) activate at distance of 100
 
 #sokolov:
-say boycho-sokolov | boycho-sokolov.srt
-lookat (1, 1) and wait 3000
-goto (20, 30)
-goto (20, 30)
+say now boycho-sokolov | boycho-sokolov.srt
+lookat (1, 1) and wait 4000
+goto (-541, 1008) and wait 2000
+say sokolov-boycho | sokolov-boycho.srt and wait 2000
+goto (0, 0)

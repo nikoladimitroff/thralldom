@@ -157,6 +157,7 @@ module Thralldom {
             var shapeGen = (halfExtents: THREE.Vector3) => {
                 var centerToMesh = new THREE.Vector3(0, -halfExtents.y, 0);
                 halfExtents.multiplyScalar(scaling);
+                halfExtents.divideScalar(100);
                 var shape = new Ammo.btBoxShape(new Ammo.btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
 
                 return { shape: shape, centerToMesh: centerToMesh };
