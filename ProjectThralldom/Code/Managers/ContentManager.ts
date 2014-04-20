@@ -117,7 +117,11 @@ module Thralldom {
                 geometry.computeFaceNormals();
                 geometry.computeVertexNormals();
 
-                var duplicate = () => new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+                var duplicate = () => {
+                    var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+                    mesh.name = path;
+                    return mesh;
+                }
                 this.onContentLoaded(path, duplicate);
             });
         }
@@ -180,7 +184,11 @@ module Thralldom {
                     m.perPixel = true;
                 }
 
-                var duplicate = () => new THREE.SkinnedMesh(geometry, new THREE.MeshFaceMaterial(materials));
+                var duplicate = () => {
+                    var mesh = new THREE.SkinnedMesh(geometry, new THREE.MeshFaceMaterial(materials));
+                    mesh.name = path;
+                    return mesh;
+                };
                 this.onContentLoaded(path, duplicate);
             });
         }
@@ -192,7 +200,7 @@ module Thralldom {
             physicsDescription.linearDamping = physicsDescription.linearDamping || 0;
             physicsDescription.angularDamping = physicsDescription.angularDamping || 0;
 
-            World.instance.updatePhysicsSettings(physicsDescription);
+            PhysicsManager.instance.updatePhysicsSettings(physicsDescription);
         }
 
         private parseSettings(worldDescription: any): void {

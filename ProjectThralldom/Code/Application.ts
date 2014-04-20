@@ -50,6 +50,7 @@ module Thralldom {
         private static zoomSpeed: number = 5;
 
         // Managers
+        private physics: PhysicsManager;
         private input: InputManager;
         private ui: UIManager;
         private content: ContentManager;
@@ -64,6 +65,7 @@ module Thralldom {
 
         constructor(container: HTMLElement) {
             this.webglContainer = container;
+            this.physics = new PhysicsManager();
             this.input = new InputManager(container);
             this.ui = new UIManager();
             this.language = new Languages.English();
@@ -73,8 +75,6 @@ module Thralldom {
         }
 
         public init(meta: IMetaGameData): void {
-
-
             this.stats = new Stats();
             this.stats.setMode(StatsModes.Fps);
             this.stats.domElement.style.position = 'absolute';
@@ -89,8 +89,6 @@ module Thralldom {
 
             this.renderer.setSize(this.webglContainer.offsetWidth, this.webglContainer.offsetHeight);
             this.webglContainer.appendChild(this.renderer.domElement);
-
-
 
             // Detect going out of focus
             // TODO
@@ -134,16 +132,20 @@ module Thralldom {
 
             this.world.renderScene.add(directionalLight);
 
-            // Combat
-            this.combat = new CombatManager(this.world, this.hero, this.enemies);
+            // Fog
+            //var fog = new THREE.FogExp2(0x0A0A0A);
+            //this.world.renderScene.fog = fog;
 
-            // Audio
+            // Combat
+            this.combat = new CombatManager(this.world, this.physics, this.hero, this.enemies);
+
+            // Subs
             var subtitleContainer = this.ui.subtitles;
             Subs.fixDomElement(subtitleContainer);
 
-            this.toggleDebugDraw(false);
-            this.toggleDebugDraw();
-            this.toggleDebugDraw();
+
+            this.world.mergeStatics();
+
         }
 
         private beforeRun(): void {
@@ -160,13 +162,13 @@ module Thralldom {
 
             this.cameraController.handleMouse(delta, this.input);
             // See if our raycast request has been resolved. 
-            var ray = this.world.tryResolveRaycast(this.raycastPromiseUid);
+            var ray = this.physics.tryResolveRaycast(this.raycastPromiseUid);
             // If no request is currently pending, request another
             if (!ray && this.raycastPromiseUid == -1) {
                 var pos = this.cameraController.position;
                 var target = (new THREE.Vector3).subVectors(this.hero.mesh.position, this.hero.centerToMesh);
 
-                this.world.requestRaycast(pos, target);
+                this.physics.requestRaycast(pos, target);
             }
             // If the request has been fullfilled, do stuff
             if (ray) {
@@ -214,6 +216,9 @@ module Thralldom {
                 delta = 0;
                 return;
             }
+
+            // Run physics before everything else
+            this.physics.update(delta);
 
             this.handleKeyboard(delta);
             this.handleMouse(delta);

@@ -9,15 +9,6 @@ module Thralldom {
         public statics: Array<LoadableObject>;
 
         public renderScene: THREE.Scene;
-
-        public physicsWorker: Worker;
-        private worldBuffer: ArrayBuffer;
-        private worldView: Float32Array;
-        private pendingRaycasts: Map<number, IRaycastResult>;
-
-        // TODO: Probably not the best solution, but does the job for O(n)
-        public threeIndexToObject: Map<number, DynamicObject>;
-
         public aiManager: AIManager;
 
         constructor() {
@@ -25,39 +16,7 @@ module Thralldom {
             this.dynamics = new Array<DynamicObject>();
             this.statics = new Array<LoadableObject>();
 
-            this.physicsWorker = new Worker("Code/Physics/Worker.js");
-            this.physicsWorker.onmessage = (eventData) => {
-                var data = eventData.data;
-                switch (data.code) {
-                    case MessageCode.Raycast:
-                        this.raycastCompleted(data);
-                        break;
-
-                    case MessageCode.AirborneObject:
-                        this.objectAirborneChange(data.id, data.isAirborne);
-                        break;
-
-                    case MessageCode.UpdateWorld:
-                        this.updateDynamicPositions(data);
-                        break;
-
-                    default:
-                        throw new RangeError("invalid message code: " + data.code);
-                };
-            }
-            this.physicsWorker.onerror = <any>function (e) {
-                console.log(arguments);
-            }
-
-            this.physicsWorker.postMessage("");
-
-            this.pendingRaycasts = <any> {};
-            this.worldBuffer = new ArrayBuffer(BODY_COUNT * MEM_PER_BODY);
-            this.worldView = new Float32Array(this.worldBuffer)
-
             this.aiManager = new AIManager();
-
-            this.threeIndexToObject = <any> {};
 
             World._instance = this;
         }
@@ -187,7 +146,6 @@ module Thralldom {
         public addDynamic(object: DynamicObject): void {
             this.dynamics.push(object);
             this.renderScene.add(object.mesh);
-            this.threeIndexToObject[object.mesh.id] = object;
        }
 
         public addDrawable(object: IDrawable): void {
@@ -227,9 +185,6 @@ module Thralldom {
         }
 
         public update(delta: number): void {
-            if (this.worldBuffer.byteLength != 0)
-                this.physicsWorker.postMessage({ code: MessageCode.UpdateWorld, buffer: this.worldBuffer }, [this.worldBuffer]);
-
             for (var i = 0; i < this.dynamics.length; i++) {
                 this.dynamics[i].update(delta);
             }
@@ -237,81 +192,53 @@ module Thralldom {
             this.aiManager.update(delta, this);
         }
 
-        public updateDynamicPositions(data: any): void {
-            this.worldBuffer = data.buffer;
-            this.worldView = new Float32Array(this.worldBuffer);
+        public mergeStatics(): void {
+            var geometry = new THREE.Geometry();
+            var materials = new THREE.MeshFaceMaterial();
 
-            var dynamicObjectsCount = Object.keys(this.threeIndexToObject).length;
-            for (var i = 0; i < dynamicObjectsCount; i ++) {
+            var processedGeometries: any = {};
 
-                var offset = i * NUMBERS_PER_BODY;
-                var object: DynamicObject = this.threeIndexToObject[this.worldView[offset]];
-                object.mesh.position.x = this.worldView[offset + 1];
-                object.mesh.position.y = this.worldView[offset + 2];
-                object.mesh.position.z = this.worldView[offset + 3];
-                object.mesh.position.add(object.centerToMesh);
 
-                // WARNING: DONT SET THE QUATERNION FROM THE SIM
-                //this.dynamics[i].mesh.quaternion.set(quat.x(), quat.y(), quat.z(), quat.w());
+            for (var i = 0; i < this.statics.length; i++) {
+                var current = this.statics[i].mesh;
+                if (current.material instanceof THREE.MeshFaceMaterial) {
+                    materials.materials = materials.materials.concat((<THREE.MeshFaceMaterial>current.material).materials);
+                }
+                else {
+                    materials.materials.push(current.material);
+                }
             }
-        }
+            
+            var mats = materials.materials;
+            materials.materials = materials.materials.filter((mat, index, arr) => arr.indexOf(mat) == index);
 
-        public requestRaycast(from: THREE.Vector3, to: THREE.Vector3): number {
-            var uid = ~~(Math.random() * Number.MAX_VALUE);
+            for (var i = 0; i < this.statics.length; i++) {
+                var current = this.statics[i].mesh;
 
-            this.physicsWorker.postMessage({
-                code: MessageCode.Raycast,
-                from: new VectorDTO(from.x, from.y, from.z),
-                to: new VectorDTO(to.x, to.y, to.z),
-                uid: uid,
-            });
-            return uid;
-        }
+                if (!processedGeometries[current.name]) {
+                    var faces = current.geometry.faces;
+                    for (var j = 0; j < faces.length; j++) {
+                        var mat = current.material instanceof THREE.MeshFaceMaterial
+                            ? (<any>current.material).materials[faces[j].materialIndex]
+                            : current.material;
 
-        public tryResolveRaycast(promiseUid: number): IRaycastResult {
-            var result = this.pendingRaycasts[promiseUid];
-            delete this.pendingRaycasts[promiseUid];
-            return result;
-        }
+                        // Set all materials to 0, boosts performance by 123013891273189273812368721%
+                        faces[j].materialIndex = 0//materials.materials.indexOf(mat);
+                        console.log(faces[j].materialIndex, current.name);
+                    }
+                    processedGeometries[current.name] = true;
+                }
 
-        public raycastCompleted(data: any): void {
-            this.pendingRaycasts[data.uid] = data.result;
-        }
+                // This overload is missin in three.d.ts so cast the utils to an any
+                var utils: any = THREE.GeometryUtils;
+                utils.merge(geometry, current);
 
-        public objectAirborneChange(id: number, isAirborne: boolean): void {
-            this.threeIndexToObject[id].isAirborne = isAirborne;
-        }
+                this.renderScene.remove(current);
+            }
 
-        public computePhysicsBody(id: number, info: IWorkerMeshInfo, bodyType: BodyType): void {
-            this.physicsWorker.postMessage({
-                code: MessageCode.CreateBody,
-                id: id,
-                bodyType: bodyType,
-                info: info,
-            });
-        }
-
-        public updatePhysicsSettings(settings: IPhysicsSettings): void {
-            this.physicsWorker.postMessage({
-                code: MessageCode.UpdateSettings,
-                settings: settings,
-            });
-        }
-
-        public applyImpulse(id: number, impulse: THREE.Vector3): void {
-            this.physicsWorker.postMessage({
-                code: MessageCode.ApplyImpulse,
-                id: id,
-                impulse: impulse,
-            });
-        }
-
-        public setWalkingVelocity(id: number, velocity: THREE.Vector3): void {
-            this.physicsWorker.postMessage({
-                code: MessageCode.SetWalkingVelocity,
-                id: id,
-                velocity: velocity,
-            });
+            var mesh = new THREE.Mesh(geometry, materials);
+            mesh.name = "scenery";
+            this.renderScene.add(mesh);
         }
     }
 } 

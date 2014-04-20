@@ -30,6 +30,7 @@ module Thralldom {
     }
 
     export interface IWorkerMeshInfo {
+        shapeUID: string;
         pos: IVector3;
         rot: IQuaternion;
         scale: number;

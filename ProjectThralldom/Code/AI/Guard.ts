@@ -42,10 +42,10 @@ module Thralldom {
                 }
             }
 
-            private scanAround(world: Thralldom.World, guardToTarget: THREE.Vector3, guardToTargetDist: number): void {
+            private scanAround(guardToTarget: THREE.Vector3, guardToTargetDist: number): void {
                 var guard = this.character;
 
-                var ray = world.tryResolveRaycast(this.raycastPromiseUid);
+                var ray = PhysicsManager.instance.tryResolveRaycast(this.raycastPromiseUid);
                 if (!ray && this.raycastPromiseUid == -1) {
                     var from = new THREE.Vector3();
                     from.subVectors(guard.mesh.position, guard.centerToMesh);
@@ -53,7 +53,7 @@ module Thralldom {
                     var to = new THREE.Vector3();
                     to.subVectors(this.target.mesh.position, this.target.centerToMesh);
 
-                    this.raycastPromiseUid = world.requestRaycast(from, to);
+                    this.raycastPromiseUid = PhysicsManager.instance.requestRaycast(from, to);
                 }
 
                 if (ray && ray.hasHit) {
@@ -71,8 +71,6 @@ module Thralldom {
                     }
                     this.raycastPromiseUid = -1;
                 }
-
-
             }
 
             public updateCallback(delta: number, world: Thralldom.World): void {
@@ -93,7 +91,7 @@ module Thralldom {
                     this.chaseOrAttack(guardToTarget, guardToTargetDist);
                 }
                 else {
-                    this.scanAround(world, guardToTarget, guardToTargetDist);
+                    this.scanAround(guardToTarget, guardToTargetDist);
                 }
             }
         }

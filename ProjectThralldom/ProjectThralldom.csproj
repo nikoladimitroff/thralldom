@@ -168,6 +168,7 @@
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\subtitles.js" />
     <Content Include="Scripts\implementations\polyfills.js" />
+    <Content Include="Scripts\implementations\three.js" />
     <Content Include="thralldom.js">
       <DependentUpon>thralldom.js.bundle</DependentUpon>
     </Content>
@@ -177,6 +178,7 @@
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
     <TypeScriptCompile Include="Code\AI\Statue.ts" />
+    <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
     <TypeScriptCompile Include="Code\Physics\SharedInterfaces.ts" />
     <TypeScriptCompile Include="Code\Managers\CombatManager.ts" />
     <TypeScriptCompile Include="Code\Managers\UIManager.ts" />

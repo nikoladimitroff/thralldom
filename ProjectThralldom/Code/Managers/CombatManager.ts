@@ -3,12 +3,14 @@ module Thralldom {
 
         public hero: Character;
         public world: Thralldom.World;
+        public physics: Thralldom.PhysicsManager;
         public enemies: Array<Character>;
 
         private raycastUids: Array<number>;
 
-        constructor(world: Thralldom.World, hero: Character, enemies: Array<Character>) {
+        constructor(world: Thralldom.World, physics: PhysicsManager, hero: Character, enemies: Array<Character>) {
             this.world = world;
+            this.physics = physics;
             this.hero = hero;
             this.enemies = enemies;
 
@@ -30,12 +32,12 @@ module Thralldom {
 
             if (this.hero.weapon.attackWaiting) {
 
-                var ray = this.world.tryResolveRaycast(this.raycastUids[0]);
+                var ray = this.physics.tryResolveRaycast(this.raycastUids[0]);
                 if (this.raycastUids[0] == -1) {
 
                     var worldFrom = this.hero.weapon.attackWorldFrom;
                     var worldTo = this.hero.weapon.attackForward.multiplyScalar(this.hero.range).add(worldFrom);
-                    this.raycastUids[0] = this.world.requestRaycast(worldFrom, worldTo);
+                    this.raycastUids[0] = this.physics.requestRaycast(worldFrom, worldTo);
                 }
 
                 if (ray) {
@@ -49,7 +51,7 @@ module Thralldom {
 
             for (var i = 0; i < this.enemies.length; i++) {
                 if (this.raycastUids[i + 1] != -1) {
-                    var ray = this.world.tryResolveRaycast(this.raycastUids[i + 1]);
+                    var ray = this.physics.tryResolveRaycast(this.raycastUids[i + 1]);
                     if (ray) {
                         if (ray.hasHit) {
                             var collisionObjectId = ray.collisionObjectId;
@@ -79,7 +81,7 @@ module Thralldom {
                     var worldTo = this.enemies[i].weapon.attackForward;
                     worldTo.multiplyScalar(this.enemies[i].range).add(worldFrom);
                     // There's a small chance this causes a MEMLEAK
-                    this.raycastUids[i + 1] = this.world.requestRaycast(worldFrom, worldTo);
+                    this.raycastUids[i + 1] = this.physics.requestRaycast(worldFrom, worldTo);
                 }
             }
 

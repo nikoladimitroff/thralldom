@@ -27,7 +27,7 @@ module Thralldom {
                     mass: 0,
                     scale: scale,
                 };
-                World.instance.computePhysicsBody(this.mesh.id, physicsInfo, BodyType.Plane);
+                PhysicsManager.instance.computePhysicsBody(this, physicsInfo, BodyType.Plane);
             }
             else if (description.model) {
                 var mesh = <THREE.Mesh>content.getContent(description.model);
@@ -35,6 +35,7 @@ module Thralldom {
                 this.mesh = mesh;
 
                 var meshInfo: IWorkerMeshInfo = <any> {
+                    shapeUID: description.model,
                     mass: 0,
                     pos: new VectorDTO(mesh.position.x, mesh.position.y, mesh.position.z),
                     rot: new QuatDTO(mesh.quaternion.x, mesh.quaternion.y, mesh.quaternion.z, mesh.quaternion.w),
@@ -42,7 +43,7 @@ module Thralldom {
                     faces: this.mesh.geometry.faces.map((face) => new FaceDTO(face["a"], face["b"], face["c"])),
                     vertices: this.mesh.geometry.vertices.map((vertex) => new VectorDTO(vertex.x, vertex.y, vertex.z)),
                 }
-                World.instance.computePhysicsBody(this.mesh.id, meshInfo, BodyType.TriangleMesh);
+                PhysicsManager.instance.computePhysicsBody(this, meshInfo, BodyType.TriangleMesh);
             }
             else {
                 throw new Error("Can't load terrain, please provide a texture or a model!");

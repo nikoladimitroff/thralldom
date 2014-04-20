@@ -143,7 +143,7 @@ module Thralldom {
             var jumpingEntry = (previous: number, hero: Character) => {
                 var impulse = new THREE.Vector3();
                 StateMachineUtils.GetJumpingImpulse(impulse, hero);
-                World.instance.applyImpulse(hero.mesh.id, impulse);
+                PhysicsManager.instance.applyImpulse(hero.mesh.id, impulse);
 
                 StateMachineUtils.restartAnimationIfNeeded(hero, previous);
             }

@@ -17,7 +17,6 @@ module Thralldom {
     export class PhysicsWorker {
         private static FallingEntranceMultiplier = 0.4;
 
-
         public physManager: Thralldom.PhysicsManagerWorker;
 
         public worldBuffer: ArrayBuffer;
@@ -98,6 +97,7 @@ module Thralldom {
             }
         }
 
+        private flag = false;
         private updateWorld(data: any): void {
             this.worldBuffer = data.buffer;
             this.worldView = new Float32Array(this.worldBuffer)
@@ -164,19 +164,6 @@ module Thralldom {
             this.meshToBody[id] = body;
             this.bodyToMesh[body.a || body.ptr] = id;
             this.physManager.world.addRigidBody(body);
-
-
-            var transform = new Ammo.btTransform(), pos, quat;
-            body.getMotionState().getWorldTransform(transform);
-
-            //this.dynamics[i].rigidBody.applyDamping();
-            pos = transform.getOrigin();
-            quat = transform.getRotation();
-            if (meshInfo.mass == 0) {
-                console.log(pos.x(), pos.y(), pos.z());
-                console.log(meshInfo.pos.x, meshInfo.pos.y, meshInfo.pos.z);
-                console.log(quat.x(), quat.y(), quat.z(), quat.w());
-            }
         }
 
         private setWalkingVelocity(data: any): void {

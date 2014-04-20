@@ -1,5 +1,5 @@
 module Thralldom {
-    export class Environment implements ISelectableObject {
+    export class Environment implements ISelectableObject, ILoadable, IDrawable {
 
         public id: string;
         public tags: Array<string>;
@@ -43,6 +43,7 @@ module Thralldom {
             //this.centerToMesh = new THREE.Vector3(0, -meshInfo.halfExtents.y, 0)
 
             var meshInfo: IWorkerMeshInfo = <any> {
+                shapeUID: description.model,
                 mass: 0,
                 pos: this.mesh.position,
                 rot: new QuatDTO(this.mesh.quaternion.x, this.mesh.quaternion.y, this.mesh.quaternion.z, this.mesh.quaternion.w),
@@ -53,7 +54,7 @@ module Thralldom {
             };
             meshInfo.centerToMesh = new VectorDTO(0, -meshInfo.halfExtents.y, 0);
 
-            World.instance.computePhysicsBody(this.mesh.id, meshInfo, BodyType.TriangleMesh);
+            PhysicsManager.instance.computePhysicsBody(this, meshInfo, BodyType.TriangleMesh);
         }
     }
 } 

@@ -18,6 +18,7 @@ module Thralldom {
             var solver = new Ammo.btSequentialImpulseConstraintSolver();
             this.world = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
+            this.shapeCache = <any> {};
             this.settings = PhysicsManagerWorker.defaultSettings;
 
             this.world.setGravity(new Ammo.btVector3(0, this.settings.gravity || 0, 0));
@@ -52,7 +53,6 @@ module Thralldom {
             // Mesh pos + bias
             var origin = new Ammo.btVector3();
             origin.setValue(pos.x + bias.x, pos.y + bias.y, pos.z + bias.z);
-            console.log(bias);
             initialTransform.setOrigin(origin);
 
             var quat = new Ammo.btQuaternion();
@@ -72,8 +72,13 @@ module Thralldom {
 
             var motionState = this.computeInitialMotionState(info.pos, info.rot, info.centerToMesh);
 
-            // Call the shapeGen
-            var shape = shapeGenerator(info.halfExtents);
+                // Call the shapeGen
+            var shape: Ammo.btCollisionShape;
+            if (!this.shapeCache[info.shapeUID]) {
+                this.shapeCache[info.shapeUID] = shapeGenerator(info.halfExtents);
+            }
+                
+            shape = this.shapeCache[info.shapeUID];
             var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(info.mass, motionState, shape, localInertia);
 
             var rigidBody = new Ammo.btRigidBody(rigidBodyInfo);
@@ -81,8 +86,6 @@ module Thralldom {
        
             rigidBody.setRestitution(this.settings.restitution);
             rigidBody.setFriction(this.settings.friction);
-
-
 
             // MEMLEAK? Destroy motion state?
 
@@ -123,20 +126,22 @@ module Thralldom {
             var motionState = this.computeInitialMotionState(mesh.pos, mesh.rot);
             var localInertia = Const.btZeroVector;
 
-            var vertices = mesh.vertices.map((vertex) => new Ammo.btVector3(vertex.x, vertex.y, vertex.z));
+            var shape: Ammo.btBvhTriangleMeshShape;
+            var cacheUID = mesh.shapeUID + mesh.scale;
+            if (!this.shapeCache[cacheUID]) {
+                // Generate a new mesh if it is not found in the cache
+                var vertices = mesh.vertices.map((vertex) => new Ammo.btVector3(vertex.x, vertex.y, vertex.z));
 
-            var meshInterface = new Ammo.btTriangleMesh();
-            for (var i = 0; i < mesh.faces.length; i++) {
-                var face = mesh.faces[i];
-                meshInterface.addTriangle(vertices[face.a], vertices[face.b], vertices[face.c]);
-                if (!(vertices[face.a] && vertices[face.b] && vertices[face.c])) {
-                    console.log("something went undefined at face: ", face);
+                var meshInterface = new Ammo.btTriangleMesh();
+                for (var i = 0; i < mesh.faces.length; i++) {
+                    var face = mesh.faces[i];
+                    meshInterface.addTriangle(vertices[face.a], vertices[face.b], vertices[face.c]);
                 }
+                meshInterface.setScaling(new Ammo.btVector3(mesh.scale, mesh.scale, mesh.scale));
+                this.shapeCache[cacheUID] = new Ammo.btBvhTriangleMeshShape(meshInterface, true);
             }
 
-            console.log("scale: " + mesh.scale + ", mass: " +  mesh.mass);
-            meshInterface.setScaling(new Ammo.btVector3(mesh.scale, mesh.scale, mesh.scale));
-            var shape = new Ammo.btBvhTriangleMeshShape(meshInterface, true);
+            shape = this.shapeCache[cacheUID];
             var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mesh.mass, motionState, shape, localInertia);
             return new Ammo.btRigidBody(rigidBodyInfo);
         }

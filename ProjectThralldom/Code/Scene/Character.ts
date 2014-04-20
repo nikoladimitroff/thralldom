@@ -108,6 +108,7 @@ module Thralldom {
             this.centerToMesh = new THREE.Vector3(0, -(radius + height / 2), 0);
 
             var physicsInfo: IWorkerMeshInfo = <any> {
+                shapeUID: description.model,
                 mass: this.settings.mass,
                 pos: this.mesh.position,
                 rot: new QuatDTO(this.mesh.quaternion.x, this.mesh.quaternion.y, this.mesh.quaternion.z, this.mesh.quaternion.w),
@@ -117,7 +118,7 @@ module Thralldom {
                 raycastRayLength: this.centerToMesh.length() * 1.1,
             };
 
-            World.instance.computePhysicsBody(this.mesh.id, physicsInfo, BodyType.Capsule);
+            PhysicsManager.instance.computePhysicsBody(this, physicsInfo, BodyType.Capsule);
 
             this.stateMachine = StateMachineUtils.getCharacterStateMachine(this);
             
@@ -141,7 +142,7 @@ module Thralldom {
 
             forward.transformDirection(this.mesh.matrix).multiplyScalar(multiplier);
 
-            World.instance.setWalkingVelocity(this.mesh.id, forward);
+            PhysicsManager.instance.setWalkingVelocity(this.mesh.id, forward);
         }
     }
 } 
