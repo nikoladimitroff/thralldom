@@ -99,7 +99,25 @@ module Thralldom {
                 this.mesh.scale.set(scale, scale, scale);
             }
 
-            this.rigidBody = PhysicsManager.computeCapsuleBody(this.mesh, this.settings.mass);
+            this.mesh.geometry.computeBoundingBox();
+            var box = this.mesh.geometry.boundingBox;
+
+            var halfExtents = (new THREE.Vector3()).subVectors(box.max, box.min).multiplyScalar(this.mesh.scale.x / 2)
+            var radius = Math.max(halfExtents.x, halfExtents.z);
+            var height = 2 * halfExtents.y - 2 * radius;
+            this.centerToMesh = new THREE.Vector3(0, -(radius + height / 2), 0);
+
+            var physicsInfo: IWorkerMeshInfo = <any> {
+                mass: this.settings.mass,
+                pos: this.mesh.position,
+                rot: new QuatDTO(this.mesh.quaternion.x, this.mesh.quaternion.y, this.mesh.quaternion.z, this.mesh.quaternion.w),
+                scale: this.mesh.scale.x,
+                halfExtents: halfExtents,
+                centerToMesh: this.centerToMesh,
+                raycastRayLength: this.centerToMesh.length() * 1.1,
+            };
+
+            World.instance.computePhysicsBody(this.mesh.id, physicsInfo, BodyType.Capsule);
 
             this.stateMachine = StateMachineUtils.getCharacterStateMachine(this);
             
@@ -123,9 +141,7 @@ module Thralldom {
 
             forward.transformDirection(this.mesh.matrix).multiplyScalar(multiplier);
 
-            var velocity = this.rigidBody.getLinearVelocity();
-            velocity.setX(forward.x);
-            velocity.setZ(forward.z);
+            World.instance.setWalkingVelocity(this.mesh.id, forward);
         }
     }
 } 

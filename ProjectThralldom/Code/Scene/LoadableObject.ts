@@ -1,9 +1,8 @@
 module Thralldom {
-    export class LoadableObject implements ISelectableObject, IDrawable, ICollidable, ILoadable {
+    export class LoadableObject implements ISelectableObject, IDrawable, ILoadable {
         public id: string;
         public tags: Array<string>;
         public mesh: THREE.Mesh;
-        public rigidBody: Ammo.btRigidBody;
 
         constructor() {
             this.id = null;

@@ -37,7 +37,23 @@ module Thralldom {
                 this.mesh.scale.set(scale, scale, scale);
             }
 
-            this.rigidBody = PhysicsManager.computeTriangleMeshBody(this.mesh);// PhysicsManager.computeStaticBoxBody(this.mesh); //PhysicsManager.computeTriangleMeshBody(this.mesh); // ;
+            this.mesh.geometry.computeBoundingBox();
+            var box = this.mesh.geometry.boundingBox;
+            
+            //this.centerToMesh = new THREE.Vector3(0, -meshInfo.halfExtents.y, 0)
+
+            var meshInfo: IWorkerMeshInfo = <any> {
+                mass: 0,
+                pos: this.mesh.position,
+                rot: new QuatDTO(this.mesh.quaternion.x, this.mesh.quaternion.y, this.mesh.quaternion.z, this.mesh.quaternion.w),
+                scale: this.mesh.scale.x,
+                halfExtents: (new THREE.Vector3()).subVectors(box.max, box.min).multiplyScalar(this.mesh.scale.x / 2),
+                faces: this.mesh.geometry.faces.map((face) => new FaceDTO(face["a"], face["b"], face["c"])),
+                vertices: this.mesh.geometry.vertices.map((vertex) => new VectorDTO(vertex.x, vertex.y, vertex.z)),
+            };
+            meshInfo.centerToMesh = new VectorDTO(0, -meshInfo.halfExtents.y, 0);
+
+            World.instance.computePhysicsBody(this.mesh.id, meshInfo, BodyType.TriangleMesh);
         }
     }
 } 

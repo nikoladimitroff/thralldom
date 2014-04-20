@@ -177,8 +177,12 @@
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
     <TypeScriptCompile Include="Code\AI\Statue.ts" />
+    <TypeScriptCompile Include="Code\Physics\SharedInterfaces.ts" />
     <TypeScriptCompile Include="Code\Managers\CombatManager.ts" />
     <TypeScriptCompile Include="Code\Managers\UIManager.ts" />
+    <TypeScriptCompile Include="Code\Physics\PhysicsManagerWorker.ts" />
+    <TypeScriptCompile Include="Code\Physics\Worker.ts" />
+    <TypeScriptCompile Include="Code\Pool.ts" />
     <TypeScriptCompile Include="Scripts\typings\subtitles.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\Three.Plugins\THREE.AudioObject.d.ts" />
     <Content Include="Tests\TestingPage.html" />
@@ -223,7 +227,6 @@
     <TypeScriptCompile Include="Code\FrameInfo.ts" />
     <TypeScriptCompile Include="Code\Managers\AIManager.ts" />
     <TypeScriptCompile Include="Code\Managers\AudioManager.ts" />
-    <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
     <TypeScriptCompile Include="Code\Objectives.ts" />
     <TypeScriptCompile Include="Code\Quest.ts" />
     <TypeScriptCompile Include="Code\AI\AIController.ts" />
@@ -236,7 +239,6 @@
     <TypeScriptCompile Include="Code\LanguagePacks\English.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\ILanguagePack.ts" />
     <TypeScriptCompile Include="Code\Scene\Environment.ts" />
-    <TypeScriptCompile Include="Code\Scene\ICollidable.ts" />
     <TypeScriptCompile Include="Code\Scene\IDrawable.ts" />
     <TypeScriptCompile Include="Code\Scene\ILoadable.ts" />
     <TypeScriptCompile Include="Code\Scene\ISelectableObject.ts" />
@@ -267,9 +269,7 @@
     <TypeScriptCompile Include="Scripts\typings\three.d.ts" />
     <TypeScriptCompile Include="Tests\Tests.ts" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\Models\Heroes\Sokolov\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

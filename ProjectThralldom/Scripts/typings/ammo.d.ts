@@ -192,8 +192,10 @@ declare module Ammo {
         setActivationState(state: number): void;
         getActivationState(): number;
 
-        // THRALLDOM STUFF
-        centerToMesh: THREE.Vector3;
+        // THRALLDOM
+        needsUpdate: boolean;
+        isAirborne: boolean;
+        rayLength: number;
     }
 
     export class btPairCachingGhostObject extends btCollisionShape  {

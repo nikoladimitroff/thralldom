@@ -1,12 +1,23 @@
 module Thralldom {
     export class World {
+        private static _instance: World;
+        public static get instance(): World {
+            return World._instance;
+        }
+
         public dynamics: Array<DynamicObject>;
         public statics: Array<LoadableObject>;
 
         public renderScene: THREE.Scene;
 
+        public physicsWorker: Worker;
+        private worldBuffer: ArrayBuffer;
+        private worldView: Float32Array;
+        private pendingRaycasts: Map<number, IRaycastResult>;
 
-        public physicsManager: PhysicsManager;
+        // TODO: Probably not the best solution, but does the job for O(n)
+        public threeIndexToObject: Map<number, DynamicObject>;
+
         public aiManager: AIManager;
 
         constructor() {
@@ -14,8 +25,41 @@ module Thralldom {
             this.dynamics = new Array<DynamicObject>();
             this.statics = new Array<LoadableObject>();
 
-            this.physicsManager = new PhysicsManager();
+            this.physicsWorker = new Worker("Code/Physics/Worker.js");
+            this.physicsWorker.onmessage = (eventData) => {
+                var data = eventData.data;
+                switch (data.code) {
+                    case MessageCode.Raycast:
+                        this.raycastCompleted(data);
+                        break;
+
+                    case MessageCode.AirborneObject:
+                        this.objectAirborneChange(data.id, data.isAirborne);
+                        break;
+
+                    case MessageCode.UpdateWorld:
+                        this.updateDynamicPositions(data);
+                        break;
+
+                    default:
+                        throw new RangeError("invalid message code: " + data.code);
+                };
+            }
+            this.physicsWorker.onerror = <any>function (e) {
+                console.log(arguments);
+            }
+
+            this.physicsWorker.postMessage("");
+
+            this.pendingRaycasts = <any> {};
+            this.worldBuffer = new ArrayBuffer(BODY_COUNT * MEM_PER_BODY);
+            this.worldView = new Float32Array(this.worldBuffer)
+
             this.aiManager = new AIManager();
+
+            this.threeIndexToObject = <any> {};
+
+            World._instance = this;
         }
 
 
@@ -135,10 +179,6 @@ module Thralldom {
         public addStatic(object: LoadableObject): void {
             this.statics.push(object);
             this.renderScene.add(object.mesh);
-
-
-            if (!(object instanceof Skybox))
-                this.physicsManager.world.addRigidBody(object.rigidBody);
         }
 
         /*
@@ -147,7 +187,7 @@ module Thralldom {
         public addDynamic(object: DynamicObject): void {
             this.dynamics.push(object);
             this.renderScene.add(object.mesh);
-            this.physicsManager.world.addRigidBody(object.rigidBody);
+            this.threeIndexToObject[object.mesh.id] = object;
        }
 
         public addDrawable(object: IDrawable): void {
@@ -187,35 +227,92 @@ module Thralldom {
         }
 
         public update(delta: number): void {
+            if (this.worldBuffer.byteLength != 0)
+                this.physicsWorker.postMessage({ code: MessageCode.UpdateWorld, buffer: this.worldBuffer }, [this.worldBuffer]);
+
             for (var i = 0; i < this.dynamics.length; i++) {
                 this.dynamics[i].update(delta);
             }
 
             this.aiManager.update(delta, this);
+        }
 
-            var transform = new Ammo.btTransform(),
-                pos: Ammo.btVector3,
-                quat: Ammo.btQuaternion;
+        public updateDynamicPositions(data: any): void {
+            this.worldBuffer = data.buffer;
+            this.worldView = new Float32Array(this.worldBuffer);
 
-            this.physicsManager.world.stepSimulation(1 / 60, 5);
+            var dynamicObjectsCount = Object.keys(this.threeIndexToObject).length;
+            for (var i = 0; i < dynamicObjectsCount; i ++) {
 
-            for (var i = 0; i < this.dynamics.length; i++) {
-                this.dynamics[i].rigidBody.getMotionState().getWorldTransform(transform);
-                //this.dynamics[i].rigidBody.applyDamping();
+                var offset = i * NUMBERS_PER_BODY;
+                var object: DynamicObject = this.threeIndexToObject[this.worldView[offset]];
+                object.mesh.position.x = this.worldView[offset + 1];
+                object.mesh.position.y = this.worldView[offset + 2];
+                object.mesh.position.z = this.worldView[offset + 3];
+                object.mesh.position.add(object.centerToMesh);
 
-                pos = transform.getOrigin();
-                quat = transform.getRotation();
-                var centerToMesh = this.dynamics[i].rigidBody.centerToMesh;
-
-                this.dynamics[i].mesh.position.set(pos.x() + centerToMesh.x, pos.y() + centerToMesh.y, pos.z() + centerToMesh.z);
                 // WARNING: DONT SET THE QUATERNION FROM THE SIM
                 //this.dynamics[i].mesh.quaternion.set(quat.x(), quat.y(), quat.z(), quat.w());
             }
+        }
 
-            // MEMLEAK
-            Ammo.destroy(transform);
+        public requestRaycast(from: THREE.Vector3, to: THREE.Vector3): number {
+            var uid = ~~(Math.random() * Number.MAX_VALUE);
 
+            this.physicsWorker.postMessage({
+                code: MessageCode.Raycast,
+                from: new VectorDTO(from.x, from.y, from.z),
+                to: new VectorDTO(to.x, to.y, to.z),
+                uid: uid,
+            });
+            return uid;
+        }
 
+        public tryResolveRaycast(promiseUid: number): IRaycastResult {
+            var result = this.pendingRaycasts[promiseUid];
+            delete this.pendingRaycasts[promiseUid];
+            return result;
+        }
+
+        public raycastCompleted(data: any): void {
+            this.pendingRaycasts[data.uid] = data.result;
+        }
+
+        public objectAirborneChange(id: number, isAirborne: boolean): void {
+            this.threeIndexToObject[id].isAirborne = isAirborne;
+        }
+
+        public computePhysicsBody(id: number, info: IWorkerMeshInfo, bodyType: BodyType): void {
+            this.physicsWorker.postMessage({
+                code: MessageCode.CreateBody,
+                id: id,
+                bodyType: bodyType,
+                info: info,
+            });
+        }
+
+        public updatePhysicsSettings(settings: IPhysicsSettings): void {
+            this.physicsWorker.postMessage({
+                code: MessageCode.UpdateSettings,
+                settings: settings,
+            });
+        }
+
+        public applyImpulse(id: number, impulse: THREE.Vector3): void {
+            this.physicsWorker.postMessage({
+                code: MessageCode.ApplyImpulse,
+                id: id,
+                impulse: impulse,
+            });
+        }
+
+        public setWalkingVelocity(id: number, velocity: THREE.Vector3): void {
+            this.physicsWorker.postMessage({
+                code: MessageCode.SetWalkingVelocity,
+                id: id,
+                velocity: velocity,
+            });
         }
     }
 } 
+

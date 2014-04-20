@@ -192,14 +192,13 @@ module Thralldom {
             physicsDescription.linearDamping = physicsDescription.linearDamping || 0;
             physicsDescription.angularDamping = physicsDescription.angularDamping || 0;
 
-            PhysicsManager.defaultSettings = physicsDescription;
+            World.instance.updatePhysicsSettings(physicsDescription);
         }
 
         private parseSettings(worldDescription: any): void {
             // Physics first!
             this.parsePhysics(worldDescription.physics);
             var settings = worldDescription.settings;
-            PhysicsManager.attachDebuggingVisuals = settings.attachDebuggingVisuals || false;
 
             var controllerSettings = worldDescription.controller;
             if (!controllerSettings.angularSpeed) {
@@ -248,10 +247,10 @@ module Thralldom {
         }
 
         private parseWorld(path: string, worldDescription: any): Thralldom.World {
-            // Settings first
-            this.parseSettings(worldDescription);
 
             var world = new World();
+            // Settings first
+            this.parseSettings(worldDescription);
 
             this.parseCollection(worldDescription.dynamics, ContentManager.dynamicTypes, world.addDynamic.bind(world));
             this.parseCollection(worldDescription.statics, ContentManager.staticTypes, world.addStatic.bind(world));

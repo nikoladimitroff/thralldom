@@ -5,6 +5,8 @@ module Thralldom {
             private target: Character;
             private isAlerted: boolean;
 
+            private raycastPromiseUid: number = -1;
+
             constructor(character: Character, graph: Algorithms.IGraph) {
                 super(character, graph);
                 this.isAlerted = false;
@@ -43,14 +45,23 @@ module Thralldom {
             private scanAround(world: Thralldom.World, guardToTarget: THREE.Vector3, guardToTargetDist: number): void {
                 var guard = this.character;
 
-                var ray = world.physicsManager.raycastCharacters(guard, this.target);
-                if (ray.hasHit()) {
+                var ray = world.tryResolveRaycast(this.raycastPromiseUid);
+                if (!ray && this.raycastPromiseUid == -1) {
+                    var from = new THREE.Vector3();
+                    from.subVectors(guard.mesh.position, guard.centerToMesh);
 
+                    var to = new THREE.Vector3();
+                    to.subVectors(this.target.mesh.position, this.target.centerToMesh);
+
+                    this.raycastPromiseUid = world.requestRaycast(from, to);
+                }
+
+                if (ray && ray.hasHit) {
                     var guardForward = new THREE.Vector3(0, 0, 1);
                     guardForward.transformDirection(guard.mesh.matrix);
 
                     var inLineOfSight =
-                        ray.get_m_collisionObject().ptr == this.target.rigidBody.ptr &&
+                        ray.collisionObjectId == this.target.mesh.id &&
                         guardForward.angleTo(guardToTarget) <= guard.settings.viewAngle;
 
                     var isCloseEnough = guardToTargetDist < guard.range * 0.5;
@@ -58,7 +69,10 @@ module Thralldom {
                     if (inLineOfSight && isCloseEnough) {
                         this.isAlerted = true;
                     }
+                    this.raycastPromiseUid = -1;
                 }
+
+
             }
 
             public updateCallback(delta: number, world: Thralldom.World): void {

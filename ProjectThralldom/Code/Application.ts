@@ -29,6 +29,7 @@ module Thralldom {
             sprint: InputManager.keyNameToKeyCode("Shift"),
         };
 
+        // World
         public hero: Character;
 
         public enemies: Array<Character>;
@@ -40,6 +41,9 @@ module Thralldom {
         public quest: Thralldom.Quest;
         private scripts: Array<ScriptedEvent>;
         private activeScript: ScriptedEvent;
+
+        // Helping variables
+        private raycastPromiseUid: number = -1;
 
 
         // Constants
@@ -155,40 +159,23 @@ module Thralldom {
         private handleMouse(delta: number) {
 
             this.cameraController.handleMouse(delta, this.input);
+            // See if our raycast request has been resolved. 
+            var ray = this.world.tryResolveRaycast(this.raycastPromiseUid);
+            // If no request is currently pending, request another
+            if (!ray && this.raycastPromiseUid == -1) {
+                var pos = this.cameraController.position;
+                var target = (new THREE.Vector3).subVectors(this.hero.mesh.position, this.hero.centerToMesh);
 
-            var pos = this.cameraController.position;
-            var target = (new THREE.Vector3).subVectors(this.hero.mesh.position, this.hero.rigidBody.centerToMesh);
-
-            var ray = this.world.physicsManager.raycast(pos, target);
-
-            if (ray.hasHit() && ray.get_m_collisionObject().a != this.hero.rigidBody.a) {
-
-                // Magic Number
-                var mult = 1 - 2.5 * delta;
-                this.cameraController.distance *= mult;
-                return;
-                //var distance = this.ray.get_m_hitPointWorld().distance(this.fromWorldVec);
-
-                var hpammo = ray.get_m_hitPointWorld();
-                var hitPoint = new THREE.Vector3(hpammo.x(), hpammo.y(), hpammo.z());
-
-                var ab = (new THREE.Vector3()).subVectors(target, pos).normalize();
-                var bc = (new THREE.Vector3()).subVectors(target, hitPoint).normalize();
-                var ac = (new THREE.Vector3()).subVectors(hitPoint, pos).normalize();
-
-                this.ui.text.innerHTML =
-                    "Pos: " + Utilities.formatVector(pos, 3) + "\n" +
-                    "Target: " + Utilities.formatVector(target, 3) + "\n" +
-                    "Boycho: " + Utilities.formatVector(this.hero.mesh.position, 3) + "\n" +
-                    "Hit point: " + Utilities.formatVector(hitPoint, 3) + "\n" +
-                    "AB: " + Utilities.formatVector(ab, 3) + "\n" +
-                    "BC: " + Utilities.formatVector(bc, 3) + "\n" +
-                    "AC: " + Utilities.formatVector(ac, 3) + "\n" +
-                    Utilities.formatString("Pointers: {0}  {1}  {2}\n", ray.get_m_collisionObject().a, this.hero.rigidBody.a, this.world.statics.filter((x) => x instanceof Terrain)[0].rigidBody.a) +
-                    "";
-                
-                //this.cameraController.distance -= distance * 1.05;
-                //console.log(distance);
+                this.world.requestRaycast(pos, target);
+            }
+            // If the request has been fullfilled, do stuff
+            if (ray) {
+                if (ray.hasHit && ray.collisionObjectId != this.hero.mesh.id) {
+                    // Magic Number
+                    var mult = 1 - 2.5 * delta;
+                    this.cameraController.distance *= mult;
+                }
+                this.raycastPromiseUid = -1;
             }
         }
 
@@ -241,7 +228,8 @@ module Thralldom {
             var currentAnimTime = this.hero.animation.currentTime;
 
             var sokolov = <any>this.world.select("#sokolov")[0];
-            this.ui.text.innerHTML =  questText;
+            this.ui.text.innerHTML =  questText +
+                                Utilities.formatString("Position: {0}\n", Utilities.formatVector(this.hero.mesh.position, 3));
 
             var frameInfo = this.combat.update(this.debugDraw);
 
@@ -307,7 +295,7 @@ module Thralldom {
                 this.debugDraw = !this.debugDraw;
             }
 
-            var allObjects = this.world.dynamics.concat(this.world.statics);
+            var allObjects = this.world.statics.concat(this.world.dynamics);
             for (var index in allObjects) {
                 var boundingShape = this.selectBoundingVisual(allObjects[index].mesh);
                 if (boundingShape) {
@@ -316,33 +304,6 @@ module Thralldom {
             }
             var debuggingLines = this.world.renderScene.children.filter((x) => x.name == "debug");
             debuggingLines.forEach((x) => this.world.renderScene.remove(x));
-        }
-
-        public toggleNoClip(noClip?: boolean): void {
-            if (noClip !== undefined) {
-                this.noClip = noClip;
-            }
-            else {
-                this.noClip = !this.noClip;
-            }
-            var sizeCoefficientAbsolute = 1 / 100;
-            var sizeCoefficient = this.noClip ? sizeCoefficientAbsolute : 1 / sizeCoefficientAbsolute;
-
-            var staticBodies = this.world.statics.filter((x) => !(x instanceof Terrain) && !(x instanceof Skybox));
-            var physWorld = this.world.physicsManager.world;
-            for (var i in staticBodies) {
-                var rigidBody = staticBodies[i].rigidBody;
-                var mesh = staticBodies[i].mesh;
-                physWorld.removeRigidBody(rigidBody);
-
-                Ammo.destroy(rigidBody);
-                mesh.scale.multiplyScalar(sizeCoefficient);
-                rigidBody = PhysicsManager.computeStaticBoxBody(mesh);
-                mesh.scale.divideScalar(sizeCoefficient);
-                this.selectBoundingVisual(mesh).scale.multiplyScalar(sizeCoefficient);
-                staticBodies[i].rigidBody = rigidBody;
-                physWorld.addRigidBody(rigidBody);
-            }
         }
     }
 }

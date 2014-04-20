@@ -3,7 +3,6 @@ module Thralldom {
     export class Terrain extends LoadableObject {
 
         public mesh: THREE.Mesh;
-        public rigidBody: Ammo.btRigidBody;
         public id = "terrain";
         public tags: Array<string> = [];
 
@@ -19,16 +18,31 @@ module Thralldom {
                 var planeMaterial = new THREE.MeshPhongMaterial({ map: texture });
                 var plane = new THREE.Mesh(planeGeometry, planeMaterial);
                 plane.rotation.x = -Math.PI / 2;
+                
 
                 this.mesh = plane;
-                this.rigidBody = PhysicsManager.computePlaneBody();
+                var physicsInfo: IWorkerMeshInfo = <any>{
+                    pos: new VectorDTO(0, 0, 0),
+                    rot: new QuatDTO(0, 0, 0, 1),
+                    mass: 0,
+                    scale: scale,
+                };
+                World.instance.computePhysicsBody(this.mesh.id, physicsInfo, BodyType.Plane);
             }
             else if (description.model) {
                 var mesh = <THREE.Mesh>content.getContent(description.model);
                 mesh.scale.set(scale, scale, scale);
                 this.mesh = mesh;
 
-                this.rigidBody = PhysicsManager.computeTriangleMeshBody(mesh);
+                var meshInfo: IWorkerMeshInfo = <any> {
+                    mass: 0,
+                    pos: new VectorDTO(mesh.position.x, mesh.position.y, mesh.position.z),
+                    rot: new QuatDTO(mesh.quaternion.x, mesh.quaternion.y, mesh.quaternion.z, mesh.quaternion.w),
+                    scale: scale,
+                    faces: this.mesh.geometry.faces.map((face) => new FaceDTO(face["a"], face["b"], face["c"])),
+                    vertices: this.mesh.geometry.vertices.map((vertex) => new VectorDTO(vertex.x, vertex.y, vertex.z)),
+                }
+                World.instance.computePhysicsBody(this.mesh.id, meshInfo, BodyType.TriangleMesh);
             }
             else {
                 throw new Error("Can't load terrain, please provide a texture or a model!");

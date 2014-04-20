@@ -32,7 +32,6 @@ module Thralldom {
             // create skybox mesh
             var skybox = new THREE.Mesh(new THREE.CubeGeometry(size, size, size), skyBoxMaterial);
             this.mesh = skybox;
-            this.rigidBody = null;
         }
     }
 }

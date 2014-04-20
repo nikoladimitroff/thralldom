@@ -1,16 +1,15 @@
 module Thralldom {
     export class StateMachineUtils {
         private static FallingExitMultiplier = 1 + 1e-4;
-        private static FallingEntranceMultiplier = 0.4;
         private static JumpingErrorMargin = 3;
 
         private static dummyEventHandler = (state: number, object: DynamicObject) => { };
         private static dummyPredicate = (object: DynamicObject) => false;
 
         // MEMLEAK
-        private static _jumpingImpulse: Ammo.btVector3;
-        private static GetJumpingImpulse(vector: Ammo.btVector3, hero: Character): void {
-            vector.setValue(0, hero.settings.jumpImpulse, 0);
+        private static _jumpingImpulse: THREE.Vector3;
+        private static GetJumpingImpulse(vector: THREE.Vector3, hero: Character): void {
+            vector.set(0, hero.settings.jumpImpulse, 0);
         }
 
         private static getDummyState(index: number): State {
@@ -91,7 +90,6 @@ module Thralldom {
             }
 
             var walkingInterupt = (hero: Character): boolean => {
-                var velocity = hero.rigidBody.getLinearVelocity();
 
                 return !walking.data.isWalking// && GeometryUtils.almostZero(velocity.x()) && GeometryUtils.almostZero(velocity.z());
             }
@@ -119,7 +117,7 @@ module Thralldom {
 
                 StateMachineUtils.ensureAnimationLoop(hero);
 
-                var velocity = hero.setWalkingVelocity(delta, true);
+                hero.setWalkingVelocity(delta, true);
 
                 sprinting.data.isSprinting = false;
             }
@@ -131,8 +129,7 @@ module Thralldom {
             }
 
             var sprintingInterupt = (hero: Character): boolean => {
-                var velocity = hero.rigidBody.getLinearVelocity();
-                return !sprinting.data.isSprinting //&& GeometryUtils.almostZero(velocity.x()) && GeometryUtils.almostZero(velocity.z());
+                return !sprinting.data.isSprinting;
             };
 
             sprinting = new State(CharacterStates.Sprinting, sprintingUpdate, sprintingEntry, sprintingExit, sprintingInterupt);
@@ -144,13 +141,9 @@ module Thralldom {
             var jumping: State;
 
             var jumpingEntry = (previous: number, hero: Character) => {
-                jumping.data.beforeJumpY = hero.mesh.position.y;
-                jumping.data.previous = previous;
-                jumping.data.reachedPeak = false;
-                var impulse = new Ammo.btVector3();
+                var impulse = new THREE.Vector3();
                 StateMachineUtils.GetJumpingImpulse(impulse, hero);
-                hero.rigidBody.applyCentralImpulse(impulse);
-                Ammo.destroy(impulse);
+                World.instance.applyImpulse(hero.mesh.id, impulse);
 
                 StateMachineUtils.restartAnimationIfNeeded(hero, previous);
             }
@@ -165,14 +158,7 @@ module Thralldom {
 
             var jumpingInterupt = (object: DynamicObject): boolean => {
 
-                var from = (new THREE.Vector3()).subVectors(object.mesh.position, object.rigidBody.centerToMesh);
-
-                var to = (new THREE.Vector3())
-                    .copy(Const.DownVector)
-                    .multiplyScalar(Math.abs(object.rigidBody.centerToMesh.y * StateMachineUtils.FallingExitMultiplier))
-                    .add(from);
-                var ray = PhysicsManager.instance.raycast(from, to);
-                return ray.hasHit();
+                return !object.isAirborne;
             };
 
             jumping = new State(CharacterStates.Jumping, jumpingUpdate, jumpingEntry, StateMachineUtils.dummyEventHandler, jumpingInterupt);
@@ -193,20 +179,11 @@ module Thralldom {
 
 
             var fallingInterupt = (object: DynamicObject): boolean => {
-                var from = (new THREE.Vector3()).subVectors(object.mesh.position, object.rigidBody.centerToMesh);
-
-                var to = (new THREE.Vector3())
-                    .copy(Const.DownVector)
-                    .multiplyScalar(Math.abs(object.rigidBody.centerToMesh.y * StateMachineUtils.FallingExitMultiplier))
-                    .add(from);
-                var ray = PhysicsManager.instance.raycast(from, to);
-                return ray.hasHit();
+                return !object.isAirborne;
             };
 
-            var fallingEntranceCondition = (object: DynamicObject): boolean => {
-                var velocityY = object.rigidBody.getLinearVelocity().y();
-                // Negative velocity bigger than gravity * gravityMultiplier
-                return velocityY < 0 && Math.abs(velocityY) > Math.abs(PhysicsManager.defaultSettings.gravity * StateMachineUtils.FallingEntranceMultiplier);
+            var fallingEntranceCondition = (hero: Character): boolean => {
+                return hero.stateMachine.current != CharacterStates.Jumping && hero.isAirborne;
             }
 
             falling = new State(CharacterStates.Falling,
@@ -255,7 +232,7 @@ module Thralldom {
             forward.transformDirection(hero.mesh.matrix);
             var worldFrom = new THREE.Vector3();
             worldFrom.applyMatrix4((<any>hero.weapon.mesh).matrixWorld);
-            worldFrom.sub(hero.rigidBody.centerToMesh);
+            worldFrom.sub(hero.centerToMesh);
 
             hero.weapon.attack(worldFrom, forward);
         }
