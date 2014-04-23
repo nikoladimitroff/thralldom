@@ -20,8 +20,8 @@ module Thralldom {
 
                 // If in attack range, attack
                 if (guardToTargetDist <= guard.range) {
-                    if (!guard.stateMachine.requestTransitionTo(CharacterStates.Attacking))
-                        guard.stateMachine.requestTransitionTo(CharacterStates.Unsheathing);
+                    if (!guard.stateMachine.requestTransitionTo(CharacterState.Attacking))
+                        guard.stateMachine.requestTransitionTo(CharacterState.Unsheathing);
                 }
                 // If out of range, let him go
                 else if (guardToTargetDist >= guard.range * 3) {
@@ -30,14 +30,14 @@ module Thralldom {
                 // Chase
                 else {
                     // WARNING: I smell bugs here, what if the target runs away from the guard in time less than the time needed to finish sheathing the weapon?
-                    if (guard.stateMachine.current == CharacterStates.Attacking) {
-                        guard.stateMachine.requestTransitionTo(CharacterStates.Sheathing);
+                    if (guard.stateMachine.current == CharacterState.Attacking) {
+                        guard.stateMachine.requestTransitionTo(CharacterState.Sheathing);
                         return;
                     }
 
-                    if (!guard.stateMachine.requestTransitionTo(CharacterStates.Sprinting)) {
-                        guard.stateMachine.requestTransitionTo(CharacterStates.Walking);
-                        guard.stateMachine.requestTransitionTo(CharacterStates.Sprinting);
+                    if (!guard.stateMachine.requestTransitionTo(CharacterState.Sprinting)) {
+                        guard.stateMachine.requestTransitionTo(CharacterState.Walking);
+                        guard.stateMachine.requestTransitionTo(CharacterState.Sprinting);
                     }
                 }
             }

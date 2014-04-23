@@ -1,6 +1,6 @@
 module Thralldom {
 
-    export enum CharacterStates {
+    export enum CharacterState {
         Idle,
         Walking,
         Sprinting,
@@ -13,6 +13,7 @@ module Thralldom {
     }
 
     export interface IAnimationData {
+        name: string;
         startFrame: number;
         endFrame: number;
     }
@@ -25,7 +26,8 @@ module Thralldom {
         public settings: ICharacterSettings;
 
         public mesh: THREE.SkinnedMesh;
-        public animation: THREE.Animation;
+        public animations: Map<string, THREE.Animation>;
+        public activeAnimations: Array<THREE.Animation>;
 
         public weapon: Weapon;
 
@@ -76,8 +78,19 @@ module Thralldom {
 
             if (description.model) {
                 this.mesh = content.getContent(description["model"]);
-                this.animation = new THREE.Animation(this.mesh, this.mesh.geometry.animation.name, THREE.AnimationHandler.LINEAR);
 
+                this.animations = <any>{};
+                for (var i = 0; i < this.mesh.geometry.animations.length; ++i) {
+
+                    var anim = this.mesh.geometry.animations[i];
+                    THREE.AnimationHandler.add(this.mesh.geometry.animations[i]);
+
+                    // Create the animation object and set a default weight
+                    this.animations[anim.name] = new THREE.Animation(this.mesh, anim.name);
+
+                }
+
+                this.activeAnimations = new Array<THREE.Animation>();
                 this.animationData = content.getContent(content.getAnimationFilePath(description.model));
             }
 
@@ -124,14 +137,16 @@ module Thralldom {
             
         }
 
-        public getAnimationName(): string {
-            var weaponAnimations = [CharacterStates.Unsheathing, CharacterStates.Attacking, CharacterStates.Sheathing];
+        public getAnimationName(state?: CharacterState): string {
+            state = state === undefined ? this.stateMachine.current : state;
 
-            if (weaponAnimations.indexOf(this.stateMachine.current) != -1) {
-                return this.weapon.characterAnimations[this.stateMachine.current];
+            var weaponAnimations = [CharacterState.Unsheathing, CharacterState.Attacking, CharacterState.Sheathing];
+
+            if (weaponAnimations.indexOf(state) != -1) {
+                return this.weapon.characterAnimations[state];
             }
 
-            return CharacterStates[this.stateMachine.current];
+            return this.animationData[CharacterState[state]].name;
         }
 
         public setWalkingVelocity(delta: number, isSprinting: boolean = false): void {

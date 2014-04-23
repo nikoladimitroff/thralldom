@@ -80,7 +80,7 @@
     <Content Include="Content\Models\Buildings\SmallMarket\Small_Market.js" />
     <Content Include="Content\Models\Buildings\SmallMarket\Small_Market_01.jpg" />
     <Content Include="Content\Models\Buildings\SmallMarket\Small_Market_02.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimatioNNN.js" />
+    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimBlending.js" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Cloth.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Head.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Left_Eye.jpg" />
@@ -90,7 +90,6 @@
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Hand.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Tie.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\ClothSkin.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\Head.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
     <Content Include="Content\Models\Heroes\Sokolov\ClothSkin.jpg" />
@@ -194,7 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.anim" />
+    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimBlending.anim" />
     <Content Include="Content\Subtitles\Liars.srt" />
     <Content Include="Content\Subtitles\dialog.srt" />
     <Content Include="Content\ScriptedEvents\RandomStuff.tscr" />

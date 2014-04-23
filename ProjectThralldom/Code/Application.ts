@@ -230,7 +230,6 @@ module Thralldom {
                 "Quest complete!" :
                 "Your current quest:\n" + this.quest.toString();
 
-            var currentAnimTime = this.hero.animation.currentTime;
 
             var sokolov = <any>this.world.select("#sokolov")[0];
             this.ui.text.innerHTML =  questText +

@@ -1,7 +1,7 @@
 ﻿{
     skinned: [
         {
-            path: "Content/Models/Heroes/Boycho/BoychoAnimation.js",
+            path: "Content/Models/Heroes/Boycho/BoychoAnimBlending.js",
             animationData: true,
         },
         {

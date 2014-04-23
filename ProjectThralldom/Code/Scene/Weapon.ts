@@ -38,9 +38,9 @@ module Thralldom {
             //this.animationData = content.getContent(content.getAnimationFilePath(description.model));
 
             this.characterAnimations = <any> {};
-            this.characterAnimations[CharacterStates.Sheathing] = "PistolSheath";
-            this.characterAnimations[CharacterStates.Attacking] = "PistolShoot";
-            this.characterAnimations[CharacterStates.Unsheathing] = "PistolUnsheath";
+            this.characterAnimations[CharacterState.Sheathing] = "PistolSheath";
+            this.characterAnimations[CharacterState.Attacking] = "PistolShoot";
+            this.characterAnimations[CharacterState.Unsheathing] = "PistolUnsheath";
 
         }
 

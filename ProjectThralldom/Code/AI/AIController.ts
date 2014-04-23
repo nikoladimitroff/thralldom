@@ -20,7 +20,7 @@ module Thralldom {
 
             public update(delta: number, world: Thralldom.World): void {
                 if (this.character.isDead) {
-                    this.character.stateMachine.requestTransitionTo(CharacterStates.Dying);
+                    this.character.stateMachine.requestTransitionTo(CharacterState.Dying);
                 }
                 else {
                     if (this.script) {
@@ -30,8 +30,8 @@ module Thralldom {
                         this.updateCallback(delta, world);
                     }
 
-                    this.character.stateMachine.requestTransitionTo(CharacterStates.Falling);
-                    this.character.stateMachine.requestTransitionTo(CharacterStates.Idle);
+                    this.character.stateMachine.requestTransitionTo(CharacterState.Falling);
+                    this.character.stateMachine.requestTransitionTo(CharacterState.Idle);
                 }
                 this.character.stateMachine.update(delta);
             }

@@ -73,8 +73,8 @@ module Thralldom {
 
             private handleMouseClick(delta: number, input: InputManager): void {
                 if (input.mouse.leftButton) {
-                    if (!this.hero.stateMachine.requestTransitionTo(CharacterStates.Attacking))
-                        this.hero.stateMachine.requestTransitionTo(CharacterStates.Unsheathing);
+                    if (!this.hero.stateMachine.requestTransitionTo(CharacterState.Attacking))
+                        this.hero.stateMachine.requestTransitionTo(CharacterState.Unsheathing);
                 }
 
                 if (input.mouse.rightButton) {
@@ -112,17 +112,17 @@ module Thralldom {
 
                 // See if we are still alive
                 if (this.hero.isDead) {
-                    this.hero.stateMachine.requestTransitionTo(CharacterStates.Dying);
+                    this.hero.stateMachine.requestTransitionTo(CharacterState.Dying);
                 }
 
                 if (input.keyboard[keybindings.moveForward]) {      
                     // If the sprint key is down, try to sprint
                     if (input.keyboard[keybindings.sprint]) {
-                        hero.stateMachine.requestTransitionTo(CharacterStates.Sprinting)
+                        hero.stateMachine.requestTransitionTo(CharacterState.Sprinting)
                     }
                     // Otherwise just walk
                     else {
-                        hero.stateMachine.requestTransitionTo(CharacterStates.Walking)
+                        hero.stateMachine.requestTransitionTo(CharacterState.Walking)
                     }
                 }
                 if (input.keyboard[keybindings.strafeLeft]) {
@@ -135,17 +135,17 @@ module Thralldom {
 
                 }
                 if (input.keyboard[keybindings.jump]) {
-                    hero.stateMachine.requestTransitionTo(CharacterStates.Jumping);
+                    hero.stateMachine.requestTransitionTo(CharacterState.Jumping);
                 }
 
 
-                if (this.hero.stateMachine.current == CharacterStates.Attacking) {
-                    this.hero.stateMachine.requestTransitionTo(CharacterStates.Sheathing);
+                if (this.hero.stateMachine.current == CharacterState.Attacking) {
+                    this.hero.stateMachine.requestTransitionTo(CharacterState.Sheathing);
                 }
 
 
-                hero.stateMachine.requestTransitionTo(CharacterStates.Falling);
-                hero.stateMachine.requestTransitionTo(CharacterStates.Idle);
+                hero.stateMachine.requestTransitionTo(CharacterState.Falling);
+                hero.stateMachine.requestTransitionTo(CharacterState.Idle);
                 // Update the state machine before trying to reset it back to falling / idle
                 hero.stateMachine.states[hero.stateMachine.current].update(delta, hero);
             }

@@ -60,7 +60,7 @@ module Thralldom {
             var diff3d = GeometryUtils.Vector2To3(diff);
             character.mesh.quaternion.copy(GeometryUtils.quaternionFromVectors(Const.ForwardVector, diff3d));
 
-            character.stateMachine.requestTransitionTo(CharacterStates.Walking);
+            character.stateMachine.requestTransitionTo(CharacterState.Walking);
 
             // MAGIC NUMBER
             var radius = 5;
@@ -92,7 +92,7 @@ module Thralldom {
             var diff3d = GeometryUtils.Vector2To3(diff);
             character.mesh.quaternion.copy(GeometryUtils.quaternionFromVectors(Const.ForwardVector, diff3d));
 
-            character.stateMachine.requestTransitionTo(CharacterStates.Idle);
+            character.stateMachine.requestTransitionTo(CharacterState.Idle);
 
             this.hasCompleted = true;
         }
@@ -116,7 +116,7 @@ module Thralldom {
         }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
-            character.stateMachine.requestTransitionTo(CharacterStates.Idle);
+            character.stateMachine.requestTransitionTo(CharacterState.Idle);
 
             this.hasCompleted = Math.abs(Date.now() - this.startTime) >= this.delay;
         }
@@ -161,7 +161,7 @@ module Thralldom {
                 this.hasStarted = true;
             }
 
-            character.stateMachine.requestTransitionTo(CharacterStates.Idle);
+            character.stateMachine.requestTransitionTo(CharacterState.Idle);
 
             this.hasCompleted = this.hasCompleted || this.completeImmediately || AudioManager.instance.hasFinished(this.audio, character.mesh);
         }

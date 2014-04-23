@@ -1149,6 +1149,11 @@ declare module THREE {
         animation: AnimationData;
 
         /**
+         *
+         */
+        animations: Array<AnimationData>;
+
+        /**
          * Bakes matrix transform directly into vertex coordinates.
          */
         applyMatrix(matrix: Matrix4): void;
@@ -5009,6 +5014,8 @@ declare module THREE {
         getPrevKeyWith(type: string, h: number, key: number): KeyFrame;
 
         JITCompile: boolean; // https://github.com/mrdoob/three.js/blob/master/examples/webgl_animation_skinning_morph.html#L251
+        // DEV BRANCH
+        weight: number;
     }
 
     export class AnimationInterpolation { }

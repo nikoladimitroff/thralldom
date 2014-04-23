@@ -1,0 +1,11 @@
+﻿{
+	"Walking": { name: "Walk", startFrame: 5, endFrame: 27 },
+	"Sprinting": { name: "Run", startFrame: 5, endFrame: 54 },
+	"Jumping": { startFrame: 5, endFrame: 435 },
+	"Falling": { startFrame: 5, endFrame: 435 },
+	"Dying": { startFrame: 5, endFrame: 150 },
+	"Idle": { startFrame: 5, endFrame: 395 },
+	"PistolUnsheath": { startFrame: 5, endFrame: 171 },
+	"PistolShoot": { startFrame: 5, endFrame: 181 },
+	"PistolSheath": { startFrame: 5, endFrame: 232 },
+}

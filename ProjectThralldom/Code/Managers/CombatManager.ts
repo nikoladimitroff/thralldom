@@ -91,7 +91,7 @@ module Thralldom {
                 if (this.enemies[i].health <= 0) {
                     frameInfo.killedEnemies.push(this.enemies[i]);
 
-                    this.enemies[i].stateMachine.requestTransitionTo(CharacterStates.Dying);
+                    this.enemies[i].stateMachine.requestTransitionTo(CharacterState.Dying);
                     this.enemies.splice(i, 1);
                 }
             }
