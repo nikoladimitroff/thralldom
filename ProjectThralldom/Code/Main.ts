@@ -1,6 +1,28 @@
 /// <reference path="application.ts" />
+function tellIntroStory(webglContainer: HTMLElement): void {
+
+    var context: CanvasRenderingContext2D = (<any>document.getElementById("storyline-canvas")).getContext("2d");
+    var imageSource = "Images/Overlay2D/smoke.png";
+
+    var text = [
+        "FIRST",
+        "SECOND",
+        "THIRD",
+        "FORTH"
+    ];
+
+    var bias = 0;
+    var engine = new Thralldom.ParticleEngine2D(context, imageSource, 40, 1, 0, 1, 0.45, 0.55);
+    var w = <any> window;
+    var font = "3em Segoe UI";
+    w.storyteller = new Thralldom.Storyteller(webglContainer, context, text, [engine], font);
+
+    w.storyteller.play(5000);
+}
+
 $(function () {
-    var app: Thralldom.Application = new Thralldom.Application(document.getElementById("webGL"));
+    var webglContainer = document.getElementById("webGL");
+    var app: Thralldom.Application = new Thralldom.Application(webglContainer);
     // Make the game visible for easier debuggin
     var w = <any> window;
     w.game = app;
@@ -31,6 +53,7 @@ $(function () {
                 app.run();
                 loadingScreen.style.display = "none";
                 hasStarted = true;
+                tellIntroStory(webglContainer);
             }
         };
 

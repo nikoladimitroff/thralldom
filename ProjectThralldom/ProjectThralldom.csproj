@@ -18,6 +18,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="app.min.css">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
     <Content Include="Code\StringExtensions.js" />
     <Content Include="Code\StringExtensions.min.js">
       <DependentUpon>StringExtensions.js</DependentUpon>
@@ -151,15 +154,16 @@
     <Content Include="Docs\Presentation\js\impress.js" />
     <Content Include="Images\blank.cur" />
     <Content Include="Images\levski.jpg" />
+    <Content Include="Images\loading-screen.jpg" />
     <Content Include="Images\Outdated\black_glass.jpg" />
     <Content Include="Images\Outdated\chrome.png" />
     <Content Include="Images\Outdated\firefox.png" />
     <Content Include="Images\Outdated\iexplorer.png" />
     <Content Include="Images\Outdated\opera.png" />
     <Content Include="Images\Outdated\safari.png" />
-    <Content Include="Images\ProgressScreenV3.jpg" />
     <Content Include="Images\shipka.jpg" />
     <Content Include="Images\shipka2.jpg" />
+    <Content Include="Images\Overlay2D\smoke.png" />
     <Content Include="Images\winged.jpg" />
     <Content Include="outdated.html" />
     <Content Include="Scripts\implementations\ammo.js" />
@@ -179,6 +183,9 @@
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
     <TypeScriptCompile Include="Code\AI\Statue.ts" />
     <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
+    <TypeScriptCompile Include="Code\Overlay2D\Particle2D.ts" />
+    <TypeScriptCompile Include="Code\Overlay2D\ParticleEngine2D.ts" />
+    <TypeScriptCompile Include="Code\Overlay2D\Storyteller.ts" />
     <TypeScriptCompile Include="Code\Physics\SharedInterfaces.ts" />
     <TypeScriptCompile Include="Code\Managers\CombatManager.ts" />
     <TypeScriptCompile Include="Code\Managers\UIManager.ts" />

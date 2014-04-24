@@ -143,9 +143,7 @@ module Thralldom {
             var subtitleContainer = this.ui.subtitles;
             Subs.fixDomElement(subtitleContainer);
 
-
-            this.world.mergeStatics();
-
+            //this.world.mergeStatics();
         }
 
         private beforeRun(): void {

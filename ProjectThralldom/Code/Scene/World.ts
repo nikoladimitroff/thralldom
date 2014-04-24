@@ -224,7 +224,7 @@ module Thralldom {
 
                         // Set all materials to 0, boosts performance by 123013891273189273812368721%
                         faces[j].materialIndex = 0//materials.materials.indexOf(mat);
-                        console.log(faces[j].materialIndex, current.name);
+                        //console.log(faces[j].materialIndex, current.name);
                     }
                     processedGeometries[current.name] = true;
                 }
