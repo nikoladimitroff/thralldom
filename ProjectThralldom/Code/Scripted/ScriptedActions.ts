@@ -12,7 +12,7 @@ module Thralldom {
 
         private actions: Array<IScriptedAction>;
 
-        constructor(actions: Array<IScriptedAction>, content: ContentManager) {
+        constructor(actions: Array<IScriptedAction>, content: ContentManager, extras: Array<any>) {
             this.actions = actions;
         }
 
@@ -41,7 +41,7 @@ module Thralldom {
 
         private destination: THREE.Vector2;
 
-        constructor(args: string, content: ContentManager) {
+        constructor(args: string, content: ContentManager, extras: Array<any>) {
             this.destination = Utilities.parseVector2(args);
         }
 
@@ -75,7 +75,7 @@ module Thralldom {
 
         private lookat: THREE.Vector2;
 
-        constructor(args: string, content: ContentManager) {
+        constructor(args: string, content: ContentManager, extras: Array<any>) {
             this.lookat = Utilities.parseVector2(args);
         }
 
@@ -106,7 +106,7 @@ module Thralldom {
         private delay: number;
         private startTime: number;
 
-        constructor(args: string, content: ContentManager) {
+        constructor(args: string, content: ContentManager, extras: Array<any>) {
             this.delay = parseFloat(args);
 
         }
@@ -138,7 +138,7 @@ module Thralldom {
         private content: ContentManager;
 
         private static nowKeyword = "now";
-        constructor(args: string, content: ContentManager) {
+        constructor(args: string, content: ContentManager, extras: Array<any>) {
             this.completeImmediately = args.indexOf(DialogAction.nowKeyword) != -1;
 
             var files = args.replace(DialogAction.nowKeyword, "").trim().split("|");
@@ -164,6 +164,37 @@ module Thralldom {
             character.stateMachine.requestTransitionTo(CharacterStates.Idle);
 
             this.hasCompleted = this.hasCompleted || this.completeImmediately || AudioManager.instance.hasFinished(this.audio, character.mesh);
+        }
+    }
+
+    export class TellAction implements IScriptedAction {
+
+        public static Keyword: string = "tell";
+
+        public hasCompleted: boolean;
+
+        private hasStarted = false;
+
+        private content: ContentManager;
+        private storyteller: Storyteller;
+        private interval: number;
+
+        constructor(args: string, content: ContentManager, extras: Array<any>) {
+
+            this.storyteller = <Storyteller> extras[0];
+            var regex = /story by (\d*)\b/g;
+            this.interval = ~~regex.exec(args)[1];
+
+            this.content = content;
+        }
+
+        public begin(): void {
+            this.storyteller.play(this.interval);
+            this.storyteller.onDone = () => this.hasCompleted = true;
+        }
+
+        public update(character: Character, world: Thralldom.World, delta: number): void {
+
         }
     }
 } 

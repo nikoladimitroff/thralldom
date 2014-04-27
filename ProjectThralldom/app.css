@@ -145,9 +145,9 @@ nav pre {
 /* Storytelling */
 
 .fadeout {
-  -webkit-opacity: 0;
-  -moz-opacity: 0;
-  opacity: 0;
+  -webkit-opacity: 0 !important;
+  -moz-opacity: 0 !important;
+  opacity: 0 !important;
   -webkit-transition: all 0.5s linear;
   -moz-transition: all 0.5s linear;
   -ms-transition: all 0.5s linear;
@@ -156,9 +156,9 @@ nav pre {
 }
 
 .fadein {
-  -webkit-opacity: 1;
-  -moz-opacity: 1;
-  opacity: 1;
+  -webkit-opacity: 1 !important;
+  -moz-opacity: 1 !important;
+  opacity: 1 !important;
   -webkit-transition: all 0.5s linear;
   -moz-transition: all 0.5s linear;
   -ms-transition: all 0.5s linear;

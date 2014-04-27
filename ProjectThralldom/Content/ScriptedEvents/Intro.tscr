@@ -1,0 +1,8 @@
+﻿place trigger at #hero activate at distance of 10
+
+*$story-text:
+Imprisoned for 8 years...
+You have now returned
+
+*sokolov
+tell story by 2500

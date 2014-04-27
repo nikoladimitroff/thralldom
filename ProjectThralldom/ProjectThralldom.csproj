@@ -83,7 +83,6 @@
     <Content Include="Content\Models\Buildings\SmallMarket\Small_Market.js" />
     <Content Include="Content\Models\Buildings\SmallMarket\Small_Market_01.jpg" />
     <Content Include="Content\Models\Buildings\SmallMarket\Small_Market_02.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\BoychoAnimatioNNN.js" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Cloth.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Head.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Left_Eye.jpg" />
@@ -93,7 +92,6 @@
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Right_Hand.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Boycho_Tie.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\ClothSkin.jpg" />
-    <Content Include="Content\Models\Heroes\Boycho\Head.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\Pistol.jpg" />
     <Content Include="Content\Models\Heroes\Boycho\PistolAnimation.js" />
     <Content Include="Content\Models\Heroes\Sokolov\ClothSkin.jpg" />
@@ -148,10 +146,17 @@
     <Content Include="Docs\Presentation\images\skyrim.jpg" />
     <Content Include="Docs\Presentation\images\sr4.png" />
     <Content Include="Docs\Presentation\images\thepeople.png" />
+    <Content Include="Docs\Project Proposal\images\thepeople.png" />
     <Content Include="Docs\Presentation\images\under-yoke.png" />
     <Content Include="Docs\Presentation\images\vs.png" />
     <Content Include="Docs\Presentation\index.html" />
     <Content Include="Docs\Presentation\js\impress.js" />
+    <Content Include="Docs\Project Proposal\ProposalText.html">
+      <DependentUpon>ProposalText.md</DependentUpon>
+    </Content>
+    <Content Include="Docs\Project Proposal\ProposalText.min.html">
+      <DependentUpon>ProposalText.html</DependentUpon>
+    </Content>
     <Content Include="Images\blank.cur" />
     <Content Include="Images\levski.jpg" />
     <Content Include="Images\loading-screen.jpg" />
@@ -182,6 +187,7 @@
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
     <TypeScriptCompile Include="Code\AI\Statue.ts" />
+    <TypeScriptCompile Include="Code\CharacterControllers\FreeRoamCharacterController.ts" />
     <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\Particle2D.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\ParticleEngine2D.ts" />
@@ -211,6 +217,8 @@
     <Content Include="Content\Subtitles\boycho-sokolov.srt" />
     <Content Include="Content\Models\Heroes\Sokolov\SokolovAnimation.anim" />
     <Content Include="Content\Subtitles\sokolov-boycho.srt" />
+    <Content Include="Docs\Project Proposal\ProposalText.md" />
+    <Content Include="Content\ScriptedEvents\Intro.tscr" />
     <None Include="thralldom.js.bundle" />
     <Content Include="thralldom.min.js.map">
       <DependentUpon>thralldom.min.js</DependentUpon>

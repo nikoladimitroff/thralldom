@@ -17,9 +17,6 @@ module Thralldom {
         private webglContainer: HTMLElement;
         private subtitleContainer: HTMLSpanElement;
 
-        // stats
-        private stats: Stats;
-
         private keybindings = {
             strafeLeft: InputManager.keyNameToKeyCode("A"),
             strafeRight: InputManager.keyNameToKeyCode("D"),
@@ -27,6 +24,8 @@ module Thralldom {
             moveBackward: InputManager.keyNameToKeyCode("S"),
             jump: InputManager.keyNameToKeyCode("Space"),
             sprint: InputManager.keyNameToKeyCode("Shift"),
+
+            toggleUI: InputManager.keyNameToKeyCode("Z"),
         };
 
         // World
@@ -50,9 +49,9 @@ module Thralldom {
         private static zoomSpeed: number = 5;
 
         // Managers
+        private ui: UIManager;
         private physics: PhysicsManager;
         private input: InputManager;
-        private ui: UIManager;
         private content: ContentManager;
         private audio: AudioManager;
         private combat: CombatManager;
@@ -61,6 +60,7 @@ module Thralldom {
 
         // Debug settings
         private debugDraw: boolean = false;
+        private showHud: boolean = true;
         private noClip: boolean = false;
 
         constructor(container: HTMLElement) {
@@ -72,16 +72,20 @@ module Thralldom {
             this.content = new ContentManager();
             this.audio = new AudioManager(this.content);
             this.clock = new THREE.Clock();
+
+
+            // Subs
+            var subtitleContainer = this.ui.subtitles;
+            Subs.fixDomElement(subtitleContainer);
+
+            // Storyteller
+            var imageSource = "Images/Overlay2D/smoke.png";
+            var engine = new Thralldom.ParticleEngine2D(this.ui.storylineContext, imageSource, 40, 1, 0, 1, 0.45, 0.55);
+
+            Storyteller.fixProperties(container, this.ui.storylineContext, [engine]);
         }
 
         public init(meta: IMetaGameData): void {
-            this.stats = new Stats();
-            this.stats.setMode(StatsModes.Fps);
-            this.stats.domElement.style.position = 'absolute';
-            this.stats.domElement.style.left = '0px';
-            this.stats.domElement.style.bottom = '0px';
-            document.body.appendChild(this.stats.domElement);
-
             this.world = this.content.getContent(meta.world);
             this.quest = this.content.getContent(meta.quest);
             this.scripts = <Array<ScriptedEvent>> meta.scripts.map((file) => this.content.getContent(file));
@@ -105,7 +109,7 @@ module Thralldom {
 
             this.hero = <Character> this.world.select("#hero")[0];
             // Camera controller
-            this.cameraController = new CharacterControllers.SkyrimCharacterController(
+            this.cameraController = new CharacterControllers.FreeRoamCharacterController(
                 this.webglContainer.offsetWidth / this.webglContainer.offsetHeight,
                 Application.zoomSpeed,
                 this.hero,
@@ -139,9 +143,6 @@ module Thralldom {
             // Combat
             this.combat = new CombatManager(this.world, this.physics, this.hero, this.enemies);
 
-            // Subs
-            var subtitleContainer = this.ui.subtitles;
-            Subs.fixDomElement(subtitleContainer);
 
             //this.world.mergeStatics();
         }
@@ -154,6 +155,9 @@ module Thralldom {
         private handleKeyboard(delta: number) {
 
             this.cameraController.handleKeyboard(delta, this.input, this.keybindings);
+
+            if (this.input.keyboard[this.keybindings.toggleUI] && !this.input.previousKeyboard[this.keybindings.toggleUI])
+                this.ui.toggleHud(!this.ui.isVisible);
         }
 
         private handleMouse(delta: number) {
@@ -231,7 +235,7 @@ module Thralldom {
             var currentAnimTime = this.hero.animation.currentTime;
 
             var sokolov = <any>this.world.select("#sokolov")[0];
-            this.ui.text.innerHTML =  questText +
+            this.ui.hud.innerHTML =  questText +
                                 Utilities.formatString("Position: {0}\n", Utilities.formatVector(this.hero.mesh.position, 3));
 
             var frameInfo = this.combat.update(this.debugDraw);
@@ -245,14 +249,14 @@ module Thralldom {
         }
         
         private draw() {
-            this.stats.begin();
             this.renderer.render(this.world.renderScene, this.cameraController.camera);
-            this.stats.end();
         }
 
         private loop() {
+            this.ui.stats.begin();
             this.update();
             this.draw();
+            this.ui.stats.end();
 
             requestAnimationFrame(() => this.loop());
         }

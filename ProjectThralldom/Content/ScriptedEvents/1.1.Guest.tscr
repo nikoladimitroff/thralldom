@@ -1,6 +1,6 @@
 ﻿place trigger at (-520, 383) activate at distance of 100
 
-#sokolov:
+*sokolov:
 say now boycho-sokolov | boycho-sokolov.srt
 lookat (1, 1) and wait 4000
 goto (-541, 1008) and wait 2000

@@ -1,13 +1,14 @@
 module Thralldom {
     export class ScriptedEvent implements ILoadable {
-        private actions: Map<String, Function> = <Map<String, Function>> [GotoAction, LookAtAction, WaitAction, DialogAction].reduce((previous: any, current) => {
+        private actions: Map<String, Function> = <any> [GotoAction, LookAtAction, WaitAction, DialogAction, TellAction].reduce((previous: any, current) => {
             previous[current.Keyword] = current;
             return previous;
         }, {});
 
-        private trigger: THREE.Vector2;
+        private trigger: any;
         private triggerRadius: number;
         public actors: Map<string, ScriptController>;
+        public storyteller: Storyteller;
 
         public get finished(): boolean {
             var finished = true;
@@ -23,15 +24,19 @@ module Thralldom {
             this.actors = <Map<string, ScriptController>> {};
         }
 
-        public tryTrigger(playerCharacter: Character, scene: Thralldom.World): boolean {
+        public tryTrigger(playerCharacter: Character, world: Thralldom.World): boolean {
             var characterPos = GeometryUtils.Vector3To2(playerCharacter.mesh.position);
-            var canTrigger = !this.finished && characterPos.distanceToSquared(this.trigger) <= this.triggerRadius * this.triggerRadius;
+            var trigger = typeof this.trigger == "string"
+                ? GeometryUtils.Vector3To2(world.select(<any>this.trigger)[0].mesh.position)
+                : this.trigger;
+
+            var canTrigger = !this.finished && characterPos.distanceToSquared(trigger) <= this.triggerRadius * this.triggerRadius;
 
             if (canTrigger) {
                 var actors = this.actors;
                 for (var name in actors) {
-                    var character = scene.selectByDynamicId(name);
-                    var controller = scene.aiManager.controllers.filter((controller) => controller.character == character)[0];
+                    var character = world.selectByDynamicId(name);
+                    var controller = world.aiManager.controllers.filter((controller) => controller.character == character)[0];
                     if (!controller) {
                         console.warn(Utilities.formatString("No matching character with id {0} found when activatin script", name));
                         actors[name].finished = true;
@@ -69,27 +74,31 @@ module Thralldom {
             for (var i = 0; i < descriptors.length; i++) {
                 var type = descriptors[i].substr(0, descriptors[i].indexOf(' '));
                 var args = descriptors[i].substr(descriptors[i].indexOf(' ') + 1);
-                var action = new this.actions[type](args, content);
+                var action = new this.actions[type](args, content, [this.storyteller]);
                 actions.push(action);
             }
             if (actions.length == 1) 
                 return actions[0]
-            return new MultiAction(actions, content);
+
+            return new MultiAction(actions, content, undefined);
         }
 
         public loadFromDescription(script: string, content: ContentManager): void {
             var column = ":";
-            var hashtag = "#";
+            var blockSeparator = "*";
             var linePattern = /[^\r\n]+/g;
 
-            var blocks = script.split(hashtag);
+            var blocks = script.split(blockSeparator);
 
             // Parse settings (shift the array so that are only left with actors and no settings)
             var settings = blocks.shift().match(linePattern);
             for (var i = 0; i < settings.length; i++) {
                 var line = settings[i];
-                if (line.indexOf("trigger at") != -1) {
-                    this.trigger = Utilities.parseVector2(line.match(/\(.*\)/g)[0]);
+                var triggerIndex = line.indexOf("trigger at ") + "trigger at ".length;
+                if (triggerIndex != -1) {
+                    var spaceIndex = line.substr(triggerIndex).indexOf(" ");
+                    var triggerText = line.substr(triggerIndex, spaceIndex);
+                    this.trigger = triggerText.startsWith("#") ? triggerText : Utilities.parseVector2(triggerText);
                     this.triggerRadius = parseFloat(line.substr(line.lastIndexOf(" ") + 1));
                 }
             }
@@ -97,7 +106,15 @@ module Thralldom {
             // Parse the actions for each actor
             for (var i = 0; i < blocks.length; i++) {
                 var lines = blocks[i].match(linePattern);
-                var actor = lines.shift().replace(hashtag, "").replace(column, "");
+                var actor = lines.shift().replace(blockSeparator, "").replace(column, "");
+
+                var storyMark = "$"
+                if (actor[0] == storyMark) {
+                    // It's not an actor, rather it is story text
+                    this.storyteller = new FixedStoryteller(lines.filter((value) => value.trim() != ""));
+                    continue;
+                }
+            
                 var sequence = [];
                 for (var j = 0; j < lines.length; j++) {
                     var action = this.parseAction(lines[j], content);
