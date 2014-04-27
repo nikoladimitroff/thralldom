@@ -228,7 +228,7 @@ module Thralldom {
         private cameraController: CameraControllers.ICameraController;
         private lerpCoefficient: number;
         private duration: number;
-        private pathGenerator: (character: Character, delta: number) => void;
+        private pathGenerator: (character: Character, delta: number) => THREE.Vector3;
 
         constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
 
@@ -236,7 +236,7 @@ module Thralldom {
             var matches = coordinatesRegex.exec(args);
             this.from = Utilities.parseVector3(matches[1]);
             this.to = Utilities.parseVector3(matches[2]);
-            this.duration = ~~matches[3];
+            this.duration = ~~matches[3] * 1e-3;
 
             this.pathGenerator = args.endsWith("line") ? this.linearUpdate : this.arcUpdate;
 
@@ -254,19 +254,14 @@ module Thralldom {
             this.cameraController.ignoreInput = true;
         }
 
-        private linearUpdate(character: Character, delta: number): void {
+        private linearUpdate(character: Character, delta: number): THREE.Vector3 {
             var characterToCamera = new THREE.Vector3();
             characterToCamera.copy(this.from).lerp(this.to, this.lerpCoefficient).applyQuaternion(character.mesh.quaternion);
-            this.lerpCoefficient += delta / (1e-3 * this.duration);
 
-            var cam = this.cameraController.camera;
-            var target = (new THREE.Vector3()).subVectors(character.mesh.position, character.centerToMesh);
-            cam.position.copy(target).add(characterToCamera);
-            cam.lookAt(target);
+            return characterToCamera;
         }
-
-
-        private arcUpdate(character: Character, delta: number): void {
+        
+        private arcUpdate(character: Character, delta: number): THREE.Vector3 {
             var forward = (new THREE.Vector3()).copy(Const.ForwardVector).applyQuaternion(character.mesh.quaternion);
             var norm1 = (new THREE.Vector3()).copy(this.from).normalize();
             var norm2 = (new THREE.Vector3()).copy(this.to).normalize();
@@ -282,17 +277,20 @@ module Thralldom {
 
             var characterToCamera = new THREE.Vector3();
             characterToCamera.copy(Const.ForwardVector).applyQuaternion(q1).multiplyScalar(length);
-            this.lerpCoefficient += delta / ( 1e-3 * this.duration);
+
+            return characterToCamera;
+        }
+
+        public update(character: Character, world: Thralldom.World, delta: number): void {
+
+            var characterToCamera = this.pathGenerator(character, delta);
+
+            this.lerpCoefficient += delta / this.duration;
 
             var cam = this.cameraController.camera;
             var target = (new THREE.Vector3()).subVectors(character.mesh.position, character.centerToMesh);
             cam.position.copy(target).add(characterToCamera);
             cam.lookAt(target);
-        }
-
-        public update(character: Character, world: Thralldom.World, delta: number): void {
-
-            this.pathGenerator(character, delta);
 
             this.hasCompleted = this.lerpCoefficient >= 1;
             if (this.hasCompleted) {
