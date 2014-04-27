@@ -12,6 +12,7 @@ module Thralldom {
                 if (description.repeatTexture) {
                     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
                     texture.repeat.set(2, 2);
+                    texture.anisotropy = Const.MaxAnisotropy;
                 }
 
                 var planeGeometry = new THREE.PlaneGeometry(scale, scale);
@@ -48,6 +49,11 @@ module Thralldom {
             else {
                 throw new Error("Can't load terrain, please provide a texture or a model!");
             }
+
+            var material: THREE.MeshLambertMaterial = <THREE.MeshLambertMaterial> this.mesh.material;
+
+            material.map.generateMipmaps = true;
+            material.map.anisotropy = Const.MaxAnisotropy;
         }
 
         public loadFromDescription(description: any, content: ContentManager): void {

@@ -2,6 +2,7 @@
 <bundle minify="true" runOnBuild="true" output="thralldom.js" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://vswebessentials.com/schemas/v1/bundle.xsd">
   <!--The order of the <file> elements determines the order of the file contents when bundled.-->
   <file>/Scripts/implementations/Three.Plugins/THREE.AudioObject.js</file>
+  <file>/Scripts/implementations/Three.Plugins/THREE.ParticleEngine.js</file>
   <file>/Scripts/implementations/subtitles.js</file>
   
   <!-- Web Workers-->
@@ -58,6 +59,7 @@
   <file >Code/Managers/CombatManager.js</file>
   <file >Code/Managers/ControllerManager.js</file>
   <file >Code/Managers/AudioManager.js</file>
+  <file >Code/Managers/ParticleManager.js</file>
   <!-- Managers -->
 
   <!-- Scene -->

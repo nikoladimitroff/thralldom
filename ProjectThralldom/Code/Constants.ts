@@ -27,5 +27,7 @@ module Thralldom {
         public static dtoForwardVector = new VectorDTO(0, 0, 1);
         public static dtoBackwardVector = new VectorDTO(0, 0, -1);
         public static dtoZeroVector = new VectorDTO(0, 0, 0);
+
+        public static MaxAnisotropy: number = 1;
     }
 } 

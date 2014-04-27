@@ -57,6 +57,7 @@ module Thralldom {
         private content: ContentManager;
         private audio: AudioManager;
         private combat: CombatManager;
+        private particles: ParticleManager;
         private language: Languages.ILanguagePack;
 
 
@@ -67,9 +68,18 @@ module Thralldom {
 
         constructor(container: HTMLElement) {
             this.webglContainer = container;
+
+            this.renderer = new THREE.WebGLRenderer({ antialias: true });
+            this.renderer.setSize(this.webglContainer.offsetWidth, this.webglContainer.offsetHeight);
+            this.webglContainer.appendChild(this.renderer.domElement);
+
+            Const.MaxAnisotropy = this.renderer.getMaxAnisotropy();
+
+
             this.physics = new PhysicsManager();
             this.input = new InputManager(container);
             this.ui = new UIManager();
+            this.particles = new ParticleManager();
             this.language = new Languages.English();
             this.content = new ContentManager();
             this.audio = new AudioManager(this.content);
@@ -91,10 +101,6 @@ module Thralldom {
             this.world = this.content.getContent(meta.world);
             this.quest = this.content.getContent(meta.quest);
             this.scripts = <Array<ScriptedEvent>> meta.scripts.map((file) => this.content.getContent(file));
-            this.renderer = new THREE.WebGLRenderer({ antialias: true });
-
-            this.renderer.setSize(this.webglContainer.offsetWidth, this.webglContainer.offsetHeight);
-            this.webglContainer.appendChild(this.renderer.domElement);
 
             // Detect going out of focus
             // TODO
@@ -146,6 +152,13 @@ module Thralldom {
 
             // Combat
             this.combat = new CombatManager(this.world, this.physics, this.hero, this.enemies);
+
+            // Particles
+            var terrain = this.world.selectByStaticId("terrain").mesh;
+            terrain.geometry.computeBoundingBox();
+            var lengths = (new THREE.Vector3()).subVectors(terrain.geometry.boundingBox.max, terrain.geometry.boundingBox.min);
+            var max = Math.max(lengths.x, lengths.y, lengths.z) * terrain.scale.x;
+            this.particles.load(this.world, this.hero.mesh.position, max);
 
 
             //this.world.mergeStatics();
@@ -248,6 +261,7 @@ module Thralldom {
 
             var frameInfo = this.combat.update(this.debugDraw);
 
+            this.particles.update(delta);
             this.world.update(delta);
             this.quest.update(frameInfo, this.world);
 

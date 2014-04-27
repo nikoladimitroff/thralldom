@@ -119,8 +119,10 @@ module Thralldom {
                 geometry.computeFaceNormals();
                 geometry.computeVertexNormals();
 
+                var material: THREE.MeshBasicMaterial = <any> (materials.length == 1 ? materials[0] : new THREE.MeshFaceMaterial(materials));
+
                 var duplicate = () => {
-                    var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+                    var mesh = new THREE.Mesh(geometry, material);
                     mesh.name = path;
                     return mesh;
                 }
@@ -185,9 +187,10 @@ module Thralldom {
                     m.wrapAround = true;
                     m.perPixel = true;
                 }
+                var material: THREE.MeshBasicMaterial = <any> (materials.length == 1 ? materials[0] : new THREE.MeshFaceMaterial(materials));
 
                 var duplicate = () => {
-                    var mesh = new THREE.SkinnedMesh(geometry, new THREE.MeshFaceMaterial(materials));
+                    var mesh = new THREE.SkinnedMesh(geometry, material);
                     mesh.name = path;
                     return mesh;
                 };
