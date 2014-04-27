@@ -5,7 +5,7 @@ module Thralldom {
 
     export class ContentManager {
 
-        private loadedContent: Map<string, any> = <Map<string, any>>{};
+        private loadedContent: IIndexable<any> = <IIndexable<any>>{};
 
         private loaded: number = 0;
         private loading: number = 0;
@@ -24,10 +24,12 @@ module Thralldom {
             "kill": Thralldom.Objectives.KillObjective,
         }
 
-        private static aiControllerTypes = {
+        private static controllerTypes = {
             "citizen": Thralldom.AI.Citizen,
             "guard": Thralldom.AI.Guard,
             "statue": Thralldom.AI.Statue,
+
+            "skyrim": Thralldom.CharacterControllers.SkyrimCharacterController,
         }
 
         private progressNotifier: IProgressNotifier;
@@ -213,7 +215,7 @@ module Thralldom {
                 throw new Error("Some or all of character controller settings are missing!");
             }
 
-            Thralldom.CharacterControllers.SkyrimCharacterController.defaultSettings = controllerSettings;
+            Thralldom.CameraControllers.SkyrimCameraController.defaultSettings = controllerSettings;
 
             var characterSettings = worldDescription.character;
             Thralldom.Character.Settings = characterSettings;
@@ -243,14 +245,14 @@ module Thralldom {
             }
         }
 
-        private loadAI(world: Thralldom.World, graph: Algorithms.IGraph): void {
-            world.aiManager.graph = graph;
+        private loadControllers(world: Thralldom.World, graph: Algorithms.IGraph): void {
+            world.controllerManager.graph = graph;
 
-            for (var typeName in ContentManager.aiControllerTypes) {
-                var type = ContentManager.aiControllerTypes[typeName];
+            for (var typeName in ContentManager.controllerTypes) {
+                var type = ContentManager.controllerTypes[typeName];
 
-                var controllers = <Array<AI.AIController>> world.selectByTag(typeName).map((character) => new type(character, graph));
-                world.aiManager.controllers = world.aiManager.controllers.concat(controllers);
+                var controllers = <Array<IController>> world.selectByTag(typeName).map((character) => new type(character, graph));
+                world.controllerManager.controllers = world.controllerManager.controllers.concat(controllers);
             }
         }
 
@@ -277,7 +279,7 @@ module Thralldom {
                 edges: worldDescription.waypoints.edges.map((array) => new Algorithms.Edge(array[0], array[1])),
             }
 
-            this.loadAI(world, graph);
+            this.loadControllers(world, graph);
 
             return world;
         }

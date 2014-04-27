@@ -27,7 +27,7 @@
     },
     // No more settings, scene definition
     terrain: {
-        scale: 2000,
+        scale: 200,
         texture: "Grass.jpg",
         repeatTexture: true,
         // If a model is provided, the texture above is ignored
@@ -51,7 +51,7 @@
     dynamics: [
         {
             type: "character",
-            tags: [],
+            tags: ["skyrim"],
             id: "hero",
             model: "SokolovAnimation.js",
             weapon: "PistolAnimation.js",

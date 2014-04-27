@@ -9,14 +9,7 @@ module Thralldom {
             sprint: number;
         }
 
-
-        export interface ICharacterController {
-            camera: THREE.PerspectiveCamera;
-            zoomSpeed: number;
-            distance: number;
-            position: THREE.Vector3;
-
-            getTarget(): THREE.Vector3;
+        export interface ICharacterController extends IController {
             handleMouse(delta: number, input: InputManager): void;
             handleKeyboard(delta: number, input: InputManager, keybindings: IKeybindings): void;
         }

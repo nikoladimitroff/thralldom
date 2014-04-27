@@ -11,8 +11,8 @@ module Thralldom {
 
         private context: any;
 
-        private active: Map<string, Map<number, THREE.AudioObject>>;
-        private silent: Map<string, Map<number, THREE.AudioObject>>;
+        private active: IIndexable<INumberIndexable<THREE.AudioObject>>;
+        private silent: IIndexable<INumberIndexable<THREE.AudioObject>>;
 
         private isDisabled: boolean = false;
 
@@ -26,8 +26,8 @@ module Thralldom {
                 this.isDisabled = true;
             }
 
-            this.active = <Map<string, Map<number, THREE.AudioObject>>> {};
-            this.silent = <Map<string, Map<number, THREE.AudioObject>>> {};
+            this.active = <IIndexable<INumberIndexable<THREE.AudioObject>>> {};
+            this.silent = <IIndexable<INumberIndexable<THREE.AudioObject>>> {};
         }
 
         public playSound(sound: string, object: THREE.Object3D, loop: boolean, isDirectional: boolean): void {

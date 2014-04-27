@@ -4,7 +4,7 @@ module Thralldom {
         public static defaultSettings: IPhysicsSettings = <any>{};
 
         public world: Ammo.btDiscreteDynamicsWorld;
-        public shapeCache: Map<string, Ammo.btCollisionShape>;
+        public shapeCache: IIndexable<Ammo.btCollisionShape>;
         public settings: IPhysicsSettings;
 
         public transforms = new Pool<Ammo.btTransform>(<any>Ammo.btTransform);

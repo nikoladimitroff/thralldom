@@ -19,7 +19,7 @@ module Thralldom {
 
     export class Character extends DynamicObject {
 
-        public static Settings: Map<string, ICharacterSettings>;
+        public static Settings: IIndexable<ICharacterSettings>;
 
 
         public settings: ICharacterSettings;
@@ -47,7 +47,7 @@ module Thralldom {
         }
 
         public stateMachine: StateMachine;
-        public animationData: Map<string, IAnimationData>;
+        public animationData: IIndexable<IAnimationData>;
 
         constructor() {
             super();

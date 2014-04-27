@@ -5,10 +5,10 @@ module Thralldom {
 
         private worldBuffer: ArrayBuffer;
         private worldView: Float32Array;
-        private pendingRaycasts: Map<number, IRaycastResult>;
+        private pendingRaycasts: INumberIndexable<IRaycastResult>;
 
         // TODO: Probably not the best solution, but does the job for O(n)
-        public threeIndexToObject: Map<number, DynamicObject>;
+        public threeIndexToObject: INumberIndexable<DynamicObject>;
 
         private static _instance: PhysicsManager;
         public static get instance(): PhysicsManager {
@@ -110,7 +110,7 @@ module Thralldom {
                 info: info,
             });
             if (info.mass != 0) {
-                this.threeIndexToObject[gameObject.mesh.id] = gameObject;
+                this.threeIndexToObject[gameObject.mesh.id] = <DynamicObject> gameObject;
             }
         }
 

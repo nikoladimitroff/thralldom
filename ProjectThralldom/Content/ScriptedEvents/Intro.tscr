@@ -3,6 +3,9 @@
 *$story-text:
 Imprisoned for 8 years...
 You have now returned
+You have now returned 2
+You have now returned 3
 
-*sokolov
-tell story by 2500
+*hero:
+wait 5000
+tell story by 2500 and flycamera from (-50, 0, 0) to (50, 40, 0) for 10000, use line

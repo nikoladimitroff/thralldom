@@ -4,7 +4,12 @@ module Thralldom {
     export interface IScriptedAction {
         hasCompleted: boolean;
         update(character: Character, world: Thralldom.World, delta: number): void;
-        begin(): void;
+        begin(character: Character, extras: IExtraScriptedData): void;
+    }
+
+    export interface IExtraScriptedData {
+        storyteller?: Storyteller;
+        cameraController?: CameraControllers.ICameraController;
     }
 
     export class MultiAction implements IScriptedAction {
@@ -12,7 +17,7 @@ module Thralldom {
 
         private actions: Array<IScriptedAction>;
 
-        constructor(actions: Array<IScriptedAction>, content: ContentManager, extras: Array<any>) {
+        constructor(actions: Array<IScriptedAction>, content: ContentManager, extras: IExtraScriptedData) {
             this.actions = actions;
         }
 
@@ -20,9 +25,9 @@ module Thralldom {
             return this.actions.every((action) => action.hasCompleted);
         }
 
-        public begin(): void {
+        public begin(character: Character, extras: IExtraScriptedData): void {
             for (var i = 0; i < this.actions.length; i++) {
-                this.actions[i].begin();
+                this.actions[i].begin(character, extras);
             }
         }
 
@@ -40,12 +45,21 @@ module Thralldom {
         public hasCompleted: boolean;
 
         private destination: THREE.Vector2;
+        private target: THREE.Vector2;
+        private isAdditive: boolean;
 
-        constructor(args: string, content: ContentManager, extras: Array<any>) {
-            this.destination = Utilities.parseVector2(args);
+        constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
+            this.isAdditive = args.startsWith("+");
+            // Replace the plus at the start if one is present
+            this.target = Utilities.parseVector2(args.replace(/^\+/g, ""));
         }
 
-        public begin(): void { }
+        public begin(character: Character, extras: IExtraScriptedData): void {
+            this.destination = this.target;
+            if (this.isAdditive) {
+                this.destination.add(GeometryUtils.Vector3To2(character.mesh.position));
+            }
+        }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
             if (this.hasCompleted)
@@ -75,12 +89,12 @@ module Thralldom {
 
         private lookat: THREE.Vector2;
 
-        constructor(args: string, content: ContentManager, extras: Array<any>) {
+        constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
             this.lookat = Utilities.parseVector2(args);
         }
 
 
-        public begin(): void { }
+        public begin(character: Character, extras: IExtraScriptedData): void { }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
             var characterPos = GeometryUtils.Vector3To2(character.mesh.position);
@@ -106,12 +120,12 @@ module Thralldom {
         private delay: number;
         private startTime: number;
 
-        constructor(args: string, content: ContentManager, extras: Array<any>) {
+        constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
             this.delay = parseFloat(args);
 
         }
 
-        public begin(): void {
+        public begin(character: Character, extras: IExtraScriptedData): void {
             this.startTime = Date.now();
         }
 
@@ -138,7 +152,7 @@ module Thralldom {
         private content: ContentManager;
 
         private static nowKeyword = "now";
-        constructor(args: string, content: ContentManager, extras: Array<any>) {
+        constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
             this.completeImmediately = args.indexOf(DialogAction.nowKeyword) != -1;
 
             var files = args.replace(DialogAction.nowKeyword, "").trim().split("|");
@@ -148,7 +162,7 @@ module Thralldom {
             this.content = content;
         }
 
-        public begin(): void {
+        public begin(character: Character, extras: IExtraScriptedData): void {
             this.startTime = Date.now();
         }
 
@@ -179,22 +193,111 @@ module Thralldom {
         private storyteller: Storyteller;
         private interval: number;
 
-        constructor(args: string, content: ContentManager, extras: Array<any>) {
+        constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
 
-            this.storyteller = <Storyteller> extras[0];
+            this.storyteller = extras.storyteller;
             var regex = /story by (\d*)\b/g;
             this.interval = ~~regex.exec(args)[1];
 
             this.content = content;
         }
 
-        public begin(): void {
+        public begin(character: Character, extras: IExtraScriptedData): void {
             this.storyteller.play(this.interval);
             this.storyteller.onDone = () => this.hasCompleted = true;
         }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
 
+        }
+    }
+
+    /** This action applies only on the camera, I know, I know, the API sucks.
+     * Go see some cute kittens to calm down. 
+    */
+    export class FlyAction implements IScriptedAction {
+
+        public static Keyword: string = "flycamera";
+
+        public hasCompleted: boolean;
+
+        private content: ContentManager;
+
+        private from: THREE.Vector3;
+        private to: THREE.Vector3;
+        private cameraController: CameraControllers.ICameraController;
+        private lerpCoefficient: number;
+        private duration: number;
+        private pathGenerator: (character: Character, delta: number) => void;
+
+        constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
+
+            var coordinatesRegex = /.*(\(-?\d+,\s*-?\d+,\s*-?\d+\)).*(\(-?\d+,\s*-?\d+,\s*-?\d+\)).*?(\d+)/g;
+            var matches = coordinatesRegex.exec(args);
+            this.from = Utilities.parseVector3(matches[1]);
+            this.to = Utilities.parseVector3(matches[2]);
+            this.duration = ~~matches[3];
+
+            this.pathGenerator = args.endsWith("line") ? this.linearUpdate : this.arcUpdate;
+
+            this.content = content;
+        }
+
+        public begin(character: Character, extras: IExtraScriptedData): void {
+            this.cameraController = extras.cameraController;
+            var cam = this.cameraController.camera;
+
+            cam.position.copy(character.mesh.position).sub(character.centerToMesh).sub(this.from);
+            cam.lookAt(character.mesh.position);
+            this.lerpCoefficient = 0;
+
+            this.cameraController.ignoreInput = true;
+        }
+
+        private linearUpdate(character: Character, delta: number): void {
+            var characterToCamera = new THREE.Vector3();
+            characterToCamera.copy(this.from).lerp(this.to, this.lerpCoefficient).applyQuaternion(character.mesh.quaternion);
+            this.lerpCoefficient += delta / (1e-3 * this.duration);
+
+            var cam = this.cameraController.camera;
+            var target = (new THREE.Vector3()).subVectors(character.mesh.position, character.centerToMesh);
+            cam.position.copy(target).add(characterToCamera);
+            cam.lookAt(target);
+        }
+
+
+        private arcUpdate(character: Character, delta: number): void {
+            var forward = (new THREE.Vector3()).copy(Const.ForwardVector).applyQuaternion(character.mesh.quaternion);
+            var norm1 = (new THREE.Vector3()).copy(this.from).normalize();
+            var norm2 = (new THREE.Vector3()).copy(this.to).normalize();
+
+            var q1 = (new THREE.Quaternion()).setFromUnitVectors(forward, norm1);
+            var q2 = (new THREE.Quaternion()).setFromUnitVectors(forward, norm2);
+
+            q1.slerp(q2, this.lerpCoefficient);
+
+            var l1 = this.from.length(),
+                l2 = this.to.length();
+            var length = l1 + (l2 - l1) * this.lerpCoefficient;
+
+            var characterToCamera = new THREE.Vector3();
+            characterToCamera.copy(Const.ForwardVector).applyQuaternion(q1).multiplyScalar(length);
+            this.lerpCoefficient += delta / ( 1e-3 * this.duration);
+
+            var cam = this.cameraController.camera;
+            var target = (new THREE.Vector3()).subVectors(character.mesh.position, character.centerToMesh);
+            cam.position.copy(target).add(characterToCamera);
+            cam.lookAt(target);
+        }
+
+        public update(character: Character, world: Thralldom.World, delta: number): void {
+
+            this.pathGenerator(character, delta);
+
+            this.hasCompleted = this.lerpCoefficient >= 1;
+            if (this.hasCompleted) {
+                this.cameraController.ignoreInput = false;
+            }
         }
     }
 } 

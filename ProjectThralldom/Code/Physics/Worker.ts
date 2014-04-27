@@ -21,8 +21,8 @@ module Thralldom {
 
         public worldBuffer: ArrayBuffer;
         public worldView: Float32Array;
-        public meshToBody: Map<number, Ammo.btRigidBody>;
-        public bodyToMesh: Map<number, number>;
+        public meshToBody: INumberIndexable<Ammo.btRigidBody>;
+        public bodyToMesh: INumberIndexable<number>;
 
         constructor() {
             this.physManager = new Thralldom.PhysicsManagerWorker();

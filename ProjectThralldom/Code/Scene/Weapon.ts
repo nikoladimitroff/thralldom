@@ -11,8 +11,8 @@ module Thralldom {
 
         public mesh: THREE.SkinnedMesh;
         public animation: THREE.Animation;
-        public animationData: Map<WeaponStates, IAnimationData>;
-        public characterAnimations: Map<WeaponStates, string>;
+        public animationData: INumberIndexable<IAnimationData>;
+        public characterAnimations: INumberIndexable<string>;
 
         public get attackWaiting(): boolean {
             return this._attackWorldFrom != null;

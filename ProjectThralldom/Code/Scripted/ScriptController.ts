@@ -6,14 +6,18 @@ module Thralldom {
         private sequence: Array<IScriptedAction>;
         private current: number;
 
+        private camController: CameraControllers.ICameraController;
+
         constructor(sequence: Array<IScriptedAction>) {
             this.sequence = sequence;
             this.finished = false;
         }
 
-        public trigger(): void {
+        public trigger(character: Character, camController: CameraControllers.ICameraController): void {
+            this.camController = camController;
+
             this.current = 0;
-            this.sequence[this.current].begin();
+            this.sequence[this.current].begin(character, { cameraController: this.camController });
         }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
@@ -31,7 +35,7 @@ module Thralldom {
                     this.current--;
                 }
                 else {
-                    this.sequence[this.current].begin();
+                    this.sequence[this.current].begin(character, { cameraController: this.camController });
                 }
             }
         }

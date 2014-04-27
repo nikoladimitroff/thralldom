@@ -1,14 +1,16 @@
 module Thralldom {
     export class ScriptedEvent implements ILoadable {
-        private actions: Map<String, Function> = <any> [GotoAction, LookAtAction, WaitAction, DialogAction, TellAction].reduce((previous: any, current) => {
-            previous[current.Keyword] = current;
-            return previous;
-        }, {});
+        private actions: IIndexable<(args: string, content: ContentManager, extras: IExtraScriptedData) => void> =
+                <any>[GotoAction, LookAtAction, WaitAction, DialogAction, TellAction, FlyAction].reduce((previous: any, current) => {
+                    previous[current.Keyword] = current;
+                    return previous;
+                }, {});
 
         private trigger: any;
         private triggerRadius: number;
-        public actors: Map<string, ScriptController>;
+        public actors: IIndexable<ScriptController>;
         public storyteller: Storyteller;
+
 
         public get finished(): boolean {
             var finished = true;
@@ -21,10 +23,10 @@ module Thralldom {
         }
 
         constructor() {
-            this.actors = <Map<string, ScriptController>> {};
+            this.actors = <IIndexable<ScriptController>> {};
         }
 
-        public tryTrigger(playerCharacter: Character, world: Thralldom.World): boolean {
+        public tryTrigger(playerCharacter: Character, world: Thralldom.World, camController: CameraControllers.ICameraController): boolean {
             var characterPos = GeometryUtils.Vector3To2(playerCharacter.mesh.position);
             var trigger = typeof this.trigger == "string"
                 ? GeometryUtils.Vector3To2(world.select(<any>this.trigger)[0].mesh.position)
@@ -36,14 +38,14 @@ module Thralldom {
                 var actors = this.actors;
                 for (var name in actors) {
                     var character = world.selectByDynamicId(name);
-                    var controller = world.aiManager.controllers.filter((controller) => controller.character == character)[0];
+                    var controller = world.controllerManager.controllers.filter((controller) => controller.character == character)[0];
                     if (!controller) {
                         console.warn(Utilities.formatString("No matching character with id {0} found when activatin script", name));
                         actors[name].finished = true;
                         continue;
                     }
                     controller.script = actors[name];
-                    controller.script.trigger();
+                    controller.script.trigger(controller.character, camController);
                 }
             }
 
@@ -54,7 +56,7 @@ module Thralldom {
             var actors = this.actors;
             for (var name in actors) {
                 var character = world.selectByDynamicId(name);
-                var controller = world.aiManager.controllers.filter((controller) => controller.character == character)[0];
+                var controller = world.controllerManager.controllers.filter((controller) => controller.character == character)[0];
                 if (!controller) {
                     console.warn(Utilities.formatString("No matching character with id {0} found when disabling script", name));
                     continue;
@@ -74,7 +76,7 @@ module Thralldom {
             for (var i = 0; i < descriptors.length; i++) {
                 var type = descriptors[i].substr(0, descriptors[i].indexOf(' '));
                 var args = descriptors[i].substr(descriptors[i].indexOf(' ') + 1);
-                var action = new this.actions[type](args, content, [this.storyteller]);
+                var action = new this.actions[type](args, content, { storyteller: this.storyteller });
                 actions.push(action);
             }
             if (actions.length == 1) 

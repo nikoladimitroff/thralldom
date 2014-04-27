@@ -12,7 +12,8 @@ module Thralldom {
 
         // Three.js variables
         private clock: THREE.Clock;
-        private cameraController: CharacterControllers.ICharacterController;
+        private cameraController: CameraControllers.ICameraController;
+        private characterController: CharacterControllers.ICharacterController;
         private renderer: THREE.WebGLRenderer;
         private webglContainer: HTMLElement;
         private subtitleContainer: HTMLSpanElement;
@@ -26,6 +27,7 @@ module Thralldom {
             sprint: InputManager.keyNameToKeyCode("Shift"),
 
             toggleUI: InputManager.keyNameToKeyCode("Z"),
+            toggleCam: InputManager.keyNameToKeyCode("X"),
         };
 
         // World
@@ -109,13 +111,15 @@ module Thralldom {
 
             this.hero = <Character> this.world.select("#hero")[0];
             // Camera controller
-            this.cameraController = new CharacterControllers.FreeRoamCharacterController(
+            this.cameraController = new CameraControllers.SkyrimCameraController(
                 this.webglContainer.offsetWidth / this.webglContainer.offsetHeight,
                 Application.zoomSpeed,
                 this.hero,
                 70,
-                new THREE.Vector3(0, 25, 0),
-                <Skybox>this.world.select("~skybox")[0]);
+                new THREE.Vector3(0, 25, 0));
+            
+            var heroController = this.world.controllerManager.controllers.filter((c) => c.character == this.hero)[0];
+            this.characterController = <CharacterControllers.ICharacterController> heroController;
 
 
             window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
@@ -153,16 +157,20 @@ module Thralldom {
         }
 
         private handleKeyboard(delta: number) {
-
+            this.characterController.handleKeyboard(delta, this.input, this.keybindings);
             this.cameraController.handleKeyboard(delta, this.input, this.keybindings);
 
             if (this.input.keyboard[this.keybindings.toggleUI] && !this.input.previousKeyboard[this.keybindings.toggleUI])
                 this.ui.toggleHud(!this.ui.isVisible);
-        }
+
+            if (this.input.keyboard[this.keybindings.toggleCam] && !this.input.previousKeyboard[this.keybindings.toggleCam])
+                this.changeCamera(this.cameraController instanceof CameraControllers.SkyrimCameraController);
+        }1
 
         private handleMouse(delta: number) {
-
+            this.characterController.handleMouse(delta, this.input);
             this.cameraController.handleMouse(delta, this.input);
+
             // See if our raycast request has been resolved. 
             var ray = this.physics.tryResolveRaycast(this.raycastPromiseUid);
             // If no request is currently pending, request another
@@ -201,7 +209,7 @@ module Thralldom {
 
             for (var i = 0; i < this.scripts.length; i++) {
                 var script = this.scripts[i];
-                if (script.tryTrigger(this.hero, this.world)) {
+                if (script.tryTrigger(this.hero, this.world, this.cameraController)) {
                     this.activeScript = script;
                     console.log("triggering");
 
@@ -292,6 +300,27 @@ module Thralldom {
         public pause(): void {
             this.ui.pausedScreen.style.display = "block";
             this.isOnFocus = false; 
+        }
+
+        public changeCamera(freeRoam: boolean = false): void {
+            if (freeRoam) {
+                var startPos = (new THREE.Vector3()).addVectors(this.hero.mesh.position, new THREE.Vector3(0, Math.abs(this.hero.centerToMesh.y), 0));
+
+                this.cameraController = new CameraControllers.FreeRoamCameraController(
+                    this.webglContainer.offsetWidth / this.webglContainer.offsetHeight,
+                    Application.zoomSpeed,
+                    this.hero,
+                    70,
+                    startPos);
+            }
+            else {
+                this.cameraController = new CameraControllers.SkyrimCameraController(
+                    this.webglContainer.offsetWidth / this.webglContainer.offsetHeight,
+                    Application.zoomSpeed,
+                    this.hero,
+                    70,
+                    new THREE.Vector3(0, 25, 0));
+            }
         }
 
         public toggleDebugDraw(debugDraw?: boolean): void {

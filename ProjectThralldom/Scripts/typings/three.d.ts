@@ -1944,6 +1944,12 @@ declare module THREE {
         setFromRotationMatrix(m: Matrix4): Quaternion;
 
         /**
+         * Sets this quaternion from rotation between u and v.
+         */
+        setFromUnitVectors(v: THREE.Vector3, u: THREE.Vector3): Quaternion;
+
+
+        /**
          * Inverts this quaternion.
          */
         inverse(): Quaternion;

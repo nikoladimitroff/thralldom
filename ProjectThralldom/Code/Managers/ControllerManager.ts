@@ -1,7 +1,7 @@
 module Thralldom {
-    export class AIManager {
+    export class ControllerManager {
 
-        public controllers: Array<AI.AIController>;
+        public controllers: Array<IController>;
         public graph: Algorithms.IGraph;
 
         constructor() {
@@ -20,7 +20,7 @@ module Thralldom {
 
             this.graph = graph;
         }
-
+         
         public update(delta: number, world: Thralldom.World) {
             for (var i = 0; i < this.controllers.length; i++) {
                 this.controllers[i].update(delta, world);

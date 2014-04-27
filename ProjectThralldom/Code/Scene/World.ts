@@ -9,14 +9,14 @@ module Thralldom {
         public statics: Array<LoadableObject>;
 
         public renderScene: THREE.Scene;
-        public aiManager: AIManager;
+        public controllerManager: ControllerManager;
 
         constructor() {
             this.renderScene = new THREE.Scene();
             this.dynamics = new Array<DynamicObject>();
             this.statics = new Array<LoadableObject>();
 
-            this.aiManager = new AIManager();
+            this.controllerManager = new ControllerManager();
 
             World._instance = this;
         }
@@ -189,7 +189,7 @@ module Thralldom {
                 this.dynamics[i].update(delta);
             }
 
-            this.aiManager.update(delta, this);
+            this.controllerManager.update(delta, this);
         }
 
         public mergeStatics(): void {

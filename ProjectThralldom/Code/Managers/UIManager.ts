@@ -40,8 +40,8 @@ module Thralldom {
             this.hud.classList.remove(classToRemove);
             this.stats.domElement.classList.remove(classToRemove);
 
-            this.hud.classList.add(classToRemove);
-            this.stats.domElement.classList.add(classToRemove);
+            this.hud.classList.add(classToAdd);
+            this.stats.domElement.classList.add(classToAdd);
         }
     }
 }

@@ -33,6 +33,8 @@
   <!-- /Scripted-->
 
   <!-- Character controllers & AI -->
+  <file >Code/CameraControllers/SkyrimCameraController.js</file>
+  <file >Code/CameraControllers/FreeRoamCameraController.js</file>
   <file >Code/CharacterControllers/SkyrimCharacterController.js</file>
   <file >Code/AI/AIController.js</file>
   <file >Code/AI/Citizen.js</file>
@@ -54,7 +56,7 @@
   <file >Code/Managers/UIManager.js</file>
   <file >Code/Managers/PhysicsManager.js</file>
   <file >Code/Managers/CombatManager.js</file>
-  <file >Code/Managers/AIManager.js</file>
+  <file >Code/Managers/ControllerManager.js</file>
   <file >Code/Managers/AudioManager.js</file>
   <!-- Managers -->
 

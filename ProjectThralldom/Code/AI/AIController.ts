@@ -1,6 +1,6 @@
 module Thralldom {
     export module AI {
-        export class AIController {
+        export class AIController implements IController {
 
             public character: Character;
             public script: ScriptController;
