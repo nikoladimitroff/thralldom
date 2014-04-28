@@ -58,15 +58,15 @@
             pos: [105, 50, 758],
             scale: 5,
         },
-        {
-            type: "character",
-            tags: ["statue"],
-            id: "sokolov",
-            model: "SokolovAnimation.js",
-            weapon: "PistolAnimation.js",
-            pos: [-520, 0, 383],
-            scale: 5,
-        },
+        //{
+        //    type: "character",
+        //    tags: ["statue"],
+        //    id: "sokolov",
+        //    model: "SokolovAnimation.js",
+        //    weapon: "PistolAnimation.js",
+        //    pos: [-520, 0, 383],
+        //    scale: 5,
+        //},
         //{
         //    type: "character",
         //    tags: ["npc", "citizen"],
@@ -78,7 +78,7 @@
         //},
     ],
     statics: [
-        {"type":"environment","pos":[600, 2.6, 840],"rot":[0,0.55,0],"scale":98.87,"model":"objectMarket.js","id":"","tags":[]},
+        //{"type":"environment","pos":[600, 2.6, 840],"rot":[0,0.55,0],"scale":98.87,"model":"objectMarket.js","id":"","tags":[]},
         //{"type":"environment","pos":[-621.8750916173688,-0.5615264784297338,478.80638844396805],"rot":[0,0,0],"scale":11.72180006665021,"model":"mill.js","id":"","tags":[]},
         //{"type":"environment","pos":[-668.0406695538273,0,971.0066792178466],"rot":[0,-0.13843103394036205,0],"scale":11.078899851239674,"model":"mint.js","id":"","tags":[]},
         //{"type":"environment","pos":[-209.12103696643632,-0.5615264784297338,909.7834203660742],"rot":[3.141592653589793,-1.354531116807319,3.141592653589793],"scale":11.72180006665021,"model":"mill.js","id":"","tags":[]},

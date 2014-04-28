@@ -22,10 +22,46 @@
         </div>
     </div>
     <div id="paused-screen" class="unselectable maximized">
-        <h1 class="centered">
-            PAUSED<br>
-            Click anywhere to resume.
-        </h1>
+        <h1 id="resume-button">RESUME</h1>
+        <nav id="main" class="fadein">
+            <ul>
+                <li>Graphics Options</li>
+                <li>Sound Options</li>
+                <li>Help page</li>
+                <li>Back to Home Page</li>
+            </ul>
+        </nav>
+        <nav id="graphics" class="fadeout">
+            <ul>
+                <li>
+                    <label for="view-distance">View distance</label>
+                    <input id="view-distance" type="range" min="0" max="10000" value="10000" />
+                </li>
+                <li>
+                    <label for="enable-particles">Enable Particles?</label>
+                    <input id="enable-particles" type="checkbox" />
+                </li>
+                <li>
+                    <label for="shadow-quality">Shadow quality?</label>
+                    <select form="shadow-quality">
+                        <option value="Off">Off</option>
+                        <option value="Static">Static</option>
+                        <option value="Dynamic">Dynamic</option>
+                        <option value="Soft">Dynamic & Soft</option>
+                    </select>
+                </li>
+                <li class="main-menu-return">Main menu</li>
+            </ul>
+        </nav>
+        <nav id="audio" class="fadeout">
+            <ul>
+                <li>
+                    <label for="master-volume">Master volume</label>
+                    <input id="master-volume" type="range" min="0" max="100" value="100" />
+                </li>
+                <li class="main-menu-return">Main menu</li>
+            </ul>
+        </nav>
     </div>
     <!-- intro stories -->
     <canvas id="storyline-canvas" class="fadeout maximized"></canvas>

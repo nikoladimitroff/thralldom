@@ -66,8 +66,8 @@
         {
             sound: "Crickets",
             path: "Content/Sounds/crickets.mp3",
-            // Set background music to low level, else nothing else can't be heard
-            volume: 0.01,
+            // Set background music to low level, else nothing else can be heard
+            volume: 0.1,
         },
         {
             sound: "dialog",

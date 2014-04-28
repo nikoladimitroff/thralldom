@@ -1,6 +1,23 @@
 module Thralldom {
     export class AudioManager {
+        private _masterVolume: number;
 
+        public get masterVolume(): number {
+            return this._masterVolume;
+        }
+
+        public set masterVolume(volume: number) {
+            this._masterVolume = volume;
+            for (var sound in this.active) {
+                for (var id in this.active[sound]) {
+                    var audio = <THREE.AudioObject> this.active[sound][id];
+                    if (audio) {
+                        var audioData = this.content.getContent(sound);
+                        audio.setVolume(audioData.volume * volume);
+                    }
+                }
+            }
+        }
 
         private static _instance: AudioManager;
         public static get instance(): AudioManager {
@@ -28,6 +45,7 @@ module Thralldom {
 
             this.active = <IIndexable<INumberIndexable<THREE.AudioObject>>> {};
             this.silent = <IIndexable<INumberIndexable<THREE.AudioObject>>> {};
+            this.masterVolume = 1;
         }
 
         public playSound(sound: string, object: THREE.Object3D, loop: boolean, isDirectional: boolean): void {
@@ -41,7 +59,7 @@ module Thralldom {
             var activeAudio = this.active[sound][object.id];
             if (!activeAudio) {
                 var audioOptions = this.content.getContent(sound);
-                var newAudio = new THREE.AudioObject(this.context, audioOptions.buffer, audioOptions.volume, loop, isDirectional);
+                var newAudio = new THREE.AudioObject(this.context, audioOptions.buffer, audioOptions.volume * this.masterVolume, loop, isDirectional);
                 object.add(newAudio);
 
                 // Finally, play the sound

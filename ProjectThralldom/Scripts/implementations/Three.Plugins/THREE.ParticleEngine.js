@@ -614,7 +614,7 @@
 
 			sizeBase: 3.0,
 			sizeSpread: 1.5,
-			colorBase: new THREE.Vector3(0.66, 1, 0.7), // H,S,L
+			colorBase: new THREE.Vector3(0.66, 0.5, 0.7), // H,S,L
 			colorSpread: new THREE.Vector3(0.00, 0.0, 0.2),
 			opacityBase: 0.2,
 

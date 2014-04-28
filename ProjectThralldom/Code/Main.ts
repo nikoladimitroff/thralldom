@@ -27,9 +27,9 @@ $(function () {
         progressText.innerHTML = "Click to continue";
 
         var clickHandler = () => {
-            app.requestPointerLockFullscreen(document.body);
 
             if (!hasStarted) {
+                app.requestPointerLockFullscreen(document.body);
                 app.run();
                 loadingScreen.style.display = "none";
                 hasStarted = true;

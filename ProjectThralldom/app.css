@@ -14,11 +14,9 @@ body {
 body {
   font-family: "Segoe UI", sans-serif;
 }
-
 canvas {
-    background-color: black;
+  background-color: black;
 }
-
 .maximized {
   position: absolute;
   top: 0%;
@@ -40,11 +38,49 @@ canvas {
   background-color: rgba(255, 255, 255, 0.35);
   display: none;
   color: black;
+  /*nav ~ nav {
+        // Precicely 170px is the distance between the submenus
+        margin-top: -170px;
+    }*/
 }
-#paused-screen h1 {
+#paused-screen nav {
+  max-width: 500px;
+  height: 150px;
+  margin: 0 auto;
+  border-left: 5px solid white;
+  font-size: 125%;
+}
+#paused-screen nav.fadeout {
+  display: none;
+}
+#paused-screen nav.fadein {
+  display: block;
+}
+#paused-screen #resume-button {
   text-align: center;
-  margin-top: 15%;
+  margin-top: 3%;
   font-family: "Bulgaria Moderna", "Segoe UI", sans-serif;
+  letter-spacing: 5px;
+}
+#paused-screen #resume-button:hover {
+  font-size: 110%;
+  color: #595959;
+}
+#paused-screen #resume-button:active {
+  color: #737373;
+}
+#paused-screen ul {
+  list-style-type: none;
+}
+#paused-screen ul li {
+  text-align: left;
+  color: #aaa;
+}
+#paused-screen ul li:hover {
+  color: white;
+}
+#paused-screen ul li:last-child {
+  bottom: 0;
 }
 #loading-screen {
   z-index: 99999;
@@ -140,52 +176,43 @@ nav pre {
 .cursor-hidden {
   cursor: url(Images/blank.cur), default;
 }
-
-
 /* Storytelling */
-
 .fadeout {
   -webkit-opacity: 0 !important;
   -moz-opacity: 0 !important;
   opacity: 0 !important;
   -webkit-transition: all 0.5s linear;
   -moz-transition: all 0.5s linear;
-  -ms-transition: all 0.5s linear;
   -o-transition: all 0.5s linear;
   transition: all 0.5s linear;
 }
-
 .fadein {
   -webkit-opacity: 1 !important;
   -moz-opacity: 1 !important;
   opacity: 1 !important;
-  -webkit-transition: all 0.5s linear;
-  -moz-transition: all 0.5s linear;
-  -ms-transition: all 0.5s linear;
-  -o-transition: all 0.5s linear;
-  transition: all 0.5s linear;
+  -moz-transition: all 0.5s linear step-start;
+  -o-transition: all 0.5s linear step-start;
+  -webkit-transition: all 0.5s linear step-start;
+  transition: all 0.5s linear step-start;
 }
-
 .story {
-	background-color: black;
-	position: absolute;
-	left: 0%;
-	top: 0%;
-	bottom: 0%;
-	right: 0%;
-	text-align: center;
-	color: white;
-	font-family: "Segoe UI";
-	font-size: 3em;
-    
+  background-color: black;
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  bottom: 0%;
+  right: 0%;
+  text-align: center;
+  color: white;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 3em;
 }
-
 .story span {
-    margin-top: 25%;
+  margin-top: 25%;
 }
-
 #particle-canvas {
-    position: absolute;
-    top: 30%;
-    left: 20%;
+  position: absolute;
+  top: 30%;
+  left: 20%;
 }
+/*# sourceMappingURL=app.css.map */

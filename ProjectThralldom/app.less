@@ -6,6 +6,7 @@
 @font-headings: "Bulgaria Moderna", "Segoe UI", sans-serif;
 @font-body: "Segoe UI", sans-serif;
 @max-z-index: 99999;
+@anim-transition-duration: 0.5s;
 
 html, body {
     width: 100%;
@@ -22,12 +23,19 @@ html, body {
 body {
     font-family: @font-body
 }
+
+canvas {
+    background-color: black;
+}
+
 .maximized {
     position: absolute;
     top: 0%;
     left: 0%;
     right: 0%;
     bottom: 0%;
+    width: 100%;
+    height: 100%;
 }
 .unselectable {
     -moz-user-select: -moz-none;
@@ -41,10 +49,59 @@ body {
     background-color: @pause-screen-bg-color;
     display: none;
     color: black;
-    h1 {
+
+    nav {
+        // Fix dimensions
+        max-width: 500px;
+        height: 150px;
+        margin: 0 auto;
+        border-left: 5px solid white;
+        font-size: 125%;
+
+        // Fuck smooth animations
+        &.fadeout {
+            display: none;
+        }
+        &.fadein {
+            display: block;
+        }
+    }
+
+    /*nav ~ nav {
+        // Precicely 170px is the distance between the submenus
+        margin-top: -170px;
+    }*/
+
+    #resume-button {
         text-align: center;
-        margin-top: 15%;
+        margin-top: 3%;
         font-family: @font-headings;
+        letter-spacing: 5px;
+
+        &:hover {
+            font-size: 110%;
+            color: lighten(black, 35%);
+        }
+        &:active {
+            color: lighten(black, 45%);
+        }
+    }
+
+    ul {
+        list-style-type: none;
+
+        li {
+            text-align: left;
+            color: #aaa;
+
+            &:hover {
+                color: white;
+            }
+
+            &:last-child {
+                bottom: 0;
+            }
+        }
     }
 }
 #loading-screen {
@@ -140,4 +197,52 @@ nav {
 }
 .cursor-hidden {
     cursor: url(Images/blank.cur), default;
+}
+
+
+
+/* Storytelling */
+
+.fadeout {
+    -webkit-opacity: 0 !important;
+    -moz-opacity: 0 !important;
+    opacity: 0 !important;
+
+    -webkit-transition: all @anim-transition-duration linear;
+    -moz-transition: all @anim-transition-duration linear;
+    -o-transition: all @anim-transition-duration linear;
+    transition: all @anim-transition-duration linear;
+}
+
+.fadein {
+    -webkit-opacity: 1 !important;
+    -moz-opacity: 1 !important;
+    opacity: 1 !important;
+    -moz-transition: all @anim-transition-duration linear step-start;
+    -o-transition: all @anim-transition-duration linear step-start;
+    -webkit-transition: all @anim-transition-duration linear step-start;
+    transition: all @anim-transition-duration linear step-start;
+}
+
+.story {
+	background-color: black;
+	position: absolute;
+	left: 0%;
+	top: 0%;
+	bottom: 0%;
+	right: 0%;
+	text-align: center;
+	color: white;
+	font-family: @font-body;
+	font-size: 3em;
+}
+
+.story span {
+    margin-top: 25%;
+}
+
+#particle-canvas {
+    position: absolute;
+    top: 30%;
+    left: 20%;
 }

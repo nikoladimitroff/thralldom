@@ -81,7 +81,6 @@ module Thralldom {
             this.physics = new PhysicsManager();
             this.input = new InputManager(container);
             this.ui = new UIManager();
-            this.particles = new ParticleManager();
             this.language = new Languages.English();
             this.content = new ContentManager();
             this.audio = new AudioManager(this.content);
@@ -103,17 +102,6 @@ module Thralldom {
             this.world = this.content.getContent(meta.world);
             this.quest = this.content.getContent(meta.quest);
             this.scripts = <Array<ScriptedEvent>> meta.scripts.map((file) => this.content.getContent(file));
-
-            // Detect going out of focus
-            // TODO
-            Utilities.setWindowFocusListener((isVisible) => {
-                if (!isVisible) {
-                    this.pause();
-                }
-            });
-            this.isOnFocus = true;
-
-            this.input.attachCancelFullscreenListener(this.pause.bind(this));
 
             // World 
 
@@ -149,9 +137,6 @@ module Thralldom {
 
             this.world.renderScene.add(directionalLight);
 
-            // Fog
-            //var fog = new THREE.FogExp2(0x0A0A0A);
-            //this.world.renderScene.fog = fog;
 
             // Combat
             this.combat = new CombatManager(this.world, this.physics, this.hero, this.enemies);
@@ -160,8 +145,26 @@ module Thralldom {
             var terrain = this.world.selectByStaticId("terrain").mesh;
             terrain.geometry.computeBoundingBox();
             var lengths = (new THREE.Vector3()).subVectors(terrain.geometry.boundingBox.max, terrain.geometry.boundingBox.min);
-            var max = Math.max(lengths.x, lengths.y, lengths.z) * terrain.scale.x;
-            this.particles.load(this.world, this.hero.mesh.position, max);
+            var terrainSize = Math.max(lengths.x, lengths.y, lengths.z) * terrain.scale.x;
+            this.particles = new ParticleManager(this.world.renderScene, this.hero.mesh.position, terrainSize);
+
+            // Fog
+            //var fog = new THREE.Fog(0xFFFFFF, 1, terrainSize);
+            //fog.color.setHSL(0.1, 0.5, 0.4);
+            //this.world.renderScene.fog = fog;
+
+
+            // Detect going out of focus
+            Utilities.setWindowFocusListener((isVisible) => {
+                if (!isVisible) {
+                    this.pause();
+                }
+            });
+            this.isOnFocus = true;
+
+            this.ui.hookupPausedControls(this.requestPointerLockFullscreen.bind(this), this.renderer, this.world.renderScene, this.particles);
+            this.input.attachCancelFullscreenListener(this.pause.bind(this));
+
 
             // Effects
             this.loadEffects();

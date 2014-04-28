@@ -240,6 +240,7 @@
     <Content Include="Content\ScriptedEvents\Intro.tscr" />
     <Content Include="Docs\ProjectProposal\css\Bulgaria_Moderna_Pro.otf" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.ParticleEngine.js" />
+    <Content Include="app.less" />
     <None Include="thralldom.js.bundle">
       <SubType>Designer</SubType>
     </None>
