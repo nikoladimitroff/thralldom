@@ -200,7 +200,7 @@ module Thralldom {
                 var pos = this.cameraController.position;
                 var target = (new THREE.Vector3).subVectors(this.hero.mesh.position, this.hero.centerToMesh);
 
-                this.physics.requestRaycast(pos, target);
+                this.raycastPromiseUid = this.physics.requestRaycast(pos, target);
             }
             // If the request has been fullfilled, do stuff
             if (ray) {
