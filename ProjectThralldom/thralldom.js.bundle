@@ -3,6 +3,7 @@
   <!--The order of the <file> elements determines the order of the file contents when bundled.-->
   <file>/Scripts/implementations/Three.Plugins/THREE.AudioObject.js</file>
   <file>/Scripts/implementations/Three.Plugins/THREE.ParticleEngine.js</file>
+  <file>/Scripts/implementations/Three.Plugins/THREE.Postprocessing.min.js</file>
   <file>/Scripts/implementations/subtitles.js</file>
   
   <!-- Web Workers-->

@@ -15,6 +15,7 @@ module Thralldom {
         private cameraController: CameraControllers.ICameraController;
         private characterController: CharacterControllers.ICharacterController;
         private renderer: THREE.WebGLRenderer;
+        private effectComposer: THREE.EffectComposer;
         private webglContainer: HTMLElement;
         private subtitleContainer: HTMLSpanElement;
 
@@ -70,6 +71,7 @@ module Thralldom {
             this.webglContainer = container;
 
             this.renderer = new THREE.WebGLRenderer({ antialias: true });
+
             this.renderer.setSize(this.webglContainer.offsetWidth, this.webglContainer.offsetHeight);
             this.webglContainer.appendChild(this.renderer.domElement);
 
@@ -143,6 +145,7 @@ module Thralldom {
 
             var directionalLight = new THREE.DirectionalLight(0x505050, 0.5);
             directionalLight.position.set(0.51, 0.1, 1);
+            //directionalLight.position.normalize();
 
             this.world.renderScene.add(directionalLight);
 
@@ -160,8 +163,14 @@ module Thralldom {
             var max = Math.max(lengths.x, lengths.y, lengths.z) * terrain.scale.x;
             this.particles.load(this.world, this.hero.mesh.position, max);
 
+            // Effects
+            this.loadEffects();
 
             //this.world.mergeStatics();
+        }
+
+        private loadEffects(): void {
+
         }
 
         private beforeRun(): void {
@@ -271,7 +280,12 @@ module Thralldom {
         }
         
         private draw() {
-            this.renderer.render(this.world.renderScene, this.cameraController.camera);
+            if (this.effectComposer) {
+                this.effectComposer.render();
+            }
+            else {
+                this.renderer.render(this.world.renderScene, this.cameraController.camera);
+            }
         }
 
         private loop() {

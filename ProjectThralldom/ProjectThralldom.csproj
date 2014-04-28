@@ -109,10 +109,8 @@
     <Content Include="Content\Sounds\forest_background.mp3" />
     <Content Include="Content\Sounds\gunshot.mp3" />
     <Content Include="Content\Sounds\heavy_song.mp3" />
-    <Content Include="Content\Textures\Particles\raindrop.png" />
-    <Content Include="Content\Textures\Particles\raindrop2.png" />
     <Content Include="Content\Textures\Particles\raindrop2flip.png" />
-    <Content Include="Content\Textures\Particles\raindropflip.png" />
+    <Content Include="Content\Textures\Particles\raindroptest.png" />
     <Content Include="Content\Textures\Particles\smokeparticle.png" />
     <Content Include="Content\Textures\Particles\snowflake.png" />
     <Content Include="Content\Textures\Particles\spark.png" />
@@ -193,6 +191,7 @@
     <Content Include="Scripts\implementations\subtitles.js" />
     <Content Include="Scripts\implementations\polyfills.js" />
     <Content Include="Scripts\implementations\three.js" />
+    <Content Include="Scripts\implementations\Three.Plugins\THREE.Postprocessing.min.js" />
     <Content Include="thralldom.js">
       <DependentUpon>thralldom.js.bundle</DependentUpon>
     </Content>
@@ -309,6 +308,7 @@
     <TypeScriptCompile Include="Scripts\typings\stats.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\three.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\Three.Plugins\THREE.ParticleEngine.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\Three.Plugins\THREE.Postprocessing.d.ts" />
     <TypeScriptCompile Include="Tests\Tests.ts" />
   </ItemGroup>
   <ItemGroup />

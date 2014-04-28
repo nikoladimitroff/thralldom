@@ -53,7 +53,7 @@
             type: "character",
             tags: ["skyrim"],
             id: "hero",
-            model: "SokolovAnimation.js",
+            model: "BoychoAnimation.js",
             weapon: "PistolAnimation.js",
             pos: [105, 50, 758],
             scale: 5,
