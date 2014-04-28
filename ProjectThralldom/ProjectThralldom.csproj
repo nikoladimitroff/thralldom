@@ -17,10 +17,6 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="app.css" />
-    <Content Include="app.min.css">
-      <DependentUpon>app.css</DependentUpon>
-    </Content>
     <Content Include="Code\StringExtensions.js" />
     <Content Include="Code\StringExtensions.min.js">
       <DependentUpon>StringExtensions.js</DependentUpon>
