@@ -27,11 +27,11 @@
     },
     // No more settings, scene definition
     terrain: {
-        scale: 200,
+        scale: 2000,
         texture: "Grass.jpg",
         repeatTexture: true,
         // If a model is provided, the texture above is ignored
-        model: "terrain.js",
+        //model: "terrain.js",
     },
     skybox: {
         scale: 50000,

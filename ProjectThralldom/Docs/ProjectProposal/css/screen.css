@@ -104,4 +104,8 @@ blockquote p {
     max-width: 460px;
 }
 
+body {
+    margin-top: 50px;
+}
+
 /* </ Edits> */

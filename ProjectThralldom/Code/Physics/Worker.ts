@@ -1,4 +1,5 @@
 // Worker thread
+importScripts("../../Scripts/implementations/polyfills.js");
 importScripts("../../Scripts/implementations/ammo.small.js");
 importScripts("SharedInterfaces.js");
 importScripts("../Constants.js");

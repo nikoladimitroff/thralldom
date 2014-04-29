@@ -46,7 +46,8 @@ module Thralldom {
                 console.log(arguments);
             }
 
-            this.physicsWorker.postMessage("");
+            var worker: any = this.physicsWorker;
+            worker.postMessage();
 
             PhysicsManager._instance = this;
         }
