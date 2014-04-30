@@ -23,37 +23,38 @@
     </div>
     <div id="paused-screen" class="unselectable maximized">
         <h1 id="resume-button">RESUME</h1>
-        <nav id="main" class="fadein">
+        <nav id="main" class="fadein unselectable">
             <ul>
                 <li>Graphics Options</li>
                 <li>Sound Options</li>
                 <li>Help page</li>
+                <li id="azure">Configure MS Account</li>
                 <li>Back to Home Page</li>
             </ul>
         </nav>
-        <nav id="graphics" class="fadeout">
+        <nav id="graphics" class="fadeout unselectable">
             <ul>
-                <li>
-                    <label for="view-distance">View distance</label>
-                    <input id="view-distance" type="range" min="0" max="10000" value="10000" />
-                </li>
+                <!--<li>
+                <label for="view-distance">View distance</label>
+                <input id="view-distance" type="range" min="0" max="10000" value="10000" />
+            </li>-->
                 <li>
                     <label for="enable-particles">Enable Particles?</label>
                     <input id="enable-particles" type="checkbox" />
                 </li>
-                <li>
-                    <label for="shadow-quality">Shadow quality?</label>
-                    <select form="shadow-quality">
-                        <option value="Off">Off</option>
-                        <option value="Static">Static</option>
-                        <option value="Dynamic">Dynamic</option>
-                        <option value="Soft">Dynamic & Soft</option>
-                    </select>
-                </li>
+                <!--<li>
+                <label for="shadow-quality">Shadow quality?</label>
+                <select form="shadow-quality">
+                    <option value="Off">Off</option>
+                    <option value="Static">Static</option>
+                    <option value="Dynamic">Dynamic</option>
+                    <option value="Soft">Dynamic & Soft</option>
+                </select>
+            </li>-->
                 <li class="main-menu-return">Main menu</li>
             </ul>
         </nav>
-        <nav id="audio" class="fadeout">
+        <nav id="audio" class="fadeout unselectable">
             <ul>
                 <li>
                     <label for="master-volume">Master volume</label>
@@ -69,6 +70,7 @@
     <div id="crosshair"></div>
 
     <!-- External libs -->
+    <script src="http://ajax.aspnetcdn.com/ajax/mobileservices/MobileServices.Web-1.1.3.js"></script>
     <script src="Scripts/implementations/three.min.js"></script>
     <script src="Scripts/implementations/ammo.small.js"></script>
     <script src="Scripts/implementations/jquery.documentReady.js"></script>
@@ -138,6 +140,7 @@
     <script src="Code/Managers/ControllerManager.js"></script>
     <script src="Code/Managers/AudioManager.js"></script>
     <script src="Code/Managers/ParticleManager.js"></script>
+    <script src="Code/Managers/AzureManager.js"></script>
     <!-- Managers -->
     <!-- Scene -->
     <script src="Code/Scene/World.js"></script>
@@ -157,7 +160,6 @@
     <!-- Content -->
     <script src="Code/Managers/ContentManager.js"></script>
     <!-- /Content -->
-
     <!-- Overlay2D-->
     <script src="Code/Overlay2D/Storyteller.js"></script>
     <script src="Code/Overlay2D/Particle2D.js"></script>

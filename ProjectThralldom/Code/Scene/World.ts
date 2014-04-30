@@ -214,6 +214,8 @@ module Thralldom {
 
             for (var i = 0; i < this.statics.length; i++) {
                 var current = this.statics[i].mesh;
+                if (this.statics[i] instanceof Thralldom.Terrain) continue;
+                if (this.statics[i] instanceof Thralldom.Skybox) continue;
 
                 if (!processedGeometries[current.name]) {
                     var faces = current.geometry.faces;

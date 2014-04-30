@@ -59,6 +59,7 @@ module Thralldom {
         private audio: AudioManager;
         private combat: CombatManager;
         private particles: ParticleManager;
+        private azure: AzureManager;
         private language: Languages.ILanguagePack;
 
 
@@ -84,6 +85,7 @@ module Thralldom {
             this.language = new Languages.English();
             this.content = new ContentManager();
             this.audio = new AudioManager(this.content);
+            this.azure = new AzureManager();
             this.clock = new THREE.Clock();
 
 
@@ -111,8 +113,8 @@ module Thralldom {
                 this.webglContainer.offsetWidth / this.webglContainer.offsetHeight,
                 Application.zoomSpeed,
                 this.hero,
-                70,
-                new THREE.Vector3(0, 25, 0));
+                40,
+                new THREE.Vector3(0, 1, 0));
             
             var heroController = this.world.controllerManager.controllers.filter((c) => c.character == this.hero)[0];
             this.characterController = <CharacterControllers.ICharacterController> heroController;
@@ -128,12 +130,12 @@ module Thralldom {
 
             // Lights
 
-            var ambient = new THREE.AmbientLight(0x606060);
+            var ambient = new THREE.AmbientLight(0xAAAAAA);
             this.world.renderScene.add(ambient);
 
-            var directionalLight = new THREE.DirectionalLight(0x505050, 0.5);
-            directionalLight.position.set(0.51, 0.1, 1);
-            //directionalLight.position.normalize();
+            var directionalLight = new THREE.DirectionalLight(0x707070, 0.5);
+            directionalLight.position.set(2, 1, 1);
+            directionalLight.position.normalize();
 
             this.world.renderScene.add(directionalLight);
 
@@ -162,7 +164,7 @@ module Thralldom {
             });
             this.isOnFocus = true;
 
-            this.ui.hookupPausedControls(this.requestPointerLockFullscreen.bind(this), this.renderer, this.world.renderScene, this.particles);
+            this.ui.hookupPausedControls(this.requestPointerLockFullscreen.bind(this), this.renderer, this.world.renderScene, this.particles, this.azure);
             this.input.attachCancelFullscreenListener(this.pause.bind(this));
 
 
@@ -268,8 +270,7 @@ module Thralldom {
             var currentAnimTime = this.hero.animation.currentTime;
 
             var sokolov = <any>this.world.select("#sokolov")[0];
-            this.ui.hud.innerHTML =  questText +
-                                Utilities.formatString("Position: {0}\n", Utilities.formatVector(this.hero.mesh.position, 3));
+            this.ui.hud.innerHTML =  questText;
 
             var frameInfo = this.combat.update(this.debugDraw);
 

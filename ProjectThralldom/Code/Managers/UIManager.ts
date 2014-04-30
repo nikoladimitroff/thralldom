@@ -22,7 +22,10 @@ module Thralldom {
 
         }
 
-        public hookupPausedControls(resumeCallback: Function, renderer: THREE.WebGLRenderer, scene: THREE.Scene, particleManager: ParticleManager): void {
+        public hookupPausedControls(resumeCallback: Function,
+            renderer: THREE.WebGLRenderer, scene: THREE.Scene,
+            particleManager: ParticleManager,
+            azure: AzureManager): void {
             function swap(query1, query2) {
                 Storyteller.fadein(document.querySelector(query1));
                 Storyteller.fadeout(document.querySelector(query2));
@@ -42,6 +45,7 @@ module Thralldom {
             var volume: HTMLInputElement = <any>document.getElementById("master-volume");
             volume.onchange = function () {
                 AudioManager.instance.masterVolume = ~~volume.value / ~~volume.max;
+                azure.save(particles.checked, ~~volume.value);
             }
 
             // Graphics
@@ -53,6 +57,13 @@ module Thralldom {
                 else {
                     particleManager.destroy();
                 }
+                azure.save(particles.checked, ~~volume.value);
+            }
+
+            // Azure
+            var azureEle: HTMLLIElement = <any>document.getElementById("azure");
+            azureEle.onclick = function () {
+                azure.login();
             }
 
             //var viewDistance: HTMLInputElement = <any>document.getElementById("view-distance");

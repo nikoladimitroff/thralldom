@@ -46,20 +46,17 @@ As noted in the next paragraph, the game runs entirely in the browser and you ca
 The character of Ivan Kralicha:
 ![kralicha][kralicha]
 
-The character of Dr. Sokolov:
-![sokolov][sokolov]
+Ivan shooting at a *zaptie*
+![shooting][shooting]
 
 The town of Byala Cherkva:
 ![byala-cherkva][byala-cherkva]
-
-Bai Marko's house:
-![bai-marko][bai-marko]
 
 We are featuring a [help page][thralldom-help] and pause menu that allows the players to tweak several settings.
 
 
 ## Availability
-The game's website is http://thralldom.net. Currently, anyone can click the 'Play' button at the top left and check the game by himself as long as he has an updated and supported browser. We are using many of the latest features of HTML5 and unfortunately only Chrome and Firefox have full support for them. We are actively building polyfills for Internet Explorer 11 and only a few things remain. As of this moment, we make no plans on supporting Opera and Safari.
+The game's website is http://thralldom.net. Currently, anyone can click the 'Play' button at the top left and check the game by himself as long as he has an updated and supported browser. We are using many of the latest features of HTML5 and unfortunately only Internet Explorer 11, Firefox and Chrome are supported. As of this moment, we make no plans on supporting Opera and Safari.
 
 ## External validation
 We've conducted a small survey. Precisely 159 people filled the form we distributed amongst students, undergraduates and a small number of other adults. The results proved that the idea is worth our while:
@@ -95,9 +92,9 @@ We plan on trying to get Thralldom **greenlit** - accepted into [Steam Store][gr
 
 
 ## Technology
-When deciding on the most appropriate technology stack to use we considered many options but ultimately WebGL backed up by the open - source [THREE.js][three] won the competition. We absolutely love WebGL (<3 the portability) and ~~JavaScript~~ Typescript. I often find myself persuading my fellow programmer friends to give TS a try and what better way to convince them how awesome the language is but building a big, award-winning game. We are also using many other open-source libraries, the full list can be found at our [credits page][credits].
+When deciding on the most appropriate technology stack to use we considered many options but ultimately **WebGL** backed up by the open - source [THREE.js][three] won the competition. We absolutely love WebGL (<3 the portability) and ~~JavaScript~~ **Typescript**. I often find myself persuading my fellow programmer friends to give TS a try and what better way to convince them how awesome the language is but building a big, award-winning game. We are also using many other open-source libraries, the full list can be found at our [credits page][credits].
 
-# NOTE: INCLUDE AZURE HERE!!!
+We are also using **Azure Mobile Services** as a cloud back-end of the game. All game progress and preferences are 
 
 As for art, Blender, Maya, Mudbox and Photoshop are our tools.
 
@@ -114,7 +111,6 @@ For game design, we are using our own modified version of the three.js editor.
 [greenlight]: http://steamcommunity.com/greenlight
 
 [thepeople]: images/thepeople.png
-[bai-marko]: images/bai-marko.png
-[sokolov]: images/sokolov.png
+[shooting]: images/shooting.png
 [kralicha]: images/kralicha.png
 [byala-cherkva]: images/byala-cherkva.png

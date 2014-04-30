@@ -38,21 +38,30 @@
     <Content Include="Content\Models\Buildings\Houses\6b696b5f.jpg" />
     <Content Include="Content\Models\Buildings\Houses\a97ad49c.jpg" />
     <Content Include="Content\Models\Buildings\Houses\b381b054.jpg" />
+    <Content Include="Content\Models\Buildings\Houses\Barrels_One.js" />
+    <Content Include="Content\Models\Buildings\Houses\Barrels_Three.js" />
+    <Content Include="Content\Models\Buildings\Houses\Barrels_Two.js" />
     <Content Include="Content\Models\Buildings\Houses\cacb10e5.jpg" />
+    <Content Include="Content\Models\Buildings\Houses\cart.js" />
     <Content Include="Content\Models\Buildings\Houses\cbdd7173.jpg" />
     <Content Include="Content\Models\Buildings\Houses\d985bf06.jpg" />
+    <Content Include="Content\Models\Buildings\Houses\House_01.js" />
     <Content Include="Content\Models\Buildings\Houses\House_03.js" />
+    <Content Include="Content\Models\Buildings\Houses\market.js" />
     <Content Include="Content\Models\Buildings\Houses\mill.js" />
     <Content Include="Content\Models\Buildings\Houses\mint.js" />
     <Content Include="Content\Models\Buildings\Houses\oldwarehouse.js" />
     <Content Include="Content\Models\Buildings\Houses\Restaurant_one.js" />
     <Content Include="Content\Models\Buildings\Houses\Restaurant_two.js" />
+    <Content Include="Content\Models\Buildings\Houses\smallmarket.js" />
     <Content Include="Content\Models\Buildings\Houses\Tavern.js" />
+    <Content Include="Content\Models\Buildings\Houses\totalTexture.jpg" />
+    <Content Include="Content\Models\Buildings\Houses\TransparentTexture.png" />
     <Content Include="Content\Models\Buildings\Houses\well.js" />
     <Content Include="Content\Models\Buildings\Houses\Workshop.js" />
     <Content Include="Content\Models\Buildings\MarketCart\cart.js" />
     <Content Include="Content\Models\Buildings\MarketCart\Wagen_1.jpg" />
-    <Content Include="Content\Models\Buildings\Monastery\monastery_object.js" />
+    <Content Include="Content\Models\Buildings\MarketCart\Monastery\monastery_object.js" />
     <Content Include="Content\Models\Buildings\House_01\rooftxt.jpg" />
     <Content Include="Content\Models\Buildings\Barrels\barrels_one.js" />
     <Content Include="Content\Models\Buildings\Barrels\barrels_two.js" />
@@ -63,7 +72,7 @@
     <Content Include="Content\Models\Buildings\House_02\three.jpg" />
     <Content Include="Content\Models\Buildings\House_02\two.jpg" />
     <Content Include="Content\Models\Buildings\House_01\walls.jpg" />
-    <Content Include="Content\Models\Buildings\Monastery\monastery_texture.jpg" />
+    <Content Include="Content\Models\Buildings\MarketCart\Monastery\monastery_texture.jpg" />
     <Content Include="Content\Models\Buildings\OldHouse\Door_Def.jpg" />
     <Content Include="Content\Models\Buildings\OldHouse\Floor.jpg" />
     <Content Include="Content\Models\Buildings\OldHouse\Frame_Def.jpg" />
@@ -167,6 +176,7 @@
     <Content Include="Docs\ProjectProposal\ProposalText.min.html">
       <DependentUpon>ProposalText.html</DependentUpon>
     </Content>
+    <Content Include="Docs\ProjectProposal\requirements.html" />
     <Content Include="Images\blank.cur" />
     <Content Include="Images\levski.jpg" />
     <Content Include="Images\loading-screen.jpg" />
@@ -198,6 +208,7 @@
     <Content Include="Scripts\implementations\three.min.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.AudioObject.js" />
     <TypeScriptCompile Include="Code\AI\Statue.ts" />
+    <TypeScriptCompile Include="Code\Managers\AzureManager.ts" />
     <TypeScriptCompile Include="Code\CameraControllers\FreeRoamCameraController.ts" />
     <TypeScriptCompile Include="Code\CameraControllers\ICameraController.ts" />
     <TypeScriptCompile Include="Code\CameraControllers\SkyrimCameraController.ts" />
@@ -214,6 +225,7 @@
     <TypeScriptCompile Include="Code\Physics\PhysicsManagerWorker.ts" />
     <TypeScriptCompile Include="Code\Physics\Worker.ts" />
     <TypeScriptCompile Include="Code\Pool.ts" />
+    <TypeScriptCompile Include="Scripts\typings\azure.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\subtitles.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\Three.Plugins\THREE.AudioObject.d.ts" />
     <Content Include="Tests\TestingPage.html" />

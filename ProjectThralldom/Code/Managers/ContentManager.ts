@@ -40,12 +40,19 @@ module Thralldom {
             this.audioContext = new (<any>window).AudioContext();
         }
 
+        private loadingMessages: Array<string> = [
+            "Fixing bugs",
+            "Winning Imagine Cup 2014",
+            "Thinking of funny text to put here",
+        ];
+
         private onContentLoaded(path: string, object: any) {
             this.loaded++;
             this.loadedContent[path] = object;
 
             if (this.progressNotifier) {
-                this.progressNotifier.update(this.loaded / this.totalQueuedItems, path);
+                var randomIndex = ~~(Math.random() * (this.loadingMessages.length - 1));
+                this.progressNotifier.update(this.loaded / this.totalQueuedItems, this.loadingMessages[randomIndex]);
             }
 
             if (this.loading == this.loaded) {

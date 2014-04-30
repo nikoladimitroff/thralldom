@@ -56,6 +56,10 @@ canvas {
 #paused-screen nav.fadein {
   display: block;
 }
+#paused-screen nav.fadein:before {
+  content: attr(data-content);
+  margin-left: 40px;
+}
 #paused-screen #resume-button {
   text-align: center;
   margin-top: 3%;
@@ -63,7 +67,6 @@ canvas {
   letter-spacing: 5px;
 }
 #paused-screen #resume-button:hover {
-  font-size: 110%;
   color: #595959;
 }
 #paused-screen #resume-button:active {
@@ -71,6 +74,7 @@ canvas {
 }
 #paused-screen ul {
   list-style-type: none;
+  margin-top: 10px;
 }
 #paused-screen ul li {
   text-align: left;
