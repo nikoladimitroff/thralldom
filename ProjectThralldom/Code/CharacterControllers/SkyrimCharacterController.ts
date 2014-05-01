@@ -22,7 +22,7 @@ module Thralldom {
             public handleMouse(delta: number, input: InputManager): void {
                 if (this.script) return;
 
-                this.handleMouseClick(delta, input);
+                //this.handleMouseClick(delta, input);
 
             }
 

@@ -49,7 +49,7 @@ module Thralldom {
 
 
         // Constants
-        private static zoomSpeed: number = 5;
+        private static zoomSpeed: number = 1.25;
 
         // Managers
         private ui: UIManager;
@@ -190,8 +190,8 @@ module Thralldom {
             if (this.input.keyboard[this.keybindings.toggleUI] && !this.input.previousKeyboard[this.keybindings.toggleUI])
                 this.ui.toggleHud(!this.ui.isVisible);
 
-            if (this.input.keyboard[this.keybindings.toggleCam] && !this.input.previousKeyboard[this.keybindings.toggleCam])
-                this.changeCamera(this.cameraController instanceof CameraControllers.SkyrimCameraController);
+            //if (this.input.keyboard[this.keybindings.toggleCam] && !this.input.previousKeyboard[this.keybindings.toggleCam])
+            //    this.changeCamera(this.cameraController instanceof CameraControllers.SkyrimCameraController);
         }1
 
         private handleMouse(delta: number) {
@@ -270,7 +270,7 @@ module Thralldom {
             var currentAnimTime = this.hero.animation.currentTime;
 
             var sokolov = <any>this.world.select("#sokolov")[0];
-            this.ui.hud.innerHTML =  questText + Utilities.formatVector(this.hero.mesh.position, 3);
+            this.ui.hud.innerHTML =  questText;
 
             var frameInfo = this.combat.update(this.debugDraw);
 

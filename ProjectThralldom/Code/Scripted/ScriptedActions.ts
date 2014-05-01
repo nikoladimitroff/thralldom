@@ -65,8 +65,10 @@ module Thralldom {
         }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
-            if (this.hasCompleted)
+            if (this.hasCompleted) {
+                character.stateMachine.requestTransitionTo(CharacterStates.Idle);
                 return;
+            }
 
             var characterPos = GeometryUtils.Vector3To2(character.mesh.position);
             var diff = new THREE.Vector2();
@@ -285,6 +287,8 @@ module Thralldom {
         }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
+            //if (this.hasCompleted)
+            //    return;
 
             var characterToCamera = this.pathGenerator(character, delta);
 

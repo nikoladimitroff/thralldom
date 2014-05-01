@@ -10,4 +10,4 @@ Now, seek your father's old friend Marko
 
 *hero:
 wait 5000
-goto (25.134, -50.528) and tell story by 3000 and flycamera from (5, 1, 0) to (-5, -1, 0) for 15100, use arc
+goto (22.5, -49.637) and tell story by 3000 and flycamera from (5, 0.1, 0) to (-5, -0.2, 0) for 16000, use arc

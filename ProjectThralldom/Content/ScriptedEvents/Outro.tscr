@@ -1,8 +1,9 @@
-﻿place trigger at (-15, 28) activate at distance of 1
+﻿place trigger at (-15, 28) activate at distance of 2
 
 *$story-text:
 Thank you for giving our mission a try!
 You can now walk around the town freely.
 
 *hero:
-tell story by 5000
+wait 1000
+tell story by 3000

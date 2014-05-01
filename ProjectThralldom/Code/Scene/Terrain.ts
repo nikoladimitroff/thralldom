@@ -7,12 +7,15 @@ module Thralldom {
         public tags: Array<string> = [];
 
         private loadMesh(description: any, content: ContentManager, scale: number) {
-            if (description.texture && !description.model) {
+            var isIE = navigator["sayswho"].indexOf("IE") != -1
+
+            if ((description.texture && !description.model) || isIE) {
+                if (isIE) scale *= 10;
+
                 var texture = <THREE.Texture>content.getContent(description.texture);
                 if (description.repeatTexture) {
                     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
                     texture.repeat.set(2, 2);
-                    texture.anisotropy = Const.MaxAnisotropy;
                 }
 
                 var planeGeometry = new THREE.PlaneGeometry(scale, scale);
@@ -52,8 +55,9 @@ module Thralldom {
 
             var material: THREE.MeshLambertMaterial = <THREE.MeshLambertMaterial> this.mesh.material;
 
-            material.map.generateMipmaps = true;
-            material.map.anisotropy = Const.MaxAnisotropy;
+
+            material.map.anisotropy = isIE ? 1 : Const.MaxAnisotropy;
+            material.map.generateMipmaps = !isIE;
         }
 
         public loadFromDescription(description: any, content: ContentManager): void {

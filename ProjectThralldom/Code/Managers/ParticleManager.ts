@@ -14,6 +14,9 @@ module Thralldom {
         public load(): void {
             var rain = new THREE.ParticleEngine();
             var params = THREE.ParticleEngineExamples.rain;
+            params.sizeBase *= this.terrainSize / 2000;
+            params.sizeSpread *= this.terrainSize / 2000;
+            params.positionBase.y = 10;
             // MAGIC NUMBER, Rain over 1 / 15 of the terrain centered around our character looks good
             params.positionSpread.x = params.positionSpread.z = this.terrainSize / 15;
             rain.setValues(THREE.ParticleEngineExamples.rain);
@@ -25,6 +28,15 @@ module Thralldom {
 
             var fireflies = new THREE.ParticleEngine();
             var params = THREE.ParticleEngineExamples.fireflies;
+            params.positionBase.y *= this.terrainSize / 2000;
+            params.sizeSpread *= this.terrainSize / 2000;
+            params.positionSpread.y *= this.terrainSize / 2000;;
+            params.sizeBase *= this.terrainSize / 2000;
+            if (params.accelerationBase) {
+                params.accelerationBase.divideScalar(10);
+            }
+
+            params.speedBase *= this.terrainSize / 2000;
             params.positionSpread.x = params.positionSpread.z = this.terrainSize;
             fireflies.setValues(params);
             fireflies.initialize();

@@ -19,6 +19,8 @@ TestResults
 ## Javascript and javascript maps are usually not needed
 *.js
 *.js.map
+*.gzip
+*.zip
 
 
 # Content & JS implementations

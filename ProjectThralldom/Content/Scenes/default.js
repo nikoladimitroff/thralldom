@@ -9,7 +9,7 @@
     character: {
         "*": {
             mass: 70,
-            jumpImpulse: 120,
+            jumpImpulse: 200,
             viewAngle: Math.PI / 3,
             movementSpeed: 0.1 * 1e3,
             sprintMultiplier: 2,

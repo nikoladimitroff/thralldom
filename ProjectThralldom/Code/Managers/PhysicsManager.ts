@@ -43,11 +43,11 @@ module Thralldom {
                 };
             }
             this.physicsWorker.onerror = <any>function (e) {
-                console.log(arguments);
+                //console.log(JSON.stringify(arguments));
             }
 
             var worker: any = this.physicsWorker;
-            worker.postMessage();
+            worker.postMessage("");
 
             PhysicsManager._instance = this;
         }

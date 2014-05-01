@@ -116,6 +116,7 @@
     <Content Include="Content\Sounds\forest_background.mp3" />
     <Content Include="Content\Sounds\gunshot.mp3" />
     <Content Include="Content\Sounds\heavy_song.mp3" />
+    <Content Include="Content\Textures\Grass.jpg" />
     <Content Include="Content\Textures\Particles\raindrop2flip.png" />
     <Content Include="Content\Textures\Particles\raindroptest.png" />
     <Content Include="Content\Textures\Particles\smokeparticle.png" />
@@ -128,7 +129,6 @@
     <Content Include="Content\Textures\BlackWhiteChecker.jpg" />
     <Content Include="Content\Textures\BlueGreenChecker.png" />
     <Content Include="Content\Textures\Crosshair.png" />
-    <Content Include="Content\Textures\Grass.jpg" />
     <Content Include="Content\Textures\RedChecker.png" />
     <Content Include="Content\Textures\DirtTexture.jpg" />
     <Content Include="Content\Textures\Skybox\negX.png" />
@@ -195,9 +195,16 @@
     <Content Include="Scripts\implementations\ammo.js" />
     <Content Include="Scripts\implementations\ammo.small.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
+    <Content Include="Scripts\implementations\MobileServices.Web-1.1.3.min.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\subtitles.js" />
     <Content Include="Scripts\implementations\polyfills.js" />
+    <Content Include="thralldom.dependencies.js">
+      <DependentUpon>thralldom.dependencies.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="thralldom.dependencies.min.js">
+      <DependentUpon>thralldom.dependencies.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\implementations\three.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.Postprocessing.min.js" />
     <Content Include="thralldom.js">
@@ -252,6 +259,10 @@
     <Content Include="Scripts\implementations\Three.Plugins\THREE.ParticleEngine.js" />
     <Content Include="app.less" />
     <Content Include="Fonts\bulgaria_moderna_pro-webfont.woff" />
+    <None Include="thralldom.dependencies.js.bundle" />
+    <Content Include="thralldom.dependencies.min.js.gzip">
+      <DependentUpon>thralldom.dependencies.min.js</DependentUpon>
+    </Content>
     <None Include="thralldom.js.bundle">
       <SubType>Designer</SubType>
     </None>

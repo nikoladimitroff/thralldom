@@ -213,7 +213,6 @@ function main() {
     self.onmessage = function (event) {
         var data = event.data;
         if (!data) {
-            console.log("Falsy data: ", data);
             return;
         }
         worker.handleMessage(data);

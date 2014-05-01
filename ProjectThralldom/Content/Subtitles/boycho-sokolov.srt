@@ -1,6 +1,6 @@
 ﻿1
 00:00:00 --> 00:00:04,816
-I'm sorry, I'm new to town and look for Bai Marko's house.
+I'm sorry, I'm new to town and I'm looking for Bai Marko's house.
 May I get some directions?
 
 2
@@ -8,7 +8,7 @@ May I get some directions?
 Sure, it actually is on my way. I can walk you there
 
 3
-00:00:8,01 --> 00:00:10,01
+00:00:8,01 --> 00:00:10,00
 I'd really appreaciate that.
 
 3
