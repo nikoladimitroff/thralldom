@@ -57,6 +57,9 @@ module Thralldom {
         public begin(character: Character, extras: IExtraScriptedData): void {
             this.destination = this.target;
             if (this.isAdditive) {
+                var dir = GeometryUtils.Vector2To3(this.target);
+                dir.applyQuaternion(character.mesh.quaternion);
+                this.destination = GeometryUtils.Vector3To2(dir);
                 this.destination.add(GeometryUtils.Vector3To2(character.mesh.position));
             }
         }
@@ -77,7 +80,7 @@ module Thralldom {
             character.stateMachine.requestTransitionTo(CharacterStates.Walking);
 
             // MAGIC NUMBER
-            var radius = 5;
+            var radius = 1.5;
             this.hasCompleted = distance < radius;
         }
     }
@@ -232,7 +235,7 @@ module Thralldom {
 
         constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
 
-            var coordinatesRegex = /.*(\(-?\d+,\s*-?\d+,\s*-?\d+\)).*(\(-?\d+,\s*-?\d+,\s*-?\d+\)).*?(\d+)/g;
+            var coordinatesRegex = /.*(\(-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?\)).*(\(-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?\)).*?(\d+)/g;
             var matches = coordinatesRegex.exec(args);
             this.from = Utilities.parseVector3(matches[1]);
             this.to = Utilities.parseVector3(matches[2]);
@@ -266,8 +269,8 @@ module Thralldom {
             var norm1 = (new THREE.Vector3()).copy(this.from).normalize();
             var norm2 = (new THREE.Vector3()).copy(this.to).normalize();
 
-            var q1 = (new THREE.Quaternion()).setFromUnitVectors(forward, norm1);
-            var q2 = (new THREE.Quaternion()).setFromUnitVectors(forward, norm2);
+            var q1 = GeometryUtils.quaternionFromVectors(forward, norm1);
+            var q2 = GeometryUtils.quaternionFromVectors(forward, norm2);
 
             q1.slerp(q2, this.lerpCoefficient);
 
@@ -294,7 +297,10 @@ module Thralldom {
 
             this.hasCompleted = this.lerpCoefficient >= 1;
             if (this.hasCompleted) {
-                this.cameraController.ignoreInput = false;
+                if (this.cameraController.ignoreInput) {
+                    this.cameraController.ignoreInput = false;
+                    this.cameraController.distance = this.to.length();
+                }
             }
         }
     }

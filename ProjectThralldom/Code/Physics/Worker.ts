@@ -177,10 +177,18 @@ module Thralldom {
             velocityVector.setZ(velocity.z);
         }
 
-        private applyImpulse(data: any): void {
+        private jump(data: any): void {
             var id = data.id;
             var impulse = data.impulse;
             this.meshToBody[id].applyCentralImpulse(new Ammo.btVector3(impulse.x, impulse.y, impulse.z));
+            this.meshToBody[id].isAirborne = true;
+            
+            // Send a message that the object is longer airborne
+            (<any>self).postMessage({
+                code: MessageCode.AirborneObject,
+                id: id,
+                isAirborne: true,
+            });
         }
 
         private updateSettings(data: any): void {

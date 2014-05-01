@@ -6,7 +6,7 @@
 @font-headings: "Bulgaria Moderna", "Segoe UI", sans-serif;
 @font-body: "Segoe UI", sans-serif;
 @max-z-index: 99999;
-@anim-transition-duration: 0.5s;
+@anim-transition-duration: 1s;
 
 html, body {
     width: 100%;
@@ -18,7 +18,7 @@ html, body {
 }
 @font-face {
     font-family: "Bulgaria Moderna";
-    src: url("Fonts/Bulgaria_Moderna_Pro.otf") format("opentype");
+	src: url('Fonts/bulgaria_moderna_pro-webfont.woff');
 }
 body {
     font-family: @font-body
@@ -114,8 +114,6 @@ canvas {
     background-position: center;
     background-color: black;
     div {
-        -webkit-text-shadow: 2px 2px 5px white;
-        text-shadow: 2px 2px 5px white;
         text-align: center;
         color: black;
         font-family: @font-headings;
@@ -124,6 +122,10 @@ canvas {
         left: 0%;
         right: 0%;
         bottom: 10%;
+        span {
+            position: relative;
+            top: 1.25em;
+        }
     }
 }
 progress {
@@ -134,7 +136,7 @@ progress {
     line-height: 0.5em;
     text-indent: .5em;
     width: 100%;
-    height: 1.5em;
+    height: 2.5em;
     border: none;
     background-color: @progress-bar-bg-color;
     color: @progress-bar-color;

@@ -81,13 +81,13 @@ module Thralldom {
         }
 
         public static parseVector3(text: string): THREE.Vector3 {
-            var coordinates = text.match(/-?\d+/g);
+            var coordinates = text.match(/-?\d+(?:\.\d+)?/g);
 
             return new THREE.Vector3(parseFloat(coordinates[0]), parseFloat(coordinates[1]), parseFloat(coordinates[2]));
         }
 
         public static parseVector2(text: string): THREE.Vector2 {
-            var coordinates = text.match(/-?\d+/g);
+            var coordinates = text.match(/-?\d+(?:\.\d+)?/g);
 
             return new THREE.Vector2(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
         }

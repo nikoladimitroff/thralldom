@@ -1,0 +1,8 @@
+﻿place trigger at (-15, 28) activate at distance of 1
+
+*$story-text:
+Thank you for giving our mission a try!
+You can now walk around the town freely.
+
+*hero:
+tell story by 5000

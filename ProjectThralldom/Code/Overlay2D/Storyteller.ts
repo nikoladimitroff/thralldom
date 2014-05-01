@@ -83,6 +83,8 @@ module Thralldom {
             this.visibleIndex = 0;
             this.textIndex = -1;
 
+            // Advance once immediately, set up interval
+            this.advance();
             this.intervalId = setInterval(this.advance.bind(this), interval);
             this.loop();
         }

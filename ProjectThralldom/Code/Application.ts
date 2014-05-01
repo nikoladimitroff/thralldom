@@ -171,7 +171,7 @@ module Thralldom {
             // Effects
             this.loadEffects();
 
-            //this.world.mergeStatics();
+            this.world.mergeStatics();
         }
 
         private loadEffects(): void {
@@ -270,7 +270,7 @@ module Thralldom {
             var currentAnimTime = this.hero.animation.currentTime;
 
             var sokolov = <any>this.world.select("#sokolov")[0];
-            this.ui.hud.innerHTML =  questText;
+            this.ui.hud.innerHTML =  questText + Utilities.formatVector(this.hero.mesh.position, 3);
 
             var frameInfo = this.combat.update(this.debugDraw);
 

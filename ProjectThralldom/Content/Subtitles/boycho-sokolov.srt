@@ -1,33 +1,34 @@
 ﻿1
-00:00:02,034 --> 00:00:06,816
-Mister, how far away is Marko Ivanov's house?
-This is my first time in the town, any help is appreciated.
+00:00:00 --> 00:00:04,816
+I'm sorry, I'm new to town and look for Bai Marko's house.
+May I get some directions?
 
 2
-00:00:06,816 --> 00:00:09
-It's pretty close. I'm actually going in the same direction. We can walk together.
+00:00:05 --> 00:00:8
+Sure, it actually is on my way. I can walk you there
 
 3
-00:00:09,01 --> 00:00:10,01
-Sounds good.
+00:00:8,01 --> 00:00:10,01
+I'd really appreaciate that.
 
 3
-00:00:10,01 --> 00:00:12,01
-What brings you to Byala Cherkva, friend?
+00:00:10,01 --> 00:00:14
+Let's go then. What brings you to Byala Cherkva?
 
 4
-00:00:13,01 --> 00:00:15
-I came to see bai Marko.
+00:00:14,01 --> 00:00:18
+Marko and my late father were great friends. I've come to visit him.
 
 5
-00:00:15,01 --> 00:00:18
-He's a good man. The whole town feels deep respect for him, even the turkish guard. He recentl...
+00:00:18,01 --> 00:00:22
+Aah, Marko is a good man. The whole town feels deep respect for him, even the zaptie. He recentl...
 
 6
-00:00:18 --> 00:00:21,00
-I'm, sorry for interrupting, but I'd rather just walk quietly.
+00:00:22 --> 00:00:25,00
+I'm sorry for interrupting you, but I am really tired.
+Do you mind if we keep it quiet?
 
 7
-00:00:21,01 --> 00:00:22
-Fine
+00:00:25,01 --> 00:00:27
+Fine by me.
 

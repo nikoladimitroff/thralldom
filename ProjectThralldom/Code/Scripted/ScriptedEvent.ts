@@ -98,10 +98,19 @@ module Thralldom {
                 var line = settings[i];
                 var triggerIndex = line.indexOf("trigger at ") + "trigger at ".length;
                 if (triggerIndex != -1) {
-                    var spaceIndex = line.substr(triggerIndex).indexOf(" ");
-                    var triggerText = line.substr(triggerIndex, spaceIndex);
-                    this.trigger = triggerText.startsWith("#") ? triggerText : Utilities.parseVector2(triggerText);
-                    this.triggerRadius = parseFloat(line.substr(line.lastIndexOf(" ") + 1));
+                    var noprefix = line.substr(triggerIndex);
+                    if (noprefix.startsWith("#")) {
+                        var spaceIndex = noprefix.indexOf(" ");
+                        var triggerText = line.substr(triggerIndex, spaceIndex);
+                        this.trigger = triggerText;
+                        this.triggerRadius = parseFloat(line.substr(line.lastIndexOf(" ") + 1));
+                    }
+                    else {
+                        var paranthesis = noprefix.indexOf(")");
+                        var triggerText = line.substr(triggerIndex, paranthesis + 1);
+                        this.trigger = Utilities.parseVector2(triggerText);
+                        this.triggerRadius = parseFloat(line.substr(line.lastIndexOf(" ") + 1));
+                    }
                 }
             }
 

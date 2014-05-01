@@ -101,6 +101,7 @@
     <Content Include="fonts\Bulgaria_Moderna_Pro.otf" />
     <Content Include="fonts\Franchise-Bold-hinted.ttf" />
     <Content Include="fonts\nevis.ttf" />
+    <Content Include="fonts\bulgaria_moderna_pro-webfont.woff" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -9,7 +9,7 @@ body {
 }
 @font-face {
   font-family: "Bulgaria Moderna";
-  src: url("Fonts/Bulgaria_Moderna_Pro.otf") format("opentype");
+  src: url('Fonts/bulgaria_moderna_pro-webfont.woff');
 }
 body {
   font-family: "Segoe UI", sans-serif;
@@ -93,8 +93,6 @@ canvas {
   background-color: black;
 }
 #loading-screen div {
-  -webkit-text-shadow: 2px 2px 5px white;
-  text-shadow: 2px 2px 5px white;
   text-align: center;
   color: black;
   font-family: "Bulgaria Moderna", "Segoe UI", sans-serif;
@@ -104,6 +102,10 @@ canvas {
   right: 0%;
   bottom: 10%;
 }
+#loading-screen div span {
+  position: relative;
+  top: 1.25em;
+}
 progress {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -112,7 +114,7 @@ progress {
   line-height: 0.5em;
   text-indent: .5em;
   width: 100%;
-  height: 1.5em;
+  height: 2.5em;
   border: none;
   background-color: #eeeeee;
   color: #b8860b;
@@ -185,19 +187,19 @@ nav pre {
   -webkit-opacity: 0 !important;
   -moz-opacity: 0 !important;
   opacity: 0 !important;
-  -webkit-transition: all 0.5s linear;
-  -moz-transition: all 0.5s linear;
-  -o-transition: all 0.5s linear;
-  transition: all 0.5s linear;
+  -webkit-transition: all 1s linear;
+  -moz-transition: all 1s linear;
+  -o-transition: all 1s linear;
+  transition: all 1s linear;
 }
 .fadein {
   -webkit-opacity: 1 !important;
   -moz-opacity: 1 !important;
   opacity: 1 !important;
-  -moz-transition: all 0.5s linear step-start;
-  -o-transition: all 0.5s linear step-start;
-  -webkit-transition: all 0.5s linear step-start;
-  transition: all 0.5s linear step-start;
+  -moz-transition: all 1s linear step-start;
+  -o-transition: all 1s linear step-start;
+  -webkit-transition: all 1s linear step-start;
+  transition: all 1s linear step-start;
 }
 .story {
   background-color: black;

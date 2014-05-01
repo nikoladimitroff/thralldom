@@ -24,9 +24,9 @@ namespace Thralldom.OfflineTool
         private string Root = "game/";
         private List<string> textFormats = new List<string>() { ".js", ".anim", ".script", ".srt", };
         private string allowedExtensions = "*.html | *.manifest | *.css | *.js | *.png | *.jpg | *.jpeg | *.mp3 | *.tscr | *.anim | *.srt | " + 
-                                           "*.otf | *.ttf";
+                                           "*.otf | *.ttf | *.cur";
         private int WaitTime = 50;
-        private int connectionLimit = 7;
+        private int connectionLimit = 5;
 
         public AppBuilder(string user, string pass, string domain, string pathToGame, string pathToSite)
         {
@@ -166,7 +166,7 @@ namespace Thralldom.OfflineTool
             string pages = "# Pages\nindex.html\napp.css";
 
             // Code
-            string[] libs = { "three.min.js", "ammo.small.js", "jquery.documentReady.js", "stats.min.js" };
+            string[] libs = { "three.min.js", "ammo.small.js", "jquery.documentReady.js", "stats.min.js", "polyfills.js" };
             string code = "# Code\nthralldom.min.js";
             code += libs.Select((x) => "/Scripts/implementations/" + x).Aggregate(string.Empty, (previous, current) => previous + "\n" + current);
 
@@ -218,7 +218,7 @@ namespace Thralldom.OfflineTool
             string content = File.ReadAllText(path + "\\default.htm");
             string thralldomStart = @"<!--@ThralldomCodeBegin-->";
             string thralldomEnd = @"<!--@ThralldomCodeEnd-->";
-            string replacement = "<script src='thralldom.min.js'></script>";
+            string replacement = "<script src='thralldom.js'></script>";
             string pattern = string.Format(@"{0}[\s\S]*{1}", thralldomStart, thralldomEnd);
             string output = Regex.Replace(content, pattern, replacement);
 

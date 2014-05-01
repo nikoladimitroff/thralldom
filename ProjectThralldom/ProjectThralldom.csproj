@@ -110,6 +110,7 @@
     <Content Include="Code\StringExtensions.min.js.map">
       <DependentUpon>StringExtensions.min.js</DependentUpon>
     </Content>
+    <None Include="Content\ScriptedEvents\Outro.tscr" />
     <Content Include="Content\Sounds\dialog.mp3" />
     <Content Include="Content\Sounds\footsteps.mp3" />
     <Content Include="Content\Sounds\forest_background.mp3" />
@@ -244,12 +245,13 @@
     <Content Include="Content\ScriptedEvents\1.1.Guest.tscr" />
     <Content Include="Content\Subtitles\boycho-sokolov.srt" />
     <Content Include="Content\Models\Heroes\Sokolov\SokolovAnimation.anim" />
-    <Content Include="Content\Subtitles\sokolov-boycho.srt" />
+    <Content Include="Content\Subtitles\near-marko.srt" />
     <Content Include="Docs\ProjectProposal\ProposalText.md" />
     <Content Include="Content\ScriptedEvents\Intro.tscr" />
     <Content Include="Docs\ProjectProposal\css\Bulgaria_Moderna_Pro.otf" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.ParticleEngine.js" />
     <Content Include="app.less" />
+    <Content Include="Fonts\bulgaria_moderna_pro-webfont.woff" />
     <None Include="thralldom.js.bundle">
       <SubType>Designer</SubType>
     </None>

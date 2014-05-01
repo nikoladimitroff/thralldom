@@ -100,16 +100,16 @@ module Thralldom {
             }
 
             public toString(): string {
-                var output: string;
+                //var output: string;
 
-                if (this.targetSelector) {
-                    output = Utilities.formatString("{0} {1}", this.text, this.targetSelector);
-                }
-                else {
-                    output = Utilities.formatString("{0} ({1}, {2}, {3})", this.text, this.target.x, this.target.y, this.target.z);
-                }
+                //if (this.targetSelector) {
+                //    output = Utilities.formatString("{0} {1}", this.text, this.targetSelector);
+                //}
+                //else {
+                //    output = Utilities.formatString("{0} ({1}, {2}, {3})", this.text, this.target.x, this.target.y, this.target.z);
+                //}
 
-                return super.toString(output);
+                return super.toString(this.text);
             }
         }
 

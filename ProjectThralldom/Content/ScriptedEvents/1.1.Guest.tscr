@@ -1,8 +1,15 @@
-﻿place trigger at (-520, 383) activate at distance of 100
+﻿place trigger at #sokolov activate at distance of 5
 
 *sokolov:
 say now boycho-sokolov | boycho-sokolov.srt
-lookat (1, 1) and wait 4000
-goto (-541, 1008) and wait 2000
-say sokolov-boycho | sokolov-boycho.srt and wait 2000
-goto (0, 0)
+lookat (1, -1) and wait 3000
+goto (-11.861, -29.666)
+goto (-20.8, -27.85)
+goto (-27.8, -32.2)
+goto (-34.0, -30.784)
+goto (-34.34, 5.46)
+goto (-36.51, 11.612)
+goto (-32.92, 16.56)
+say now near-marko | near-marko.srt and wait 6000
+goto (-50.4, 12.24)
+goto (-50.23, -9.225)

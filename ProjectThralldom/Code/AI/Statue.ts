@@ -7,7 +7,7 @@ module Thralldom {
             }
 
             public updateCallback(delta: number, world: Thralldom.World): void {
-
+                this.character.stateMachine.requestTransitionTo(CharacterStates.Idle);
             }
         }
     }

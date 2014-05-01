@@ -48,7 +48,7 @@ module Thralldom {
         Raycast,
         CreateBody,
         SetWalkingVelocity,
-        ApplyImpulse,
+        Jump,
         AirborneObject,
         UpdateSettings,
     }

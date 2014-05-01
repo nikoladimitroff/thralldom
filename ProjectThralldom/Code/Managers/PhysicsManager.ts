@@ -124,7 +124,7 @@ module Thralldom {
 
         public applyImpulse(id: number, impulse: THREE.Vector3): void {
             this.physicsWorker.postMessage({
-                code: MessageCode.ApplyImpulse,
+                code: MessageCode.Jump,
                 id: id,
                 impulse: impulse,
             });

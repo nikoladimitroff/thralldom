@@ -77,6 +77,7 @@ module Thralldom {
 
             node.quaternion.set(quat.x, quat.y, quat.z, quat.w);
             node.geometry.computeBoundingBox();
+            node.scale.divideScalar(20);
 
             return node;
         }
