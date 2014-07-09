@@ -25,6 +25,18 @@
         angularDamping: 1,
         gravity: -30,
     },
+    lights: [
+        {
+            type: "ambient",
+            color: 0xFFFFFF,
+        },
+        {
+            type: "directional",
+            color: 0xFFFFFF,
+            intensity: 1,
+            position: [2, 1, 1],
+        }
+    ],
     // No more settings, scene definition
     terrain: {
         scale: 30,

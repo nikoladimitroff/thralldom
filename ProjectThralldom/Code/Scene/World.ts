@@ -39,7 +39,6 @@ module Thralldom {
                     return this.selectByTag(text);
 
                 default:
-
                     throw new Error("Invalid selector!");
             };
         }
@@ -194,24 +193,23 @@ module Thralldom {
 
         public mergeStatics(): void {
             var geometry = new THREE.Geometry();
-            var materials = new THREE.MeshFaceMaterial();
+            var megamaterial = new THREE.MeshFaceMaterial();
 
-            var processedGeometries: any = {};
-
-
+            // Combine all materials into one
             for (var i = 0; i < this.statics.length; i++) {
                 var current = this.statics[i].mesh;
                 if (current.material instanceof THREE.MeshFaceMaterial) {
-                    materials.materials = materials.materials.concat((<THREE.MeshFaceMaterial>current.material).materials);
+                    megamaterial.materials = megamaterial.materials.concat((<THREE.MeshFaceMaterial>current.material).materials);
                 }
                 else {
-                    materials.materials.push(current.material);
+                    megamaterial.materials.push(current.material);
                 }
             }
             
-            var mats = materials.materials;
-            materials.materials = materials.materials.filter((mat, index, arr) => arr.indexOf(mat) == index);
+            var mats = megamaterial.materials;
+            megamaterial.materials = megamaterial.materials.filter((mat, index, arr) => arr.indexOf(mat) == index);
 
+            var processedGeometries: any = {};
             for (var i = 0; i < this.statics.length; i++) {
                 var current = this.statics[i].mesh;
                 if (this.statics[i] instanceof Thralldom.Terrain) continue;
@@ -220,13 +218,8 @@ module Thralldom {
                 if (!processedGeometries[current.name]) {
                     var faces = current.geometry.faces;
                     for (var j = 0; j < faces.length; j++) {
-                        var mat = current.material instanceof THREE.MeshFaceMaterial
-                            ? (<any>current.material).materials[faces[j].materialIndex]
-                            : current.material;
-
                         // Set all materials to 0, boosts performance by 123013891273189273812368721%
-                        faces[j].materialIndex = 0//materials.materials.indexOf(mat);
-                        //console.log(faces[j].materialIndex, current.name);
+                        faces[j].materialIndex = 0;
                     }
                     processedGeometries[current.name] = true;
                 }
@@ -238,7 +231,7 @@ module Thralldom {
                 this.renderScene.remove(current);
             }
 
-            var mesh = new THREE.Mesh(geometry, materials);
+            var mesh = new THREE.Mesh(geometry, megamaterial);
             mesh.name = "scenery";
             this.renderScene.add(mesh);
         }

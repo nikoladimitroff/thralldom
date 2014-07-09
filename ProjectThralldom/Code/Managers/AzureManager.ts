@@ -21,17 +21,14 @@ module Thralldom {
         }
 
         public login(): void {
-            //if (!this.loggedIn) {
-                this.client.login("microsoftaccount").done(
-                    this.loadInformation.bind(this),
-                    (error) => console.log(error)
-                    );
-            //}
+            this.client.login("microsoftaccount").done(
+                this.loadInformation.bind(this),
+                (error) => console.log(error)
+                );
         }
 
         private loadInformation(): void {
-            var id = 5;
-            id = this.client.currentUser.userId;
+            var id = this.client.currentUser.userId;
             console.log(id);
             this.userInfo.read().done((result) => {
                 result = result[0];

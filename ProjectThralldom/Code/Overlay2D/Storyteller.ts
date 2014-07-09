@@ -14,9 +14,10 @@ module Thralldom {
 
         public onDone: () => void;
 
-        constructor(webglContainer: HTMLElement, context: CanvasRenderingContext2D, effects: Array<ParticleEngine2D>, text: Array<string>, 
-            textFont: string = "3em Segoe UI",
-            textColor: string = "white") {
+        constructor(webglContainer: HTMLElement, context: CanvasRenderingContext2D,
+                    effects: Array<ParticleEngine2D>, text: Array<string>, 
+                    textFont: string = "3em Segoe UI",
+                    textColor: string = "white") {
             this.screens = [webglContainer, context.canvas];
             this.visibleIndex = 0;
             this.context = context;
@@ -53,7 +54,6 @@ module Thralldom {
                 this.textIndex++;
             }
 
-            var toFadeOut, toFadeIn;
             Storyteller.fadeout(this.screens[this.visibleIndex]);
             this.visibleIndex = (this.visibleIndex + 1) % this.screens.length;
             Storyteller.fadein(this.screens[this.visibleIndex]);
@@ -129,7 +129,7 @@ module Thralldom {
         }
     }
 
-    // This class is here only for declaration purposes. It's created on Storyteller.fixDomElements
+    // This class is here only for declaration purposes. It's created in Storyteller.fixProperties
     export declare class FixedStoryteller extends Storyteller {
         constructor(text: Array<string>, textFont?: string, textColor?: string);
     }

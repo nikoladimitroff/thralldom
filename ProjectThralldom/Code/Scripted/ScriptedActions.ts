@@ -186,7 +186,7 @@ module Thralldom {
         }
     }
 
-    export class TellAction implements IScriptedAction {
+    export class StoryAction implements IScriptedAction {
 
         public static Keyword: string = "tell";
 
@@ -287,9 +287,6 @@ module Thralldom {
         }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
-            //if (this.hasCompleted)
-            //    return;
-
             var characterToCamera = this.pathGenerator(character, delta);
 
             this.lerpCoefficient += delta / this.duration;

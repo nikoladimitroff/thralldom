@@ -128,17 +128,6 @@ module Thralldom {
             // ammo
             this.ammunitions = new Array<Ammunition>();
 
-            // Lights
-
-            var ambient = new THREE.AmbientLight(0xAAAAAA);
-            this.world.renderScene.add(ambient);
-
-            var directionalLight = new THREE.DirectionalLight(0x707070, 0.5);
-            directionalLight.position.set(2, 1, 1);
-            directionalLight.position.normalize();
-
-            this.world.renderScene.add(directionalLight);
-
 
             // Combat
             this.combat = new CombatManager(this.world, this.physics, this.hero, this.enemies);
@@ -200,13 +189,6 @@ module Thralldom {
 
             // See if our raycast request has been resolved. 
             var ray = this.physics.tryResolveRaycast(this.raycastPromiseUid);
-            // If no request is currently pending, request another
-            if (!ray && this.raycastPromiseUid == -1) {
-                var pos = this.cameraController.position;
-                var target = (new THREE.Vector3).subVectors(this.hero.mesh.position, this.hero.centerToMesh);
-
-                this.raycastPromiseUid = this.physics.requestRaycast(pos, target);
-            }
             // If the request has been fullfilled, do stuff
             if (ray) {
                 if (ray.hasHit && ray.collisionObjectId != this.hero.mesh.id) {
@@ -215,6 +197,13 @@ module Thralldom {
                     this.cameraController.distance *= mult;
                 }
                 this.raycastPromiseUid = -1;
+            }
+            // If no request is currently pending, request another
+            if (this.raycastPromiseUid == -1) {
+                var pos = this.cameraController.position;
+                var target = (new THREE.Vector3).subVectors(this.hero.mesh.position, this.hero.centerToMesh);
+
+                this.raycastPromiseUid = this.physics.requestRaycast(pos, target);
             }
         }
 
@@ -227,7 +216,7 @@ module Thralldom {
                     this.scripts[index] = this.scripts[this.scripts.length - 1];
                     this.scripts.pop();
                     this.activeScript = null;
-                    console.log("finished, array length:", this.scripts.length);
+                    console.log("finished, scripts count:", this.scripts.length);
                 }
 
                 return;

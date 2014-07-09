@@ -1,7 +1,7 @@
 module Thralldom {
     export class ScriptedEvent implements ILoadable {
         private actions: IIndexable<(args: string, content: ContentManager, extras: IExtraScriptedData) => void> =
-                <any>[GotoAction, LookAtAction, WaitAction, DialogAction, TellAction, FlyAction].reduce((previous: any, current) => {
+                <any>[GotoAction, LookAtAction, WaitAction, DialogAction, StoryAction, FlyAction].reduce((previous: any, current) => {
                     previous[current.Keyword] = current;
                     return previous;
                 }, {});

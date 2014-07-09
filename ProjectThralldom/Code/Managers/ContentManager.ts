@@ -229,7 +229,27 @@ module Thralldom {
 
             var characterSettings = worldDescription.character;
             Thralldom.Character.Settings = characterSettings;
+        }
 
+        private loadLights(worldDescription: any, world: Thralldom.World): void {
+            var lightsDescription = worldDescription.lights;
+
+            for (var i = 0; i < lightsDescription.length; i++) {
+                var descriptor = lightsDescription[i];
+                var light: THREE.Light;
+                switch (descriptor.type) {
+                    case "ambient":
+                        light = new THREE.AmbientLight(descriptor.color);
+                        break;
+                    case "directional":
+                        light = new THREE.DirectionalLight(descriptor.color, descriptor.intensity);
+                        var pos = descriptor.position;
+                        light.position.set(pos[0], pos[1], pos[2]);
+                        break;
+                };
+                console.log(descriptor);
+                world.renderScene.add(light);
+            }
         }
 
         private parseCollection(collectionDescription: Array<any>, typeMapping: any, callback: (instance: ILoadable) => void): void {
@@ -239,7 +259,7 @@ module Thralldom {
                 if (type) {
                     var instance = new type();
                     instance.loadFromDescription(object, this);
-                    callback(instance)
+                    callback(instance);
                 }
                 else {
                     throw new Error("Invalid type!");
@@ -272,16 +292,22 @@ module Thralldom {
             // Settings first
             this.parseSettings(worldDescription);
 
+            // Lights
+            this.loadLights(worldDescription, world);
+
+            // Dynamics / statics
             this.parseCollection(worldDescription.dynamics, ContentManager.dynamicTypes, world.addDynamic.bind(world));
             this.parseCollection(worldDescription.statics, ContentManager.staticTypes, world.addStatic.bind(world));
 
+            // Singletons
             var singletons = [];
             this.tryAddSingletonDescription(singletons, worldDescription, "skybox");
             this.tryAddSingletonDescription(singletons, worldDescription, "terrain");
             this.parseCollection(singletons, ContentManager.staticTypes, world.addStatic.bind(world));
 
+            // Waypoints
             if (!worldDescription.waypoints) {
-                console.error("No pathfinding graph supplied to scene, AI cannot work!");
+                console.error("No pathfinding graph supplied to scene, AI cannot move!");
             }
 
             var graph = {
@@ -346,7 +372,6 @@ module Thralldom {
                 this.totalQueuedItems += this.loading;
             }, false);
         }
-
 
         public loadMeta(path: string, callback: (meta: IMetaGameData) => void): IProgressNotifier {
             this.progressNotifier = {

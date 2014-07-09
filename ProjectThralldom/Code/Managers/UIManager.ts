@@ -81,22 +81,14 @@ module Thralldom {
         }
 
         public toggleHud(showHud: boolean): void {
-            var classToAdd = "",
-                classToRemove = "";
             if (showHud) {
-                classToAdd = "fadein";
-                classToRemove = "fadeout"
+                Storyteller.fadein(this.hud);
+                Storyteller.fadein(this.stats.domElement);
             }
             else {
-                classToAdd = "fadeout";
-                classToRemove = "fadein";
+                Storyteller.fadeout(this.hud);
+                Storyteller.fadeout(this.stats.domElement);
             }
-
-            this.hud.classList.remove(classToRemove);
-            this.stats.domElement.classList.remove(classToRemove);
-
-            this.hud.classList.add(classToAdd);
-            this.stats.domElement.classList.add(classToAdd);
         }
     }
 }
