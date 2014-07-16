@@ -106,11 +106,14 @@
     <Content Include="Content\Models\Terrain\terrainTexture.jpg" />
     <Content Include="Content\Models\Terrain\terrainTextureSmall.jpg" />
     <Content Include="Content\Quests\default.js" />
+    <Content Include="Content\Quests\simple.js" />
     <Content Include="Content\Scenes\default.js" />
     <Content Include="Code\StringExtensions.min.js.map">
       <DependentUpon>StringExtensions.min.js</DependentUpon>
     </Content>
     <None Include="Content\ScriptedEvents\Outro.tscr" />
+    <Content Include="Content\Scenes\simple.js" />
+    <Content Include="Content\simple-assets.js" />
     <Content Include="Content\Sounds\dialog.mp3" />
     <Content Include="Content\Sounds\footsteps.mp3" />
     <Content Include="Content\Sounds\forest_background.mp3" />
@@ -199,12 +202,6 @@
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\subtitles.js" />
     <Content Include="Scripts\implementations\polyfills.js" />
-    <Content Include="thralldom.dependencies.js">
-      <DependentUpon>thralldom.dependencies.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="thralldom.dependencies.min.js">
-      <DependentUpon>thralldom.dependencies.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\implementations\three.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.Postprocessing.min.js" />
     <Content Include="thralldom.js">
@@ -259,10 +256,6 @@
     <Content Include="Scripts\implementations\Three.Plugins\THREE.ParticleEngine.js" />
     <Content Include="app.less" />
     <Content Include="Fonts\bulgaria_moderna_pro-webfont.woff" />
-    <None Include="thralldom.dependencies.js.bundle" />
-    <Content Include="thralldom.dependencies.min.js.gzip">
-      <DependentUpon>thralldom.dependencies.min.js</DependentUpon>
-    </Content>
     <None Include="thralldom.js.bundle">
       <SubType>Designer</SubType>
     </None>

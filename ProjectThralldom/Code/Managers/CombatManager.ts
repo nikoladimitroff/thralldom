@@ -14,7 +14,8 @@ module Thralldom {
             this.hero = hero;
             this.enemies = enemies;
 
-            this.raycastUids = new Array<number>();
+            // An map from character index(0 for #hero) to their raycasts
+            this.raycastUids = [-1];
         }
 
         private addTrajectoryLine(worldFrom: THREE.Vector3, worldTo: THREE.Vector3, color: number): void {
@@ -30,23 +31,21 @@ module Thralldom {
         public update(debugDraw: boolean): FrameInfo {
             var heroCollisionObjectId: number = -1;
 
-            if (this.hero.weapon.attackWaiting) {
-
-                var ray = this.physics.tryResolveRaycast(this.raycastUids[0]);
-                if (this.raycastUids[0] == -1) {
-
-                    var worldFrom = this.hero.weapon.attackWorldFrom;
-                    var worldTo = this.hero.weapon.attackForward.multiplyScalar(this.hero.range).add(worldFrom);
-                    this.raycastUids[0] = this.physics.requestRaycast(worldFrom, worldTo);
+            var ray = this.physics.tryResolveRaycast(this.raycastUids[0]);
+            if (ray) {
+                heroCollisionObjectId = ray.collisionObjectId;
+                this.raycastUids[0] = -1;
+                if (debugDraw && ray.hasHit) {
+                    var from = this.hero.mesh.position;
+                    console.log(ray.hitPoint);
+                    this.addTrajectoryLine(from, <any>ray.hitPoint, 0x0000FF);
                 }
+            }
 
-                if (ray) {
-                    heroCollisionObjectId = ray.collisionObjectId;
-                    if (debugDraw && ray.hasHit) {
-                        this.addTrajectoryLine(worldFrom, <any>ray.hitPoint, 0x0000FF);
-                    }
-                    this.raycastUids[0] = -1;
-                }
+            if (this.hero.weapon.attackWaiting && this.raycastUids[0] == -1) {
+                var worldFrom = this.hero.weapon.attackWorldFrom;
+                var worldTo = this.hero.weapon.attackForward.multiplyScalar(this.hero.range).add(worldFrom);
+                this.raycastUids[0] = this.physics.requestRaycast(worldFrom, worldTo);
             }
 
             for (var i = 0; i < this.enemies.length; i++) {
@@ -58,14 +57,12 @@ module Thralldom {
                             if (this.hero.mesh.id == collisionObjectId) {
                                 this.hero.health -= this.enemies[i].damage;
                             }
-
                             if (debugDraw) {
-                                this.addTrajectoryLine(worldFrom, <any>ray.hitPoint, 0xFF0000);
+                                var from = this.enemies[i].mesh.position;
+                                this.addTrajectoryLine(from, <any>ray.hitPoint, 0xFF0000);
                             }
                         }
-                        if (ray) {
-                            this.raycastUids[i + 1] = -1;
-                        }
+                        this.raycastUids[i + 1] = -1;
                     }
                 }
 
@@ -75,7 +72,7 @@ module Thralldom {
                     this.enemies[i].health -= this.hero.damage;
                 } 
 
-                // See if the enemy has attacked and hit something
+                // See if the enemy has attacked 
                 if (this.enemies[i].weapon.attackWaiting) {
                     var worldFrom = this.enemies[i].weapon.attackWorldFrom;
                     var worldTo = this.enemies[i].weapon.attackForward;

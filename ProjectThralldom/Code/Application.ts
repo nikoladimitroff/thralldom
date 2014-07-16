@@ -29,6 +29,7 @@ module Thralldom {
 
             toggleUI: InputManager.keyNameToKeyCode("Z"),
             toggleCam: InputManager.keyNameToKeyCode("X"),
+            toggleDebug: InputManager.keyNameToKeyCode("C"),
         };
 
         // World
@@ -179,8 +180,11 @@ module Thralldom {
             if (this.input.keyboard[this.keybindings.toggleUI] && !this.input.previousKeyboard[this.keybindings.toggleUI])
                 this.ui.toggleHud(!this.ui.isVisible);
 
-            //if (this.input.keyboard[this.keybindings.toggleCam] && !this.input.previousKeyboard[this.keybindings.toggleCam])
-            //    this.changeCamera(this.cameraController instanceof CameraControllers.SkyrimCameraController);
+            if (this.input.keyboard[this.keybindings.toggleCam] && !this.input.previousKeyboard[this.keybindings.toggleCam])
+                this.changeCamera(this.cameraController instanceof CameraControllers.SkyrimCameraController);
+
+            if (this.input.keyboard[this.keybindings.toggleDebug] && !this.input.previousKeyboard[this.keybindings.toggleDebug])
+                this.toggleDebugDraw();
         }1
 
         private handleMouse(delta: number) {
@@ -257,9 +261,15 @@ module Thralldom {
                 "Your current quest:\n" + this.quest.toString();
 
             var currentAnimTime = this.hero.animation.currentTime;
+            var enemy = <any>this.world.select("#enemy")[0];
+            var enemyhp = Utilities.formatString("Enemy HP: {0}\n", enemy.health)
+            var debug = Utilities.formatString("HP: {0}\nPosition: {1}\n",
+                                                this.hero.health,
+                                                Utilities.formatVector(this.hero.mesh.position, 3))
+            var uiText = questText + debug + enemyhp;
 
-            var sokolov = <any>this.world.select("#sokolov")[0];
-            this.ui.hud.innerHTML =  questText;
+
+            this.ui.hud.innerHTML = uiText;
 
             var frameInfo = this.combat.update(this.debugDraw);
 

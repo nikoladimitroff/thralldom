@@ -90,8 +90,7 @@ module Thralldom {
             }
 
             var walkingInterupt = (hero: Character): boolean => {
-
-                return !walking.data.isWalking// && GeometryUtils.almostZero(velocity.x()) && GeometryUtils.almostZero(velocity.z());
+                return !walking.data.isWalking;
             }
 
             walking = new State(CharacterStates.Walking, walkingUpdate, walkingEntry, walkingExit, walkingInterupt);
@@ -196,7 +195,6 @@ module Thralldom {
             return falling;
         }
 
-
         private static getUnsheatingState(): State {
             var unsheating: State;
 
@@ -284,7 +282,6 @@ module Thralldom {
 
             return attacking;
         }
-
 
         private static getSheatingState(): State {
             var sheating: State;

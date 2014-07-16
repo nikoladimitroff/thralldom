@@ -15,14 +15,14 @@ module Thralldom {
                 }
 
                 if (input.mouse.rightButton) {
-                    //this.hero.health = 0;
+                    this.character.health = 0;
                 }
             }
 
             public handleMouse(delta: number, input: InputManager): void {
                 if (this.script) return;
 
-                //this.handleMouseClick(delta, input);
+                this.handleMouseClick(delta, input);
 
             }
 
