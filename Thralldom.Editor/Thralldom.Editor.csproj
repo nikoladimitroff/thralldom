@@ -95,8 +95,12 @@
     <Content Include="examples\js\exporters\OBJExporter.js" />
     <Content Include="examples\js\exporters\SceneExporter.js" />
     <Content Include="examples\js\exporters\STLExporter.js" />
+    <Content Include="examples\js\exporters\TypedGeometryExporter.js" />
     <Content Include="examples\js\geometries\ConvexGeometry.js" />
     <Content Include="examples\js\libs\dat.gui.min.js" />
+    <Content Include="examples\js\libs\msgpack-js.js" />
+    <Content Include="examples\js\libs\pnltri.min.js" />
+    <Content Include="examples\js\libs\require.js" />
     <Content Include="examples\js\libs\stats.min.js" />
     <Content Include="examples\js\libs\system.min.js" />
     <Content Include="examples\js\libs\tween.min.js" />
@@ -121,6 +125,7 @@
     <Content Include="examples\js\loaders\OBJMTLLoader.js" />
     <Content Include="examples\js\loaders\PDBLoader.js" />
     <Content Include="examples\js\loaders\PLYLoader.js" />
+    <Content Include="examples\js\loaders\SceneLoader.js" />
     <Content Include="examples\js\loaders\STLLoader.js" />
     <Content Include="examples\js\loaders\UTF8Loader.js" />
     <Content Include="examples\js\loaders\VRMLLoader.js" />
@@ -131,6 +136,7 @@
     <Content Include="examples\js\modifiers\TessellateModifier.js" />
     <Content Include="examples\js\renderers\CSS2DRenderer.js" />
     <Content Include="examples\js\renderers\CSS3DRenderer.js" />
+    <Content Include="examples\js\renderers\RaytracingRenderer.js" />
     <Content Include="examples\js\renderers\SoftwareRenderer.js" />
     <Content Include="examples\js\renderers\SVGRenderer.js" />
     <Content Include="examples\js\renderers\WebGLDeferredRenderer.js" />
