@@ -247,7 +247,6 @@ module Thralldom {
                         light.position.set(pos[0], pos[1], pos[2]);
                         break;
                 };
-                console.log(descriptor);
                 world.renderScene.add(light);
             }
         }

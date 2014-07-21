@@ -121,8 +121,6 @@ module Thralldom {
             var hasHit = result.hasHit();
             var hitPoint = result.get_m_hitPointWorld();
             var collisionObject = result.get_m_collisionObject();
-            if (hasHit)
-                console.log(new VectorDTO(hitPoint.x(), hitPoint.y(), hitPoint.z()))
             var messageRaycast = {
                 code: MessageCode.Raycast,
                 uid: data.uid,

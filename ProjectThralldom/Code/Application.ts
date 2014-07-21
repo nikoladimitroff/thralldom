@@ -261,12 +261,12 @@ module Thralldom {
                 "Your current quest:\n" + this.quest.toString();
 
             var currentAnimTime = this.hero.animation.currentTime;
-            var enemy = <any>this.world.select("#enemy")[0];
-            var enemyhp = Utilities.formatString("Enemy HP: {0}\n", enemy.health)
-            var debug = Utilities.formatString("HP: {0}\nPosition: {1}\n",
-                                                this.hero.health,
-                                                Utilities.formatVector(this.hero.mesh.position, 3))
-            var uiText = questText + debug + enemyhp;
+            //var enemy = <any>this.world.select("#enemy")[0];
+            //var enemyhp = Utilities.formatString("Enemy HP: {0}\n", enemy.health)
+            //var debug = Utilities.formatString("HP: {0}\nPosition: {1}\n",
+            //                                    this.hero.health,
+            //                                    Utilities.formatVector(this.hero.mesh.position, 3))
+            var uiText = questText// + debug + enemyhp;
 
 
             this.ui.hud.innerHTML = uiText;

@@ -6,7 +6,8 @@ var Editor = function () {
 
 		// actions
 
-		playAnimations: new SIGNALS.Signal(),
+		playAnimation: new SIGNALS.Signal(),
+		stopAnimation: new SIGNALS.Signal(),
 
 		// notifications
 
@@ -197,6 +198,10 @@ Editor.prototype = {
 
 				helper = new THREE.HemisphereLightHelper( object, 10 );
 
+			} else if ( object instanceof THREE.SkinnedMesh ) {
+
+				helper = new THREE.SkeletonHelper( object );
+
 			} else {
 
 				// no helper for this object type
@@ -321,6 +326,7 @@ Editor.prototype = {
 			'HemisphereLight': THREE.HemisphereLight,
 			'PointLight': THREE.PointLight,
 			'SpotLight': THREE.SpotLight,
+			'SkinnedMesh': THREE.SkinnedMesh,
 			'Mesh': THREE.Mesh,
 			'Sprite': THREE.Sprite,
 			'Object3D': THREE.Object3D
@@ -357,7 +363,6 @@ Editor.prototype = {
 			'TorusKnotGeometry': THREE.TorusKnotGeometry,
 			'TubeGeometry': THREE.TubeGeometry,
 			'Geometry': THREE.Geometry,
-			'Geometry2': THREE.Geometry2,
 			'BufferGeometry': THREE.BufferGeometry
 
 		};
@@ -382,7 +387,7 @@ Editor.prototype = {
 			'MeshLambertMaterial': THREE.MeshLambertMaterial,
 			'MeshNormalMaterial': THREE.MeshNormalMaterial,
 			'MeshPhongMaterial': THREE.MeshPhongMaterial,
-			'ParticleSystemMaterial': THREE.ParticleSystemMaterial,
+			'PointCloudMaterial': THREE.PointCloudMaterial,
 			'ShaderMaterial': THREE.ShaderMaterial,
 			'SpriteCanvasMaterial': THREE.SpriteCanvasMaterial,
 			'SpriteMaterial': THREE.SpriteMaterial,
