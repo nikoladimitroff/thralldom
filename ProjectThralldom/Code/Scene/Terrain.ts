@@ -1,4 +1,3 @@
-/// <reference path="../../scripts/typings/ammo.d.ts" />
 module Thralldom {
     export class Terrain extends LoadableObject {
 

@@ -1,4 +1,4 @@
-@font-face {
+﻿@font-face {
   font-family: "Bulgaria Moderna";
   src: url('../fonts/bulgaria_moderna_pro-webfont.woff');
 }
@@ -346,4 +346,3 @@ img::-moz-selection {
 body {
   webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }
-/*# sourceMappingURL=grayscale.css.map */

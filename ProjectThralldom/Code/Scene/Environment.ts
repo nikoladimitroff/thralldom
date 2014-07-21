@@ -4,7 +4,6 @@ module Thralldom {
         public id: string;
         public tags: Array<string>;
         public mesh: THREE.Mesh;
-        public rigidBody: Ammo.btRigidBody;
 
         constructor() {
 
