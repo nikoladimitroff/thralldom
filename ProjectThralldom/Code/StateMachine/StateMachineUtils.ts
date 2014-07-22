@@ -28,8 +28,10 @@ module Thralldom {
                 animation.stop();
                 animation.play(startTime);
 
-                character.weapon.animation.stop();
-                character.weapon.animation.play(startTime);
+                if (character.weapon) {
+                    character.weapon.animation.stop();
+                    character.weapon.animation.play(startTime);
+                }
 
                 return true;
             }
@@ -55,10 +57,12 @@ module Thralldom {
         private static restartAnimationIfNeeded(character: Character, previousState: number): void {
             if (previousState != character.stateMachine.current) {
                 character.animation.stop();
-                character.weapon.animation.stop();
                 var startTime = Utilities.convertFrameToTime(character.animationData[character.getAnimationName()].startFrame, character.animation);
                 character.animation.play(startTime);
-                character.weapon.animation.play(startTime);
+                if (character.weapon) {
+                    character.weapon.animation.stop();
+                    character.weapon.animation.play(startTime);
+                }
             }
 
         }
