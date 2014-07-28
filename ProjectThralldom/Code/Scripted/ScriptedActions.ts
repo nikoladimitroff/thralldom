@@ -51,7 +51,7 @@ module Thralldom {
         constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
             this.isAdditive = args.startsWith("+");
             // Replace the plus at the start if one is present
-            this.target = Utilities.parseVector2(args.replace(/^\+/g, ""));
+            this.target = Utils.parseVector2(args.replace(/^\+/g, ""));
         }
 
         public begin(character: Character, extras: IExtraScriptedData): void {
@@ -95,7 +95,7 @@ module Thralldom {
         private lookat: THREE.Vector2;
 
         constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
-            this.lookat = Utilities.parseVector2(args);
+            this.lookat = Utils.parseVector2(args);
         }
 
 
@@ -239,8 +239,8 @@ module Thralldom {
 
             var coordinatesRegex = /.*(\(-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?\)).*(\(-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?\)).*?(\d+)/g;
             var matches = coordinatesRegex.exec(args);
-            this.from = Utilities.parseVector3(matches[1]);
-            this.to = Utilities.parseVector3(matches[2]);
+            this.from = Utils.parseVector3(matches[1]);
+            this.to = Utils.parseVector3(matches[2]);
             this.duration = ~~matches[3] * 1e-3;
 
             this.pathGenerator = args.endsWith("line") ? this.linearUpdate : this.arcUpdate;

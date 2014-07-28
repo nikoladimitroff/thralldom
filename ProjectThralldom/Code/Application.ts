@@ -121,7 +121,7 @@ module Thralldom {
             this.characterController = <CharacterControllers.ICharacterController> heroController;
 
 
-            window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
+            window.addEventListener("resize", Utils.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
 
             // npcs
             this.enemies = <Array<Character>> this.world.select(".guard");
@@ -147,14 +147,14 @@ module Thralldom {
 
 
             // Detect going out of focus
-            Utilities.setWindowFocusListener((isVisible) => {
+            Utils.setWindowFocusListener((isVisible) => {
                 if (!isVisible) {
                     this.pause();
                 }
             });
             this.isOnFocus = true;
 
-            this.ui.hookupPausedControls(this.requestPointerLockFullscreen.bind(this), this.renderer, this.world.renderScene, this.particles, this.azure);
+            this.ui.hookupPausedControls(this.requestPointerLockFullscreen.bind(this), this.particles, this.azure);
             this.input.attachCancelFullscreenListener(this.pause.bind(this));
 
 
@@ -262,10 +262,9 @@ module Thralldom {
 
             var currentAnimTime = this.hero.animation.currentTime;
             //var enemy = <any>this.world.select("#enemy")[0];
-            //var enemyhp = Utilities.formatString("Enemy HP: {0}\n", enemy.health)
-            //var debug = Utilities.formatString("HP: {0}\nPosition: {1}\n",
-            //                                    this.hero.health,
-            //                                    Utilities.formatVector(this.hero.mesh.position, 3))
+            //var enemyhp = "Enemy HP: {0}\n".format(enemy.health)
+            //var debug = "HP: {0}\nPosition: {1}\n".format(this.hero.health,
+            //                                    Utils.formatVector(this.hero.mesh.position, 3))
             var uiText = questText// + debug + enemyhp;
 
 

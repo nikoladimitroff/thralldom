@@ -183,7 +183,6 @@ module Thralldom {
 
                 ensureLoop(geometry.animation);
                 geometry.animation.name += path;
-                THREE.AnimationHandler.add(geometry.animation);
 
                 for (var i = 0; i < materials.length; i++) {
 

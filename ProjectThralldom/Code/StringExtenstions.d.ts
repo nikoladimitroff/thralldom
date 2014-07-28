@@ -3,4 +3,5 @@ interface String {
     endsWith(suffix: string): boolean;
     trimEnd(): string;
     trimStart(): string;
+    format(...args): string;
 } 

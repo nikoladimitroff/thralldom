@@ -67,7 +67,7 @@
             id: "hero",
             model: "BoychoAnimation.js",
             weapon: "PistolAnimation.js",
-            pos: [0, 1, 0],
+            pos: [30, 1, 0],
             rot: [0, -0.668, 0],
             scale: 0.4,
         },

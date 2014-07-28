@@ -21,8 +21,8 @@ module Thralldom {
             // WARNING: This will work for now, but once we have multiple weapon animations it will fail
             var animationData = character.animationData[character.getAnimationName()];
 
-            var startTime = Utilities.convertFrameToTime(animationData.startFrame, animation);
-            var endTime = Utilities.convertFrameToTime(animationData.endFrame, animation);
+            var startTime = Utils.convertFrameToTime(animationData.startFrame, animation);
+            var endTime = Utils.convertFrameToTime(animationData.endFrame, animation);
 
             if (animation.currentTime >= endTime) {
                 animation.stop();
@@ -42,8 +42,8 @@ module Thralldom {
             var animation = character.animation;
             var animationData = character.animationData[character.getAnimationName()];
 
-            var startTime = Utilities.convertFrameToTime(animationData.startFrame, animation);
-            var endTime = Utilities.convertFrameToTime(animationData.endFrame, animation);
+            var startTime = Utils.convertFrameToTime(animationData.startFrame, animation);
+            var endTime = Utils.convertFrameToTime(animationData.endFrame, animation);
 
             if (animation.currentTime >= endTime && !animation.isPaused) {
                 animation.pause();
@@ -57,7 +57,7 @@ module Thralldom {
         private static restartAnimationIfNeeded(character: Character, previousState: number): void {
             if (previousState != character.stateMachine.current) {
                 character.animation.stop();
-                var startTime = Utilities.convertFrameToTime(character.animationData[character.getAnimationName()].startFrame, character.animation);
+                var startTime = Utils.convertFrameToTime(character.animationData[character.getAnimationName()].startFrame, character.animation);
                 character.animation.play(startTime);
                 if (character.weapon) {
                     character.weapon.animation.stop();

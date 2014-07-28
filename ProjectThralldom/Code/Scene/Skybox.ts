@@ -29,7 +29,7 @@ module Thralldom {
 
             var size = description.scale || 1000;
             // create skybox mesh
-            var skybox = new THREE.Mesh(new THREE.CubeGeometry(size, size, size), skyBoxMaterial);
+            var skybox = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), skyBoxMaterial);
             skybox.name = "skybox";
             this.mesh = skybox;
         }

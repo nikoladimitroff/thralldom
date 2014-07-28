@@ -40,7 +40,7 @@ module Thralldom {
                     var character = world.selectByDynamicId(name);
                     var controller = world.controllerManager.controllers.filter((controller) => controller.character == character)[0];
                     if (!controller) {
-                        console.warn(Utilities.formatString("No matching character with id {0} found when activatin script", name));
+                        console.warn("No matching character with id {0} found when activatin script".format(name));
                         actors[name].finished = true;
                         continue;
                     }
@@ -58,7 +58,7 @@ module Thralldom {
                 var character = world.selectByDynamicId(name);
                 var controller = world.controllerManager.controllers.filter((controller) => controller.character == character)[0];
                 if (!controller) {
-                    console.warn(Utilities.formatString("No matching character with id {0} found when disabling script", name));
+                    console.warn("No matching character with id {0} found when disabling script".format(name));
                     continue;
                 }
                 controller.script = null;
@@ -108,7 +108,7 @@ module Thralldom {
                     else {
                         var paranthesis = noprefix.indexOf(")");
                         var triggerText = line.substr(triggerIndex, paranthesis + 1);
-                        this.trigger = Utilities.parseVector2(triggerText);
+                        this.trigger = Utils.parseVector2(triggerText);
                         this.triggerRadius = parseFloat(line.substr(line.lastIndexOf(" ") + 1));
                     }
                 }
