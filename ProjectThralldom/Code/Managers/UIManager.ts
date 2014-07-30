@@ -22,16 +22,20 @@ module Thralldom {
             document.body.appendChild(this.stats.domElement);
         }
 
-        private loadViewmodel(particleManager: ParticleManager, azure: AzureManager): void {
-            this.viewmodel = new Viewmodel(azure, particleManager);
+        private loadViewmodel(particleManager: ParticleManager,
+            azure: AzureManager,
+            keybindings: CharacterControllers.IKeybindings): void {
+
+            this.viewmodel = new Viewmodel(azure, particleManager, keybindings);
             ko.applyBindings(this.viewmodel);
         }
 
-        public hookupPausedControls(resumeCallback: Function,
+        public hookUI(resumeCallback: Function,
             particleManager: ParticleManager,
-            azure: AzureManager): void {
+            azure: AzureManager,
+            keybindings: CharacterControllers.IKeybindings): void {
 
-            this.loadViewmodel(particleManager, azure);
+            this.loadViewmodel(particleManager, azure, keybindings);
 
             function swap(query1, query2) {
                 UIManager.fadein(document.querySelector(query1));
@@ -48,9 +52,7 @@ module Thralldom {
                 var clickHandler = swap.bind(undefined, "#main", "#" + buttons[i].parentNode.parentNode["id"]);
                 buttons[i].addEventListener("click", clickHandler, false);
             }
-
             document.getElementById("resume-button").addEventListener("click", <any>resumeCallback, false);
-
 
             // Azure
             var azureEle: HTMLLIElement = <any>document.getElementById("azure");

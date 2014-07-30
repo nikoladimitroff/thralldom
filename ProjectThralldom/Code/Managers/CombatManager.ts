@@ -38,7 +38,8 @@ module Thralldom {
                 if (debugDraw && ray.hasHit) {
                     var from = this.hero.mesh.position;
                     console.log(ray.hitPoint);
-                    this.addTrajectoryLine(from, <any>ray.hitPoint, 0x0000FF);
+                    var line = GeometryUtils.getTrajectoryLine(from, <any>ray.hitPoint, 0x0000FF);
+                    this.world.renderScene.add(line);
                 }
             }
 

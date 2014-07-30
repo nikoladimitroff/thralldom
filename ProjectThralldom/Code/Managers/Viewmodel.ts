@@ -4,9 +4,12 @@
         username = ko.observable("annonimous");
         getGreeting = ko.computed(() => "Hey there, {0}!".format(this.username()));
         settings: Array<any>;
-        inventory: Array<any>;
+        hud: any;
 
-        constructor(azure: AzureManager, particleManager: ParticleManager) {
+        constructor(azure: AzureManager,
+            particleManager: ParticleManager,
+            keybindings: CharacterControllers.IKeybindings) {
+
             this.settings = [
                 {
                     name: "Graphics",
@@ -44,7 +47,13 @@
                     }]
                 }
             ];
-            this.inventory = [];
+            this.hud = {
+                interactKey: InputManager.keyCodeToKeyName(keybindings.interact),
+                showHelp: ko.observable(false),
+                inventory: [],
+            };
+            // this depends on this.hud but this.hud is undefined above
+            this.hud.cssClass = ko.computed(() => "fade" + (this.hud.showHelp() ? "in" : "out"));
         }
 
 

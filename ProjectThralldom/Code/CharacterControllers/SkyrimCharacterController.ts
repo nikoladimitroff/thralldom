@@ -4,8 +4,18 @@ module Thralldom {
             public character: Character;
             public script: ScriptController;
 
+            public get canInteract():  boolean {
+                // viva la boolean evaluation!
+                return this.interactionTarget !== undefined;
+            }
+
+            private interactionTarget: IInteractable;
+
+            private raycastPromiseUid: number;
+
             constructor(hero: Character) {
                 this.character = hero;
+                this.raycastPromiseUid = -1;
             }
 
             private handleMouseClick(delta: number, input: InputManager): void {
@@ -18,7 +28,6 @@ module Thralldom {
                     this.character.health = 0;
                 }
             }
-
             public handleMouse(delta: number, input: InputManager): void {
                 if (this.script) return;
 
@@ -58,6 +67,12 @@ module Thralldom {
                 if (input.keyboard[keybindings.jump]) {
                     hero.stateMachine.requestTransitionTo(CharacterStates.Jumping);
                 }
+                if (this.interactionTarget &&
+                    input.keyboard[keybindings.interact] &&
+                    !input.previousKeyboard[keybindings.interact]) {
+
+                    this.interactionTarget.interact(hero);
+                }
 
 
                 if (this.character.stateMachine.current == CharacterStates.Attacking) {
@@ -68,8 +83,36 @@ module Thralldom {
                 hero.stateMachine.requestTransitionTo(CharacterStates.Falling);
                 hero.stateMachine.requestTransitionTo(CharacterStates.Idle);
                 // Update the state machine before trying to reset it back to falling / idle
-                hero.stateMachine.states[hero.stateMachine.current].update(delta, hero);
+                hero.stateMachine.update(delta);
             }
+
+
+            public handleInteraction(camera: CameraControllers.ICameraController, world: World): void {
+                // See if our raycast request has been resolved. 
+                var ray = PhysicsManager.instance.tryResolveRaycast(this.raycastPromiseUid);
+                // If the request has been fullfilled, do stuff
+                if (ray) {
+                    // we have new information, delete the old interaction target
+                    this.interactionTarget = undefined;
+                    if (ray.hasHit && ray.collisionObjectId != this.character.mesh.id) {
+                        var hitObject = <any>world.selectByPhysId(ray.collisionObjectId);
+                        if (hitObject.interact && hitObject.interact.constructor == Function) {
+                            this.interactionTarget = hitObject;
+                        }
+                    }
+                    this.raycastPromiseUid = -1;
+                }
+                // If no request is currently pending, request another
+                if (this.raycastPromiseUid == -1) {
+                    var pos = new THREE.Vector3()
+                    pos.subVectors(this.character.mesh.position, this.character.centerToMesh);
+                    var cameraToHero = (new THREE.Vector3).subVectors(pos, camera.position);
+                    var target = cameraToHero.normalize().multiplyScalar(this.character.range).add(pos);
+
+                    this.raycastPromiseUid = PhysicsManager.instance.requestRaycast(pos, target);
+                }
+            }
+
 
             public update(delta: number, world: World): void {
                 if (this.script) {

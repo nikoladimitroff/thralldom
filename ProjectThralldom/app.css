@@ -184,8 +184,6 @@ nav pre {
 }
 /* Storytelling */
 .fadeout {
-  -webkit-opacity: 0 !important;
-  -moz-opacity: 0 !important;
   opacity: 0 !important;
   -webkit-transition: all 1s linear;
   -moz-transition: all 1s linear;
@@ -193,8 +191,6 @@ nav pre {
   transition: all 1s linear;
 }
 .fadein {
-  -webkit-opacity: 1 !important;
-  -moz-opacity: 1 !important;
   opacity: 1 !important;
   -moz-transition: all 1s linear step-start;
   -o-transition: all 1s linear step-start;
@@ -220,4 +216,46 @@ nav pre {
   position: absolute;
   top: 30%;
   left: 20%;
+}
+/* Help text */
+.keyboard-button {
+  border: 1px solid gray;
+  padding: 1px 5px;
+  margin: 0 5px;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  box-shadow: 1px 0 1px 0 #fff, 0 2px 0 2px lightGray, 0 2px 0 3px #333;
+  border-radius: 3px;
+  background: -moz-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ffffff), color-stop(25%, #e2e2e2));
+  background: -webkit-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -o-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -ms-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+}
+#help-info {
+  position: absolute;
+  width: 100%;
+  bottom: 15%;
+  text-align: center;
+  color: white;
+  z-index: 99999;
+  text-shadow: 5px 0px 10px #000;
+}
+#help-info span {
+  border: 1px solid gray;
+  padding: 1px 5px;
+  margin: 0 5px;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  box-shadow: 1px 0 1px 0 #fff, 0 2px 0 2px lightGray, 0 2px 0 3px #333;
+  border-radius: 3px;
+  background: -moz-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ffffff), color-stop(25%, #e2e2e2));
+  background: -webkit-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -o-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -ms-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  color: black;
+  text-shadow: none;
 }

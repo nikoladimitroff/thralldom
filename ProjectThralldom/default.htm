@@ -10,6 +10,12 @@
     <nav id="hud" class="maximized">
         <pre></pre>
 
+        <div id="help-info" data-bind="with: hud, css: hud.cssClass ">
+            <h2>Press <span data-bind="text: interactKey"></span> to interact.</h2>
+        </div>
+
+        <div id="crosshair"></div>
+
         <div id="subtitles">
             <span></span>
         </div>
@@ -55,7 +61,6 @@
     <!-- intro stories -->
     <canvas id="storyline-canvas" class="fadeout maximized"></canvas>
 
-    <div id="crosshair"></div>
 
 
     <!--@ThralldomDependenciesBegin-->

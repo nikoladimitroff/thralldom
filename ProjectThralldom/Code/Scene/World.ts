@@ -78,6 +78,17 @@ module Thralldom {
             return null;
         }
 
+        public selectByPhysId(id: number): LoadableObject {
+            var all = this.statics.concat(this.dynamics);
+            for (var i = 0; i < all.length; i++) {
+                var obj = all[i];
+                if (obj.mesh.id == id) {
+                    return obj;
+                }
+            }
+            return undefined;
+        }
+
         /*
          * Returns the number of objects that the specified selector matches
         */

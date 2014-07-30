@@ -12,6 +12,8 @@ module Thralldom {
             public yaw: number;
             public pitch: number;
 
+            private raycastPromiseUid;
+
             public get position() {
                 return this.camera.position;
             }
@@ -31,6 +33,7 @@ module Thralldom {
                 this.pitch = Math.PI / 2;
 
                 this.settings = SkyrimCameraController.defaultSettings;
+                this.raycastPromiseUid = -1;
             }
 
             private getTarget() {
@@ -87,10 +90,34 @@ module Thralldom {
                     this.hero.mesh.quaternion.setFromAxisAngle(Const.UpVector, this.yaw);
 
                 this.normalizePosition();
+                this.preventClipping(delta);
+            }
+
+            private preventClipping(delta: number): void {
+                // See if our raycast request has been resolved. 
+                var ray = PhysicsManager.instance.tryResolveRaycast(this.raycastPromiseUid);
+                // If the request has been fullfilled, do stuff
+                if (ray) {
+                    if (ray.hasHit && ray.collisionObjectId != this.hero.mesh.id) {
+                        // Magic Number
+                        var mult = 1 - 2.5 * delta;
+                        this.distance *= mult;
+                    }
+                    this.raycastPromiseUid = -1;
+                }
+                // If no request is currently pending, request another
+                if (this.raycastPromiseUid == -1) {
+                    var pos = this.position;
+                    var target = (new THREE.Vector3).subVectors(this.hero.mesh.position, this.hero.centerToMesh);
+
+                    this.raycastPromiseUid = PhysicsManager.instance.requestRaycast(pos, target);
+                }
             }
 
 
-            handleKeyboard(delta: number, input: InputManager, keybindings: CharacterControllers.IKeybindings): void {
+            public handleKeyboard(delta: number,
+                input: InputManager,
+                keybindings: CharacterControllers.IKeybindings): void {
 
                 if (this.ignoreInput) return;
             }
