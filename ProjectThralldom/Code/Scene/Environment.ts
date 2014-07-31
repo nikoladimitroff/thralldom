@@ -1,24 +1,20 @@
 module Thralldom {
-    export class Environment implements ISelectableObject, ILoadable, IDrawable {
+    export enum InteractableEnvironementType {
+        None,
+        Item,
 
-        public id: string;
-        public tags: Array<string>;
-        public mesh: THREE.Mesh;
-        public rigidBody: Ammo.btRigidBody;
+    }
+    export class Environment extends LoadableObject implements IInteractable {
 
-        constructor() {
+        public interaction: InteractableEnvironementType;
 
-            this.id = null;
-            this.tags = [];
+        public get displayName(): string {
+            return this.id;
         }
 
+
         public loadFromDescription(description: any, content: ContentManager): void {
-            if (description.tags) {
-                this.tags = this.tags.concat(<Array<string>>description.tags);
-            }
-            if (description.id) {
-                this.id = description.id;
-            }
+            super.loadFromDescription(description, content);
 
             if (description.model) {
                 this.mesh = content.getContent(description["model"]);
@@ -26,7 +22,6 @@ module Thralldom {
 
             if (description.pos) {
                 this.mesh.position.set(description.pos[0], description.pos[1], description.pos[2]);
-                //this.mesh.position.copy(<THREE.Vector3>this.rigidBody.position);
             }
             if (description.rot) {
                 var rot = description.rot;
@@ -37,10 +32,17 @@ module Thralldom {
                 this.mesh.scale.set(scale, scale, scale);
             }
 
+            if (description.interaction) {
+                var interaction: string = description.interaction[0].toUpperCase() + description.interaction.substr(1);
+                this.interaction = InteractableEnvironementType[interaction];
+            }
+            else {
+                this.interaction = InteractableEnvironementType.None;
+            }
+
+
             this.mesh.geometry.computeBoundingBox();
             var box = this.mesh.geometry.boundingBox;
-            
-            //this.centerToMesh = new THREE.Vector3(0, -meshInfo.halfExtents.y, 0)
 
             var meshInfo: IWorkerMeshInfo = <any> {
                 shapeUID: description.model,
@@ -56,5 +58,18 @@ module Thralldom {
 
             PhysicsManager.instance.computePhysicsBody(this, meshInfo, BodyType.TriangleMesh);
         }
+
+        public interact(hero: Character): void {
+            switch (this.interaction) {
+                case InteractableEnvironementType.Item:
+                    var itemCode = 0;
+                    hero.inventory.addItemQuantity(itemCode, 1);
+                    break;
+
+                default:
+                    break;
+            };
+        }
+
     }
 } 

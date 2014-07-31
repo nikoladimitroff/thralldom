@@ -78,6 +78,17 @@ module Thralldom {
             return null;
         }
 
+        public selectByPhysId(id: number): LoadableObject {
+            var all = this.statics.concat(this.dynamics);
+            for (var i = 0; i < all.length; i++) {
+                var obj = all[i];
+                if (obj.mesh.id == id) {
+                    return obj;
+                }
+            }
+            return undefined;
+        }
+
         /*
          * Returns the number of objects that the specified selector matches
         */
@@ -218,20 +229,20 @@ module Thralldom {
                 if (!processedGeometries[current.name]) {
                     var faces = current.geometry.faces;
                     for (var j = 0; j < faces.length; j++) {
-                        // Set all materials to 0, boosts performance by 123013891273189273812368721%
+                        // Set all materials to 0, works due to all static geometry using a single material
+                        // If that was not the case, set the mat index to megamaterial.materials.indexOf(current.material);
                         faces[j].materialIndex = 0;
                     }
                     processedGeometries[current.name] = true;
                 }
 
-                // This overload is missin in three.d.ts so cast the utils to an any
-                var utils: any = THREE.GeometryUtils;
-                utils.merge(geometry, current);
+                current.updateMatrix();
+                geometry.merge(current.geometry, current.matrix, 0);
 
                 this.renderScene.remove(current);
             }
-
-            var mesh = new THREE.Mesh(geometry, megamaterial);
+            // Since Borko is a nice guy, all static geometry uses a single material, we don't need the megamaterial
+            var mesh = new THREE.Mesh(geometry, megamaterial.materials[0]);
             mesh.name = "scenery";
             this.renderScene.add(mesh);
         }

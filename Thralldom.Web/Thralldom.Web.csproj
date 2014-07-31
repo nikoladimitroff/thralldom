@@ -94,6 +94,7 @@
     <Content Include="img\shipka.jpg" />
     <Content Include="img\weapons-sharpened.png" />
     <Content Include="img\freedom-or-death.jpg" />
+    <Content Include="js\grayscale.js" />
     <Content Include="less\grayscale.css">
       <DependentUpon>grayscale.less</DependentUpon>
     </Content>
@@ -120,10 +121,6 @@
     <Content Include="img\downloads-bg.jpg" />
     <Content Include="img\intro-bg.jpg" />
     <Content Include="index.html" />
-    <Content Include="js\bootstrap.js" />
-    <Content Include="js\bootstrap.min.js" />
-    <Content Include="js\grayscale.js" />
-    <Content Include="js\jquery-1.10.2.js" />
     <Content Include="less\grayscale.min.css">
       <DependentUpon>grayscale.css</DependentUpon>
     </Content>

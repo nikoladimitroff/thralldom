@@ -18,6 +18,11 @@ button {
 	position: relative;
 }
 
+textarea {
+	white-space: pre;
+	word-wrap: normal;
+}
+
 .Panel {
 	-moz-user-select: none;
 	-webkit-user-select: none;
@@ -26,6 +31,28 @@ button {
 	/* No support for these yet */
 	-o-user-select: none;
 	user-select: none;
+}
+
+.CollapsiblePanel .CollapsiblePanelButton {
+	float: left;
+	margin-right: 6px;
+	width: 0px;
+	height: 0px;
+	border: 6px solid transparent;
+}
+
+.CollapsiblePanel.collapsed .CollapsiblePanelButton {
+	margin-top: 2px;
+	border-left-color: #bbb;
+}
+
+.CollapsiblePanel:not(.collapsed) .CollapsiblePanelButton {
+	margin-top: 6px;
+	border-top-color: #bbb;
+}
+
+.CollapsiblePanel.collapsed .CollapsibleContent {
+	display: none;
 }
 
 .FancySelect {
@@ -129,6 +156,10 @@ input.Number {
 
 	#sidebar .Panel {
 		margin-bottom: 10px;
+	}
+
+	#sidebar .Panel.collapsed {
+		margin-bottom: 0px;
 	}
 
 	#sidebar > .Panel {

@@ -17,11 +17,18 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="app.css">
+      <DependentUpon>app.less</DependentUpon>
+    </Content>
+    <Content Include="app.min.css">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
     <Content Include="Code\StringExtensions.js" />
     <Content Include="Code\StringExtensions.min.js">
       <DependentUpon>StringExtensions.js</DependentUpon>
     </Content>
     <Content Include="Content\Assets.js" />
+    <Content Include="Content\ItemDb.js" />
     <Content Include="Content\Meta.js" />
     <Content Include="Content\Models\Buildings\Barrels\barrelsUV.jpg" />
     <Content Include="Content\Models\Buildings\Houses\0a565e37.jpg" />
@@ -106,17 +113,22 @@
     <Content Include="Content\Models\Terrain\terrainTexture.jpg" />
     <Content Include="Content\Models\Terrain\terrainTextureSmall.jpg" />
     <Content Include="Content\Quests\default.js" />
+    <Content Include="Content\Quests\simple.js" />
     <Content Include="Content\Scenes\default.js" />
     <Content Include="Code\StringExtensions.min.js.map">
       <DependentUpon>StringExtensions.min.js</DependentUpon>
     </Content>
     <None Include="Content\ScriptedEvents\Outro.tscr" />
+    <Content Include="Content\Scenes\simple.js" />
+    <Content Include="Content\simple-assets.js" />
     <Content Include="Content\Sounds\dialog.mp3" />
     <Content Include="Content\Sounds\footsteps.mp3" />
     <Content Include="Content\Sounds\forest_background.mp3" />
     <Content Include="Content\Sounds\gunshot.mp3" />
     <Content Include="Content\Sounds\heavy_song.mp3" />
     <Content Include="Content\Textures\Grass.jpg" />
+    <Content Include="Content\Textures\Items\carrot.png" />
+    <Content Include="Content\Textures\Items\coin.png" />
     <Content Include="Content\Textures\Particles\raindrop2flip.png" />
     <Content Include="Content\Textures\Particles\raindroptest.png" />
     <Content Include="Content\Textures\Particles\smokeparticle.png" />
@@ -195,16 +207,12 @@
     <Content Include="Scripts\implementations\ammo.js" />
     <Content Include="Scripts\implementations\ammo.small.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
+    <Content Include="Scripts\implementations\knockout-3.1.0.js" />
+    <Content Include="Scripts\implementations\knockout-es5.min.js" />
     <Content Include="Scripts\implementations\MobileServices.Web-1.1.3.min.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\subtitles.js" />
     <Content Include="Scripts\implementations\polyfills.js" />
-    <Content Include="thralldom.dependencies.js">
-      <DependentUpon>thralldom.dependencies.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="thralldom.dependencies.min.js">
-      <DependentUpon>thralldom.dependencies.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\implementations\three.js" />
     <Content Include="Scripts\implementations\Three.Plugins\THREE.Postprocessing.min.js" />
     <Content Include="thralldom.js">
@@ -224,6 +232,7 @@
     <TypeScriptCompile Include="Code\IController.ts" />
     <TypeScriptCompile Include="Code\Managers\ParticleManager.ts" />
     <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
+    <TypeScriptCompile Include="Code\Managers\Viewmodel.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\Particle2D.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\ParticleEngine2D.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\Storyteller.ts" />
@@ -233,7 +242,11 @@
     <TypeScriptCompile Include="Code\Physics\PhysicsManagerWorker.ts" />
     <TypeScriptCompile Include="Code\Physics\Worker.ts" />
     <TypeScriptCompile Include="Code\Pool.ts" />
+    <TypeScriptCompile Include="Code\Scene\Interfaces.ts" />
+    <TypeScriptCompile Include="Code\Scene\Inventory.ts" />
     <TypeScriptCompile Include="Scripts\typings\azure.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\knockout.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\knockout.es5.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\subtitles.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\Three.Plugins\THREE.AudioObject.d.ts" />
     <Content Include="Tests\TestingPage.html" />
@@ -259,10 +272,6 @@
     <Content Include="Scripts\implementations\Three.Plugins\THREE.ParticleEngine.js" />
     <Content Include="app.less" />
     <Content Include="Fonts\bulgaria_moderna_pro-webfont.woff" />
-    <None Include="thralldom.dependencies.js.bundle" />
-    <Content Include="thralldom.dependencies.min.js.gzip">
-      <DependentUpon>thralldom.dependencies.min.js</DependentUpon>
-    </Content>
     <None Include="thralldom.js.bundle">
       <SubType>Designer</SubType>
     </None>
@@ -302,9 +311,6 @@
     <TypeScriptCompile Include="Code\LanguagePacks\English.ts" />
     <TypeScriptCompile Include="Code\LanguagePacks\ILanguagePack.ts" />
     <TypeScriptCompile Include="Code\Scene\Environment.ts" />
-    <TypeScriptCompile Include="Code\Scene\IDrawable.ts" />
-    <TypeScriptCompile Include="Code\Scene\ILoadable.ts" />
-    <TypeScriptCompile Include="Code\Scene\ISelectableObject.ts" />
     <TypeScriptCompile Include="Code\Scene\LaserOfDeath.ts" />
     <TypeScriptCompile Include="Code\Main.ts" />
     <TypeScriptCompile Include="Code\Managers\ContentManager.ts" />
@@ -324,7 +330,7 @@
     <TypeScriptCompile Include="Code\StateMachine\StateMachineUtils.ts" />
     <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />
     <TypeScriptCompile Include="Code\Scene\Terrain.ts" />
-    <TypeScriptCompile Include="Code\Utilities.ts" />
+    <TypeScriptCompile Include="Code\Utils.ts" />
     <TypeScriptCompile Include="Scripts\typings\ammo.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery.documentReady.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\qunit.d.ts" />

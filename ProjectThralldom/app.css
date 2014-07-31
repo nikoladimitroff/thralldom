@@ -1,4 +1,4 @@
-html,
+﻿html,
 body {
   width: 100%;
   height: 100%;
@@ -38,10 +38,6 @@ canvas {
   background-color: rgba(255, 255, 255, 0.35);
   display: none;
   color: black;
-  /*nav ~ nav {
-        // Precicely 170px is the distance between the submenus
-        margin-top: -170px;
-    }*/
 }
 #paused-screen nav {
   max-width: 500px;
@@ -85,6 +81,15 @@ canvas {
 }
 #paused-screen ul li:last-child {
   bottom: 0;
+}
+#paused-screen nav#inventory-panel ul li img {
+  width: 48px;
+  height: 48px;
+  margin-left: 100px;
+}
+#paused-screen nav#inventory-panel ul li :hover img {
+  width: 64px;
+  height: 64px;
 }
 #loading-screen {
   z-index: 99999;
@@ -184,8 +189,6 @@ nav pre {
 }
 /* Storytelling */
 .fadeout {
-  -webkit-opacity: 0 !important;
-  -moz-opacity: 0 !important;
   opacity: 0 !important;
   -webkit-transition: all 1s linear;
   -moz-transition: all 1s linear;
@@ -193,8 +196,6 @@ nav pre {
   transition: all 1s linear;
 }
 .fadein {
-  -webkit-opacity: 1 !important;
-  -moz-opacity: 1 !important;
   opacity: 1 !important;
   -moz-transition: all 1s linear step-start;
   -o-transition: all 1s linear step-start;
@@ -221,4 +222,45 @@ nav pre {
   top: 30%;
   left: 20%;
 }
-/*# sourceMappingURL=app.css.map */
+/* Help text */
+.keyboard-button {
+  border: 1px solid gray;
+  padding: 1px 5px;
+  margin: 0 5px;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  box-shadow: 1px 0 1px 0 #fff, 0 2px 0 2px lightGray, 0 2px 0 3px #333;
+  border-radius: 3px;
+  background: -moz-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ffffff), color-stop(25%, #e2e2e2));
+  background: -webkit-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -o-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -ms-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+}
+#help-info {
+  position: absolute;
+  width: 100%;
+  bottom: 15%;
+  text-align: center;
+  color: white;
+  z-index: 99999;
+  text-shadow: 5px 0px 10px #000;
+}
+#help-info span {
+  border: 1px solid gray;
+  padding: 1px 5px;
+  margin: 0 5px;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  box-shadow: 1px 0 1px 0 #fff, 0 2px 0 2px lightGray, 0 2px 0 3px #333;
+  border-radius: 3px;
+  background: -moz-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ffffff), color-stop(25%, #e2e2e2));
+  background: -webkit-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -o-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: -ms-linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  background: linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
+  color: black;
+  text-shadow: none;
+}

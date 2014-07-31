@@ -56,20 +56,22 @@ module Thralldom {
                     this.raycastPromiseUid = PhysicsManager.instance.requestRaycast(from, to);
                 }
 
-                if (ray && ray.hasHit) {
-                    var guardForward = new THREE.Vector3(0, 0, 1);
-                    guardForward.transformDirection(guard.mesh.matrix);
-
-                    var inLineOfSight =
-                        ray.collisionObjectId == this.target.mesh.id &&
-                        guardForward.angleTo(guardToTarget) <= guard.settings.viewAngle;
-
-                    var isCloseEnough = guardToTargetDist < guard.range * 0.5;
-
-                    if (inLineOfSight && isCloseEnough) {
-                        this.isAlerted = true;
-                    }
+                if (ray) {
                     this.raycastPromiseUid = -1;
+                    if (ray.hasHit) {
+                        var guardForward = new THREE.Vector3(0, 0, 1);
+                        guardForward.transformDirection(guard.mesh.matrix);
+
+                        var inLineOfSight =
+                            ray.collisionObjectId == this.target.mesh.id &&
+                            guardForward.angleTo(guardToTarget) <= guard.settings.viewAngle;
+
+                        var isCloseEnough = guardToTargetDist < guard.range * 0.5;
+
+                        if (inLineOfSight && isCloseEnough) {
+                            this.isAlerted = true;
+                        }
+                    }
                 }
             }
 

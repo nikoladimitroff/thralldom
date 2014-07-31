@@ -30,13 +30,9 @@ module Thralldom {
         }
 
         public raycast(from: IVector3, to: IVector3): Ammo.ClosestRayResultCallback {
-
-            var fromWorld = new Ammo.btVector3();
-            var toWorld = new Ammo.btVector3();
+            var fromWorld = new Ammo.btVector3(from.x, from.y, from.z);
+            var toWorld = new Ammo.btVector3(to.x, to.y, to.z);
             var ray = new Ammo.ClosestRayResultCallback(fromWorld, toWorld);
-
-            fromWorld.setValue(from.x, from.y, from.z);
-            toWorld.setValue(to.x, to.y, to.z);
 
             this.world.rayTest(fromWorld, toWorld, ray);
 

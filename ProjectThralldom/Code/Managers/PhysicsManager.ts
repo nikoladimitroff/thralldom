@@ -78,7 +78,7 @@ module Thralldom {
         }
 
         public requestRaycast(from: THREE.Vector3, to: THREE.Vector3): number {
-            var uid = ~~(Math.random() * Number.MAX_VALUE);
+            var uid = ~~(Math.random() * (1 << 53));
 
             this.physicsWorker.postMessage({
                 code: MessageCode.Raycast,

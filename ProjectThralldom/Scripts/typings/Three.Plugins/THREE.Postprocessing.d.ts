@@ -16,7 +16,7 @@ declare module THREE {
 
     export class ShaderPass implements IEffect, THREE.Shader {
         renderToScreen: boolean;
-        uniforms: Uniforms;
+        uniforms: any;
         vertexShader: string;
         fragmentShader: string;
         constructor(shader: THREE.Shader);

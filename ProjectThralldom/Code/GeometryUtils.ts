@@ -82,6 +82,17 @@ module Thralldom {
             return node;
         }
 
+        public static getTrajectoryLine(from: THREE.Vector3, to: THREE.Vector3, color: number): THREE.Line {
+            var lineGeom = new THREE.Geometry();
+            lineGeom.vertices.push(from);
+            lineGeom.vertices.push(new THREE.Vector3(to.x, to.y, to.z));
+
+            var line = new THREE.Line(lineGeom, new THREE.LineBasicMaterial({ color: color }));
+            line.name = "debug";
+
+            return line;
+        }
+
         /*
             Normalize any value in the cycling range from start to end
         */

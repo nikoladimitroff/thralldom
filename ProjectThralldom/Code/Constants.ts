@@ -1,5 +1,7 @@
 self["THREE"] = self["THREE"] || {};
 self["THREE"].Vector3 = self["THREE"].Vector3 || function (x, y, z) { };
+self["Ammo"] = self["Ammo"] || {};
+self["Ammo"].btVector3 = self["Ammo"].btVector3 || function (x, y, z) { };
 
 module Thralldom {
     export class Const {

@@ -18,9 +18,7 @@ module Thralldom {
     }
 
     export class Character extends DynamicObject {
-
         public static Settings: IIndexable<ICharacterSettings>;
-
 
         public settings: ICharacterSettings;
 
@@ -28,33 +26,26 @@ module Thralldom {
         public animation: THREE.Animation;
 
         public weapon: Weapon;
-
         public range: number;
-
-        private hp: number;
+        public health: number;
         public damage: number;
 
-        public get health(): number {
-            return this.hp;
-        }
-
-        public set health(value: number) {
-            this.hp = value;
-        }
-
         public get isDead(): boolean {
-            return this.hp <= 0;
+            return this.health <= 0;
         }
 
         public stateMachine: StateMachine;
         public animationData: IIndexable<IAnimationData>;
 
+        public inventory: Inventory;
+
         constructor() {
             super();
 
-            this.hp = 100;
+            this.health = 100;
             this.range = 100;
             this.damage = 5;
+            this.inventory = new Inventory();
 
         }
 
@@ -76,7 +67,7 @@ module Thralldom {
 
             if (description.model) {
                 this.mesh = content.getContent(description["model"]);
-                this.animation = new THREE.Animation(this.mesh, this.mesh.geometry.animation.name, THREE.AnimationHandler.LINEAR);
+                this.animation = new THREE.Animation(this.mesh, this.mesh.geometry.animation);
 
                 this.animationData = content.getContent(content.getAnimationFilePath(description.model));
             }

@@ -9,9 +9,6 @@ module Thralldom {
             this.tags = [];
         }
 
-        public update(delta: number): void {
-
-        }
 
         public loadFromDescription(description: any, content: ContentManager): void {
             if (description.tags) {

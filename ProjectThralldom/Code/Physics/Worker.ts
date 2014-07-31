@@ -121,7 +121,6 @@ module Thralldom {
             var hasHit = result.hasHit();
             var hitPoint = result.get_m_hitPointWorld();
             var collisionObject = result.get_m_collisionObject();
-
             var messageRaycast = {
                 code: MessageCode.Raycast,
                 uid: data.uid,

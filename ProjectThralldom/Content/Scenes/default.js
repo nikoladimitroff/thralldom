@@ -76,7 +76,6 @@
             tags: ["statue"],
             id: "sokolov",
             model: "SokolovAnimation.js",
-            weapon: "PistolAnimation.js",
             pos: [-6, 1, -34.574],
             rot: [0, -1.206, 0],
             scale: 0.4,

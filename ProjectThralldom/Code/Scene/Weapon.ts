@@ -33,7 +33,7 @@ module Thralldom {
 
         public loadFromDescription(description: any, content: ContentManager): void {
             this.mesh = content.getContent(description.model);
-            this.animation = new THREE.Animation(this.mesh, this.mesh.geometry.animation.name, THREE.AnimationHandler.LINEAR);
+            this.animation = new THREE.Animation(this.mesh, this.mesh.geometry.animation);
 
             //this.animationData = content.getContent(content.getAnimationFilePath(description.model));
 

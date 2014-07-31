@@ -25,6 +25,9 @@ namespace Thralldom.OfflineTool
         private List<string> textFormats = new List<string>() { ".js", ".anim", ".script", ".srt", };
         private string allowedExtensions = "*.html | *.manifest | *.css | *.js | *.png | *.jpg | *.jpeg | *.mp3 | *.tscr | *.anim | *.srt | " + 
                                            "*.otf | *.ttf | *.woff | *.cur";
+        private string dependenciesPath = "thralldom.dependencies.min.js";
+        private string mainJsPath = "thralldom.min.js";
+        private string[] workerFiles = { "Scripts/implementations/ammo.small.js", "Scripts/implementations/polyfills.js", "Code/Constants.js", "Code/Pool.js", "Code/Physics/SharedInterfaces.js", "Code/Physics/PhysicsManagerWorker.js", "Code/Physics/Worker.js" };
         private int WaitTime = 50;
         private int connectionLimit = 2;
 
@@ -54,12 +57,13 @@ namespace Thralldom.OfflineTool
 
             string ignored = "Code Scripts Docs Tests typings bin obj Properties";
             TraverseFileSystem(this.pathToGame, rootNormalizedDir, rootNormalizedFile, this.allowedExtensions, ignored);
-            string[] physics = { "Constants.js", "Pool.js", "Physics/SharedInterfaces.js", "Physics/PhysicsManagerWorker.js", "Physics/Worker.js" };
-            this.CreateDirectory((str) => this.Root + str, "Code/"); 
+            this.CreateDirectory((str) => this.Root + str, "Code/");
             this.CreateDirectory((str) => this.Root + str, "Code/Physics/");
-            foreach (var file in physics)
+            this.CreateDirectory((str) => this.Root + str, "Scripts/");
+            this.CreateDirectory((str) => this.Root + str, "Scripts/implementations");
+            foreach (var file in this.workerFiles)
             {
-                this.UploadFile(this.NormalizeFileNameGame, this.pathToGame + "\\Code\\" + file);
+                this.UploadFile(this.NormalizeFileNameGame, this.pathToGame + "\\" + file);
             }
         }
 
@@ -67,7 +71,7 @@ namespace Thralldom.OfflineTool
         {
             Action<string> normalizedDir = FuncExtensions.Partial<Func<string, string>, string>(CreateDirectory, NormalizeFileNameSite);
             Action<string> normalizedFile = FuncExtensions.Partial<Func<string, string>, string>(UploadFile, NormalizeFileNameSite);
-            TraverseFileSystem(this.pathToSite, normalizedDir, normalizedFile, this.allowedExtensions, "bin obj Properties less");
+            TraverseFileSystem(this.pathToSite, normalizedDir, normalizedFile, this.allowedExtensions, "bin obj Properties");
         }
 
         public void Deploy()
@@ -130,7 +134,10 @@ namespace Thralldom.OfflineTool
             Task task = stream.WriteAsync(bytes, 0, bytes.Length);
             task.ContinueWith((t) =>
             {
-                Console.WriteLine("{0} uploaded", normalized);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("Uploaded: ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(normalized);
                 this.streams.Remove(stream);
 
                 try
@@ -139,7 +146,10 @@ namespace Thralldom.OfflineTool
                 }
                 catch (TimeoutException )
                 {
-                    Console.WriteLine("Exception on {0}", normalized);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("Timeout: ");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(normalized);
                 }
             });
             this.streams.Add(stream);
@@ -173,10 +183,9 @@ namespace Thralldom.OfflineTool
             string pages = "# Pages\nindex.html\napp.css";
 
             // Physics async
-            string[] physics = { "Constants.js", "Pool.js", "Physics/SharedInterfaces.js", "Physics/PhysicsManagerWorker.js", "Physics/Worker.js" };
-            string code = "# Code\nthralldom.min.js\nthralldom.dependencies.min.js";
+            string code = String.Format("# Code\n{0}\n{1}", this.mainJsPath, this.dependenciesPath);
 
-            code += physics.Select((x) => "/Code/" + x).Aggregate(string.Empty, (previous, current) => previous + "\n" + current);
+            code += this.workerFiles.Aggregate(string.Empty, (previous, current) => previous + "\n" + current);
             
             // Content, images, fonts
             string content = this.ManifestFolder(path, "Content");
@@ -220,14 +229,20 @@ namespace Thralldom.OfflineTool
             }
         }
 
+        private void BuildDepedencies(string root, IEnumerable<string> dependencies)
+        {
+            string code = String.Join("\n", dependencies.Select((path) => File.ReadAllText(root + "\\" + path)));
+            File.WriteAllText(root + "\\" + this.dependenciesPath, code);
+        }
+
         private void BuildIndex(string path)
         {
             // Replace my files with the thralldom.js
             string content = File.ReadAllText(path + "\\default.htm");
             string thralldomStart = @"<!--@ThralldomCodeBegin-->";
             string thralldomEnd = @"<!--@ThralldomCodeEnd-->";
-            string depedenciesStart = @"<!--@ThralldomDependenciesBegin-->";
-            string depedenciesEnd = @"<!--@ThralldomDependenciesEnd-->";
+            string dependenciesStart = @"<!--@ThralldomDependenciesBegin-->";
+            string dependenciesEnd = @"<!--@ThralldomDependenciesEnd-->";
 
 
             string replacementFormat = "<script src='{0}'></script>";
@@ -235,11 +250,21 @@ namespace Thralldom.OfflineTool
 
             string output = Regex.Replace(content, 
                                         string.Format(findPattern, thralldomStart, thralldomEnd), 
-                                        string.Format(replacementFormat, "thralldom.min.js"));
+                                        string.Format(replacementFormat, this.mainJsPath));
 
             output = Regex.Replace(output, 
-                                string.Format(findPattern, depedenciesStart, depedenciesEnd), 
-                                string.Format(replacementFormat, "thralldom.dependencies.min.js"));
+                                string.Format(findPattern, dependenciesStart, dependenciesEnd),
+                                string.Format(replacementFormat, this.dependenciesPath));
+
+            var dependentFiles = Regex.Match(content,
+                                    string.Format(findPattern, dependenciesStart, dependenciesEnd));
+
+            var dependencies = new List<string>();
+            foreach (Match match in Regex.Matches(dependentFiles.Value, @"<script src=""(.+?.js)"">"))
+	        {
+                dependencies.Add(match.Groups[1].Value);
+	        }
+            this.BuildDepedencies(path, dependencies);
 
             // Attach the manifest
             string manifestPlaceholder = "<html";

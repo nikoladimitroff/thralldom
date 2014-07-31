@@ -17,48 +17,37 @@ module Thralldom {
                 "YusQHkTsjDxkzPYdtylfQAjFIGsvRu73"
                 );
             this.userInfo = this.client.getTable("userinfo");
-            this.updateText("Hey there, annonymous!");
         }
 
-        public login(): void {
+        public login(callback: (any) => void): void {
             this.client.login("microsoftaccount").done(
-                this.loadInformation.bind(this),
+                this.loadInformation.bind(this, callback),
                 (error) => console.log(error)
                 );
         }
 
-        private loadInformation(): void {
+        private loadInformation(updateCallback: (any) => void): void {
             var id = this.client.currentUser.userId;
-            console.log(id);
             this.userInfo.read().done((result) => {
-                result = result[0];
-                if (!result || !result.id) {
-                    this.userInfo.insert({ "particles_enabled": false, "master_volume": 100 })
-                        .done(this.loadInformation.bind(this), (err) => console.log(err));
-                    return;
+                if (result && result[0]) {
+                    updateCallback(result[0]);
                 }
-
-                // Graphics
-                var particles: HTMLInputElement = <any>document.getElementById("enable-particles");
-                particles.checked = JSON.parse(result.particles_enabled);
-                // Sound
-                var volume: HTMLInputElement = <any>document.getElementById("master-volume");
-                volume.value = result.master_volume.toString();
-
-                this.updateText("Hey there, " + result.username + "!");
-
+                else {
+                    this.userInfo.insert({
+                        id: this.client.currentUser.id
+                    });
+                }
             }, function (error) {
                 console.log(error);
             });
         }
 
-        public save(particles: boolean, masterVolume: number): void {
-            if (this.loggedIn)
-                this.userInfo.update({ id: this.client.currentUser.userId, particles_enabled: particles, master_volume: masterVolume });
-        }
-
-        private updateText(text: string): void {
-            document.querySelector("#paused-screen nav.fadein").setAttribute("data-content", text);
+        public save(info: any): void {
+            if (this.loggedIn) {
+                info = JSON.parse(JSON.stringify(info)); // Deep copy
+                info.id = this.client.currentUser.userId;
+                this.userInfo.update(info);
+            }
         }
     }
 }

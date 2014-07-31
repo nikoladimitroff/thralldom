@@ -4,6 +4,7 @@ module Thralldom {
         quest: string;
         scripts: Array<string>;
         assets: string;
+        items: string;
     }
 
     export class Application {
@@ -13,7 +14,7 @@ module Thralldom {
         // Three.js variables
         private clock: THREE.Clock;
         private cameraController: CameraControllers.ICameraController;
-        private characterController: CharacterControllers.ICharacterController;
+        private heroController: CharacterControllers.ICharacterController;
         private renderer: THREE.WebGLRenderer;
         private effectComposer: THREE.EffectComposer;
         private webglContainer: HTMLElement;
@@ -26,9 +27,11 @@ module Thralldom {
             moveBackward: InputManager.keyNameToKeyCode("S"),
             jump: InputManager.keyNameToKeyCode("Space"),
             sprint: InputManager.keyNameToKeyCode("Shift"),
+            interact: InputManager.keyNameToKeyCode("F"),
 
             toggleUI: InputManager.keyNameToKeyCode("Z"),
             toggleCam: InputManager.keyNameToKeyCode("X"),
+            toggleDebug: InputManager.keyNameToKeyCode("C"),
         };
 
         // World
@@ -117,10 +120,11 @@ module Thralldom {
                 new THREE.Vector3(0, 1, 0));
             
             var heroController = this.world.controllerManager.controllers.filter((c) => c.character == this.hero)[0];
-            this.characterController = <CharacterControllers.ICharacterController> heroController;
+            this.heroController = <CharacterControllers.ICharacterController> heroController;
+            this.hero.inventory = this.content.getContent(SpecialContents.Items);
 
 
-            window.addEventListener("resize", Utilities.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
+            window.addEventListener("resize", Utils.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
 
             // npcs
             this.enemies = <Array<Character>> this.world.select(".guard");
@@ -146,14 +150,15 @@ module Thralldom {
 
 
             // Detect going out of focus
-            Utilities.setWindowFocusListener((isVisible) => {
+            Utils.setWindowFocusListener((isVisible) => {
                 if (!isVisible) {
                     this.pause();
                 }
             });
             this.isOnFocus = true;
 
-            this.ui.hookupPausedControls(this.requestPointerLockFullscreen.bind(this), this.renderer, this.world.renderScene, this.particles, this.azure);
+            var callback = this.requestPointerLockFullscreen.bind(this);
+            this.ui.hookUI(callback, this.particles, this.azure, this.keybindings, this.hero.inventory);
             this.input.attachCancelFullscreenListener(this.pause.bind(this));
 
 
@@ -173,38 +178,22 @@ module Thralldom {
         }
 
         private handleKeyboard(delta: number) {
-            this.characterController.handleKeyboard(delta, this.input, this.keybindings);
+            this.heroController.handleKeyboard(delta, this.input, this.keybindings);
             this.cameraController.handleKeyboard(delta, this.input, this.keybindings);
 
             if (this.input.keyboard[this.keybindings.toggleUI] && !this.input.previousKeyboard[this.keybindings.toggleUI])
                 this.ui.toggleHud(!this.ui.isVisible);
 
-            //if (this.input.keyboard[this.keybindings.toggleCam] && !this.input.previousKeyboard[this.keybindings.toggleCam])
-            //    this.changeCamera(this.cameraController instanceof CameraControllers.SkyrimCameraController);
+            if (this.input.keyboard[this.keybindings.toggleCam] && !this.input.previousKeyboard[this.keybindings.toggleCam])
+                this.changeCamera(this.cameraController instanceof CameraControllers.SkyrimCameraController);
+
+            if (this.input.keyboard[this.keybindings.toggleDebug] && !this.input.previousKeyboard[this.keybindings.toggleDebug])
+                this.toggleDebugDraw();
         }1
 
         private handleMouse(delta: number) {
-            this.characterController.handleMouse(delta, this.input);
+            this.heroController.handleMouse(delta, this.input);
             this.cameraController.handleMouse(delta, this.input);
-
-            // See if our raycast request has been resolved. 
-            var ray = this.physics.tryResolveRaycast(this.raycastPromiseUid);
-            // If the request has been fullfilled, do stuff
-            if (ray) {
-                if (ray.hasHit && ray.collisionObjectId != this.hero.mesh.id) {
-                    // Magic Number
-                    var mult = 1 - 2.5 * delta;
-                    this.cameraController.distance *= mult;
-                }
-                this.raycastPromiseUid = -1;
-            }
-            // If no request is currently pending, request another
-            if (this.raycastPromiseUid == -1) {
-                var pos = this.cameraController.position;
-                var target = (new THREE.Vector3).subVectors(this.hero.mesh.position, this.hero.centerToMesh);
-
-                this.raycastPromiseUid = this.physics.requestRaycast(pos, target);
-            }
         }
 
         private triggerScriptedEvents(): void {
@@ -248,6 +237,8 @@ module Thralldom {
 
             this.handleKeyboard(delta);
             this.handleMouse(delta);
+            this.heroController.handleInteraction(this.cameraController, this.world);
+            this.ui.viewmodel.hud.showHelp = this.heroController.canInteract;
 
             this.triggerScriptedEvents();
 
@@ -257,9 +248,14 @@ module Thralldom {
                 "Your current quest:\n" + this.quest.toString();
 
             var currentAnimTime = this.hero.animation.currentTime;
+            //var enemy = <any>this.world.select("#enemy")[0];
+            //var enemyhp = "Enemy HP: {0}\n".format(enemy.health)
+            //var debug = "HP: {0}\nPosition: {1}\n".format(this.hero.health,
+            //                                    Utils.formatVector(this.hero.mesh.position, 3))
+            var uiText = questText// + debug + enemyhp;
 
-            var sokolov = <any>this.world.select("#sokolov")[0];
-            this.ui.hud.innerHTML =  questText;
+
+            this.ui.hud.innerHTML = uiText;
 
             var frameInfo = this.combat.update(this.debugDraw);
 

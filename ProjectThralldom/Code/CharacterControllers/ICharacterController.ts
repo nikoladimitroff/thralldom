@@ -7,11 +7,17 @@ module Thralldom {
             strafeLeft: number;
             jump: number;
             sprint: number;
+            interact: number;
         }
 
         export interface ICharacterController extends IController {
+            character: Character;
+            script: ScriptController;
+            canInteract: boolean;
+
             handleMouse(delta: number, input: InputManager): void;
             handleKeyboard(delta: number, input: InputManager, keybindings: IKeybindings): void;
+            handleInteraction(camera: CameraControllers.ICameraController, world: World): void;
         }
     }
 } 

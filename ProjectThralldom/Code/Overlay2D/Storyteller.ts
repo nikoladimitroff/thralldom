@@ -37,16 +37,6 @@ module Thralldom {
             Thralldom.FixedStoryteller = Thralldom.Storyteller.bind(undefined, webglContainer, context, effects);
         }
 
-        public static fadein = function (elem) {
-            elem.classList.remove("fadeout");
-            elem.classList.add("fadein");
-        }
-
-        public static fadeout = function (elem) {
-            elem.classList.remove("fadein");
-            elem.classList.add("fadeout");
-        }
-
         private advance(): void {
 
             // If vis index is 0, webgl is still visible but will be soon faded away,
@@ -54,9 +44,9 @@ module Thralldom {
                 this.textIndex++;
             }
 
-            Storyteller.fadeout(this.screens[this.visibleIndex]);
+            UIManager.fadeout(this.screens[this.visibleIndex]);
             this.visibleIndex = (this.visibleIndex + 1) % this.screens.length;
-            Storyteller.fadein(this.screens[this.visibleIndex]);
+            UIManager.fadein(this.screens[this.visibleIndex]);
 
 
             if (this.textIndex >= this.text.length - 1 && this.visibleIndex == 0) {

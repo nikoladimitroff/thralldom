@@ -3,6 +3,10 @@ module Thralldom {
         update(percentage: number, text: string): void;
     }
 
+    export var SpecialContents = {
+        Items: "ItemsDb",
+    }
+
     export class ContentManager {
 
         private loadedContent: IIndexable<any> = <IIndexable<any>>{};
@@ -183,7 +187,6 @@ module Thralldom {
 
                 ensureLoop(geometry.animation);
                 geometry.animation.name += path;
-                THREE.AnimationHandler.add(geometry.animation);
 
                 for (var i = 0; i < materials.length; i++) {
 
@@ -247,7 +250,6 @@ module Thralldom {
                         light.position.set(pos[0], pos[1], pos[2]);
                         break;
                 };
-                console.log(descriptor);
                 world.renderScene.add(light);
             }
         }
@@ -350,6 +352,15 @@ module Thralldom {
             });
         }
 
+        private loadItemDb(path: string): void {
+            this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
+                var items = eval(xhr.responseText);
+                var inventory = new Inventory();
+                inventory.loadFromDescription(items, this);
+                this.onContentLoaded(SpecialContents.Items, () => inventory);
+            });
+        }
+
         private loadAssets(path: string): void {
             this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
                 var assets = eval("Object(" + xhr.responseText + ")");
@@ -373,6 +384,7 @@ module Thralldom {
             }, false);
         }
 
+
         public loadMeta(path: string, callback: (meta: IMetaGameData) => void): IProgressNotifier {
             this.progressNotifier = {
                 update: function () { }
@@ -390,7 +402,7 @@ module Thralldom {
                 }
 
                 // Compute the total number of items we are to load
-                this.totalQueuedItems = 1 /* world */ + 1 /* quest */ + meta.scripts.length; /* scripts */
+                this.totalQueuedItems = 1 /* world */ + 1 /* quest */ + 1 /* itemdb */ + meta.scripts.length; /* scripts */
 
                 this.loadAssets(meta.assets);
 
@@ -398,6 +410,7 @@ module Thralldom {
                     // Once all the assets have been loaded, load the world and quests since they depend on the assets
                     this.loadWorld(meta.world);
                     this.loadQuest(meta.quest);
+                    this.loadItemDb(meta.items);
                     for (var i = 0; i < meta.scripts.length; i++) {
                         this.loadScript(meta.scripts[i]);
                     }
@@ -430,7 +443,7 @@ module Thralldom {
                 }
             }
             else {
-                throw new Error("content not loaded");
+                throw new Error("Content {0} not loaded".format(path));
             }
         }
     }

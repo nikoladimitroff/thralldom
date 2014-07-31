@@ -40,7 +40,7 @@ module Thralldom {
         }
 
         public toString(): string {
-            return Utilities.formatString("X: {0}, Y: {1}, Scroll: {2}, Left: {3}, Middle: {4}, Right: {5}\n Relative: ({6}, {7})",
+            return "X: {0}, Y: {1}, Scroll: {2}, Left: {3}, Middle: {4}, Right: {5}\n Relative: ({6}, {7})".format(
                 this.ndc.x.toFixed(3), this.ndc.y.toFixed(3), this.scroll, this.leftButton, this.middleButton, this.rightButton,
                 this.relative.x.toFixed(3), this.relative.y.toFixed(3));
         }
