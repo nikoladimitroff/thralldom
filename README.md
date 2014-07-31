@@ -1,4 +1,1 @@
-thralldom
-=========
-
-3d action game written in Typescript (or a big a pile of bullshit, who knows)
+Тhralldom=========Thralldom is a 3D Action Adventure game running entirely in the browser on top of THREE.js and Ammo.js. Almost everything besides that is written completely from a scratch in TypeScript.The game depicts the story of ['Under the Yoke'][under-the-yoke] - a famous novel by the Bulgarian author Ivan Vazov.**See more info [here][thralldom-site]**[under-the-yoke]: http://www.amazon.com/Under-Yoke-Ivan-Vazov/dp/9549403017[thralldom-site]: http://thralldom.net
