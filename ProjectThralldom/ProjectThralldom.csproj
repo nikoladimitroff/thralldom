@@ -243,7 +243,7 @@
     <TypeScriptCompile Include="Code\Physics\Worker.ts" />
     <TypeScriptCompile Include="Code\Pool.ts" />
     <TypeScriptCompile Include="Code\Scene\Interfaces.ts" />
-    <TypeScriptCompile Include="Code\Scene\Item.ts" />
+    <TypeScriptCompile Include="Code\Scene\Inventory.ts" />
     <TypeScriptCompile Include="Scripts\typings\azure.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.es5.d.ts" />
