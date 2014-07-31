@@ -24,29 +24,37 @@ module Thralldom {
 
         private loadViewmodel(particleManager: ParticleManager,
             azure: AzureManager,
-            keybindings: CharacterControllers.IKeybindings): void {
-
-            this.viewmodel = new Viewmodel(azure, particleManager, keybindings);
+            keybindings: CharacterControllers.IKeybindings,
+            inventory: Inventory): void {
+            
+            this.viewmodel = new Viewmodel(azure, particleManager, keybindings, inventory);
             ko.applyBindings(this.viewmodel);
         }
 
         public hookUI(resumeCallback: Function,
             particleManager: ParticleManager,
             azure: AzureManager,
-            keybindings: CharacterControllers.IKeybindings): void {
+            keybindings: CharacterControllers.IKeybindings,
+            inventory: Inventory): void {
 
-            this.loadViewmodel(particleManager, azure, keybindings);
+            this.loadViewmodel(particleManager, azure, keybindings, inventory);
 
             function swap(query1, query2) {
                 UIManager.fadein(document.querySelector(query1));
                 UIManager.fadeout(document.querySelector(query2));
             }
 
+            // Settings
             for (var i = 0; i < this.viewmodel.settings.length; i++) {
                 var id = this.viewmodel.settings[i].id;
                 var button = document.querySelector("#main ul li:nth-child({0})".format(i + 1));
                 button.addEventListener("click", swap.bind(undefined, "#{0}".format(id), "#main"), false);
             }
+            // Inventory
+            var inventoryButton = document.getElementById("inventory-button");
+            inventoryButton.addEventListener("click", swap.bind(undefined, "#inventory-panel", "#main", false));
+
+            // Return to main menu
             var buttons = document.getElementsByClassName("main-menu-return");
             for (var i = 0; i < buttons.length; i++) {
                 var clickHandler = swap.bind(undefined, "#main", "#" + buttons[i].parentNode.parentNode["id"]);

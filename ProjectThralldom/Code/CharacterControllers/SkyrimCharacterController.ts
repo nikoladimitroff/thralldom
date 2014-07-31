@@ -107,7 +107,8 @@ module Thralldom {
                     var pos = new THREE.Vector3()
                     pos.subVectors(this.character.mesh.position, this.character.centerToMesh);
                     var cameraToHero = (new THREE.Vector3).subVectors(pos, camera.position);
-                    var target = cameraToHero.normalize().multiplyScalar(this.character.range).add(pos);
+                    var length = THREE.Math.sign(camera.distance) * this.character.range;
+                    var target = cameraToHero.normalize().multiplyScalar(length).add(pos);
 
                     this.raycastPromiseUid = PhysicsManager.instance.requestRaycast(pos, target);
                 }

@@ -4,6 +4,7 @@ module Thralldom {
         quest: string;
         scripts: Array<string>;
         assets: string;
+        items: string;
     }
 
     export class Application {
@@ -120,6 +121,7 @@ module Thralldom {
             
             var heroController = this.world.controllerManager.controllers.filter((c) => c.character == this.hero)[0];
             this.heroController = <CharacterControllers.ICharacterController> heroController;
+            this.hero.inventory = this.content.getContent(SpecialContents.Items);
 
 
             window.addEventListener("resize", Utils.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
@@ -156,7 +158,7 @@ module Thralldom {
             this.isOnFocus = true;
 
             var callback = this.requestPointerLockFullscreen.bind(this);
-            this.ui.hookUI(callback, this.particles, this.azure, this.keybindings);
+            this.ui.hookUI(callback, this.particles, this.azure, this.keybindings, this.hero.inventory);
             this.input.attachCancelFullscreenListener(this.pause.bind(this));
 
 
@@ -236,7 +238,7 @@ module Thralldom {
             this.handleKeyboard(delta);
             this.handleMouse(delta);
             this.heroController.handleInteraction(this.cameraController, this.world);
-            this.ui.viewmodel.hud.showHelp(this.heroController.canInteract);
+            this.ui.viewmodel.hud.showHelp = this.heroController.canInteract;
 
             this.triggerScriptedEvents();
 

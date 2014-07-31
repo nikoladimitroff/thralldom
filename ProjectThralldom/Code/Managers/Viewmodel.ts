@@ -1,14 +1,15 @@
 ﻿module Thralldom {
 
     export class Viewmodel {
-        username = ko.observable("annonimous");
-        getGreeting = ko.computed(() => "Hey there, {0}!".format(this.username()));
+        username = "annonimous";
+        greeting: string;
         settings: Array<any>;
         hud: any;
 
         constructor(azure: AzureManager,
             particleManager: ParticleManager,
-            keybindings: CharacterControllers.IKeybindings) {
+            keybindings: CharacterControllers.IKeybindings,
+            inventory: Inventory) {
 
             this.settings = [
                 {
@@ -48,12 +49,36 @@
                 }
             ];
             this.hud = {
-                interactKey: InputManager.keyCodeToKeyName(keybindings.interact),
-                showHelp: ko.observable(false),
-                inventory: [],
+                showHelp: false,
+                inventory: inventory,
             };
-            // this depends on this.hud but this.hud is undefined above
-            this.hud.cssClass = ko.computed(() => "fade" + (this.hud.showHelp() ? "in" : "out"));
+
+            // KO Computed
+            ko.defineProperty(this.hud, "interactKey", () => {
+                return InputManager.keyCodeToKeyName(keybindings.interact);
+            });
+
+            // Call knockout ES5 tracking on observables
+            this.track(keybindings);
+        }
+
+        private track(keybindings: CharacterControllers.IKeybindings): void {
+
+            ko.track(this, ["username"]);
+            ko.defineProperty(this, "greeting", () => "Hey there, {0}!".format(this.username))
+
+            // Track only observable properties
+            var settingsObservables = ["value", "checked"];
+            for (var i = 0; i < this.settings.length; i++) {
+                for (var j = 0; j < this.settings[i].options.length; j++) {
+                    var option = this.settings[i].options[j];
+                    var properties = settingsObservables.filter(o => option[o] != undefined);
+                    ko.track(option, properties);
+                }
+            }
+            // Inject ko in keybindings, one can even change a keybinding and ko will continue to work
+            ko.track(keybindings);
+            ko.track(this.hud, ["showHelp"]);
         }
 
 
@@ -64,8 +89,8 @@
                     for (var j = 0; j < group.options.length; j++) {
                         var option = group.options[j];
                         if (option.id == optionId) {
-                            if (option.value) return option.value();
-                            if (option.checked) return option.checked();
+                            if (option.value !== undefined) return option.value;
+                            if (option.checked !== undefined) return option.checked;
                             throw new Error("Invalid option");
                         }
                     }
@@ -81,8 +106,8 @@
                         var option = group.options[j];
                         if (option.id == optionId) {
                             value = JSON.parse(value);
-                            if (option.value) return option.value(value);
-                            if (option.checked) return option.checked(value);
+                            if (option.value !== undefined) return option.value = value;
+                            if (option.checked !== undefined) return option.checked = value;
                             throw new Error("Invalid option");
                         }
                     }
@@ -105,7 +130,7 @@
 
             this.setOptionValue("graphics", "enable-particles", data["particles_enabled"]);
             this.setOptionValue("audio", "master-volume", data["master_volume"]);
-            this.username(data.username);
+            this.username = data.username;
         }
 
     }

@@ -10,7 +10,7 @@
     <nav id="hud" class="maximized">
         <pre></pre>
 
-        <div id="help-info" data-bind="with: hud, css: hud.cssClass ">
+        <div id="help-info" data-bind="with: hud, visible: hud.showHelp ">
             <h2>Press <span data-bind="text: interactKey"></span> to interact.</h2>
         </div>
 
@@ -29,10 +29,11 @@
     </div>
     <div id="paused-screen" class="unselectable maximized">
         <h1 id="resume-button">RESUME</h1>
-        <nav id="main" class="fadein unselectable" data-bind="attr: { 'data-content': getGreeting }">
+        <nav id="main" class="fadein unselectable" data-bind="attr: { 'data-content': greeting }">
             <ul data-bind="foreach: settings">
                 <li data-bind="text: name"></li>
                 <!-- ko if: ($index() === $parent.settings.length - 1) -->
+                    <li id="inventory-button">Inventory</li>
                     <li>Help page</li>
                     <li id="azure">Configure MS Account</li>
                     <li>Back to Home Page</li>
@@ -57,6 +58,18 @@
                 </ul>
             </nav>
         <!-- /ko -->
+        <nav id="inventory-panel" class="fadeout">
+            <ul data-bind=" foreach: hud.inventory.items">
+                <li data-bind="if: quantity > 0">
+                    <label data-bind="text: quantityText"></label>
+                    <label data-bind="text: name"></label>
+                    <img data-bind="attr: { src: icon }" />
+                </li>
+                <!-- ko if: ($index() === $root.hud.inventory.items.length - 1) -->
+                <li class="main-menu-return">Main menu</li>
+                <!-- /ko -->
+            </ul>
+        </nav>
     </div>
     <!-- intro stories -->
     <canvas id="storyline-canvas" class="fadeout maximized"></canvas>
@@ -68,6 +81,7 @@
     <script src="Scripts/implementations/three.js"></script>
     <script src="Scripts/implementations/jquery.documentReady.js"></script>
     <script src="Scripts/implementations/knockout-3.1.0.js"></script>
+    <script src="Scripts/implementations/knockout-es5.min.js"></script>
     <script src="Scripts/implementations/stats.min.js"></script>
     <!--@ThralldomDependenciesEnd-->
 
@@ -149,6 +163,7 @@
     <script src="Code/Scene/Skybox.js"></script>
     <script src="Code/Scene/Environment.js"></script>
     <script src="Code/Scene/Weapon.js"></script>
+    <script src="Code/Scene/Inventory.js"></script>
     <script src="Code/Scene/Character.js"></script>
     <script src="Code/Scene/Ammunition.js"></script>
     <script src="Code/Scene/LaserOfDeath.js"></script>

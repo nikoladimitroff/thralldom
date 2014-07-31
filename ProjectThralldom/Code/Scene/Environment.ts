@@ -62,7 +62,8 @@ module Thralldom {
         public interact(hero: Character): void {
             switch (this.interaction) {
                 case InteractableEnvironementType.Item:
-                    console.log("item added");
+                    var itemCode = 0;
+                    hero.inventory.addItemQuantity(itemCode, 1);
                     break;
 
                 default:

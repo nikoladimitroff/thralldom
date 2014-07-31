@@ -3,6 +3,7 @@
 @progress-bar-color: darkgoldenrod;
 @progress-bar-bg-color: #eee;
 @pause-screen-bg-color: rgba(255, 255, 255, 0.35);
+@pause-font-size: 125%;
 @font-headings: "Bulgaria Moderna", "Segoe UI", sans-serif;
 @font-body: "Segoe UI", sans-serif;
 @max-z-index: 99999;
@@ -56,7 +57,7 @@ canvas {
         height: 150px;
         margin: 0 auto;
         border-left: 5px solid white;
-        font-size: 125%;
+        font-size: @pause-font-size;
 
         // Fuck smooth animations
         &.fadeout {
@@ -70,11 +71,6 @@ canvas {
             }
         }
     }
-
-    /*nav ~ nav {
-        // Precicely 170px is the distance between the submenus
-        margin-top: -170px;
-    }*/
 
     #resume-button {
         text-align: center;
@@ -104,6 +100,21 @@ canvas {
 
             &:last-child {
                 bottom: 0;
+            }
+        }
+    }
+
+    nav#inventory-panel ul li {
+        img {
+            width: 48px;
+            height: 48px;
+            margin-left: 100px;
+        }
+        
+        :hover {
+            img {
+                width: 64px;
+                height: 64px;
             }
         }
     }
@@ -185,6 +196,7 @@ nav {
     z-index: 9999;
     display: none;
 }
+
 #subtitles {
     font-size: x-large;
     position: absolute;

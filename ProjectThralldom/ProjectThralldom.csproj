@@ -28,6 +28,7 @@
       <DependentUpon>StringExtensions.js</DependentUpon>
     </Content>
     <Content Include="Content\Assets.js" />
+    <Content Include="Content\ItemDb.js" />
     <Content Include="Content\Meta.js" />
     <Content Include="Content\Models\Buildings\Barrels\barrelsUV.jpg" />
     <Content Include="Content\Models\Buildings\Houses\0a565e37.jpg" />
@@ -126,6 +127,8 @@
     <Content Include="Content\Sounds\gunshot.mp3" />
     <Content Include="Content\Sounds\heavy_song.mp3" />
     <Content Include="Content\Textures\Grass.jpg" />
+    <Content Include="Content\Textures\Items\carrot.png" />
+    <Content Include="Content\Textures\Items\coin.png" />
     <Content Include="Content\Textures\Particles\raindrop2flip.png" />
     <Content Include="Content\Textures\Particles\raindroptest.png" />
     <Content Include="Content\Textures\Particles\smokeparticle.png" />
@@ -205,6 +208,7 @@
     <Content Include="Scripts\implementations\ammo.small.js" />
     <Content Include="Scripts\implementations\jquery.documentReady.js" />
     <Content Include="Scripts\implementations\knockout-3.1.0.js" />
+    <Content Include="Scripts\implementations\knockout-es5.min.js" />
     <Content Include="Scripts\implementations\MobileServices.Web-1.1.3.min.js" />
     <Content Include="Scripts\implementations\stats.min.js" />
     <Content Include="Scripts\implementations\subtitles.js" />
@@ -239,8 +243,10 @@
     <TypeScriptCompile Include="Code\Physics\Worker.ts" />
     <TypeScriptCompile Include="Code\Pool.ts" />
     <TypeScriptCompile Include="Code\Scene\Interfaces.ts" />
+    <TypeScriptCompile Include="Code\Scene\Item.ts" />
     <TypeScriptCompile Include="Scripts\typings\azure.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\knockout.es5.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\subtitles.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\Three.Plugins\THREE.AudioObject.d.ts" />
     <Content Include="Tests\TestingPage.html" />

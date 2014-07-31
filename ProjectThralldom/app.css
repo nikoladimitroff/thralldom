@@ -38,10 +38,6 @@ canvas {
   background-color: rgba(255, 255, 255, 0.35);
   display: none;
   color: black;
-  /*nav ~ nav {
-        // Precicely 170px is the distance between the submenus
-        margin-top: -170px;
-    }*/
 }
 #paused-screen nav {
   max-width: 500px;
@@ -85,6 +81,15 @@ canvas {
 }
 #paused-screen ul li:last-child {
   bottom: 0;
+}
+#paused-screen nav#inventory-panel ul li img {
+  width: 48px;
+  height: 48px;
+  margin-left: 100px;
+}
+#paused-screen nav#inventory-panel ul li :hover img {
+  width: 64px;
+  height: 64px;
 }
 #loading-screen {
   z-index: 99999;

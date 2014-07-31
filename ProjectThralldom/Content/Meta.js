@@ -14,4 +14,6 @@
     quest: "Content/Quests/simple.js",
     assets: "Content/simple-assets.js",
     scripts: [],
+
+    items: "Content/ItemDb.js",
 }
