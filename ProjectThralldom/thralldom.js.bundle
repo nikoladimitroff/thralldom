@@ -60,6 +60,7 @@
     <file>/Code/Scene/LaserOfDeath.js</file>
     <file>/Code/Managers/ContentManager.js</file>
     <file>/Code/Overlay2D/Storyteller.js</file>
+    <file>/Code/Overlay2D/Alert.js</file>
     <file>/Code/Overlay2D/Particle2D.js</file>
     <file>/Code/Overlay2D/ParticleEngine2D.js</file>
     <file>/Code/Application.js</file>

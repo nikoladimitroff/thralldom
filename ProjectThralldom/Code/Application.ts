@@ -91,6 +91,15 @@ module Thralldom {
             this.azure = new AzureManager();
             this.clock = new THREE.Clock();
 
+            // Alerts
+            var alertContainer = this.ui.alerts;
+            Alert.setUi(alertContainer);
+            setTimeout(function () {
+                Alert.info("Initiated Alerts!");
+                setTimeout(function () {
+                    Alert.warning("Warning: Alerts!");
+                }, 2000);
+            }, 20000);
 
             // Subs
             var subtitleContainer = this.ui.subtitles;

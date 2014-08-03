@@ -2,15 +2,18 @@ module Thralldom {
     export class UIManager {
 
         public hud: HTMLElement;
-        public subtitles: HTMLElement;
+        public subtitles: HTMLElement;        
+        public alerts: HTMLElement;
         public pausedScreen: HTMLElement;
         public stats: Stats;
         public storylineContext: CanvasRenderingContext2D;
         public viewmodel: any;
 
         constructor() {
+            
             this.hud = <HTMLElement> document.querySelector("nav#hud pre");
             this.subtitles = <HTMLElement> document.querySelector("#subtitles span");
+            this.alerts = <HTMLElement> document.querySelector("#alerts ul");
             this.pausedScreen = <HTMLElement> document.querySelector("#paused-screen");
             this.storylineContext = (<any>document.getElementById("storyline-canvas")).getContext("2d");
 

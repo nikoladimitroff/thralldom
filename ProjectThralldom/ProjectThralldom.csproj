@@ -118,6 +118,9 @@
     <Content Include="Code\StringExtensions.min.js.map">
       <DependentUpon>StringExtensions.min.js</DependentUpon>
     </Content>
+    <Content Include="app.css.map">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
     <None Include="Content\ScriptedEvents\Outro.tscr" />
     <Content Include="Content\Scenes\simple.js" />
     <Content Include="Content\simple-assets.js" />
@@ -233,6 +236,7 @@
     <TypeScriptCompile Include="Code\Managers\ParticleManager.ts" />
     <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
     <TypeScriptCompile Include="Code\Managers\Viewmodel.ts" />
+    <TypeScriptCompile Include="Code\Overlay2D\Alert.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\Particle2D.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\ParticleEngine2D.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\Storyteller.ts" />
