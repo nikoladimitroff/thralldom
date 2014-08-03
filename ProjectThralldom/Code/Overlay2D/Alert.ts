@@ -65,7 +65,6 @@
             }
 
             var child: HTMLElement = <HTMLElement> this.ui.children.item(0);
-            child.className = "";
             UIManager.fadein(child);
 
             Alert.alerts[0].timeoutId = setTimeout(function () {
