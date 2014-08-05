@@ -15,7 +15,7 @@
     <file>/Scripts/implementations/Three.Plugins/THREE.Postprocessing.min.js</file>
     <file>/Scripts/implementations/subtitles.js</file>
     <file>/Code/Physics/SharedInterfaces.js</file>
-    <file>/Code/StringExtensions.js</file>
+    <file>/Code/Extensions.js</file>
     <file>/Code/Constants.js</file>
     <file>/Code/LanguagePacks/Bulgarian.js</file>
     <file>/Code/LanguagePacks/English.js</file>
@@ -41,6 +41,8 @@
     <file>/Code/Managers/UIManager.js</file>
     <file>/Code/Managers/PhysicsManager.js</file>
     <file>/Code/Managers/CombatManager.js</file>
+    <file>/Code/Managers/QuestManager.js</file>
+    <file>/Code/Managers/ScriptManager.js</file>
     <file>/Code/Managers/ControllerManager.js</file>
     <file>/Code/Managers/AudioManager.js</file>
     <file>/Code/Managers/ParticleManager.js</file>
@@ -53,6 +55,7 @@
     <file>/Code/Scene/DynamicObject.js</file>
     <file>/Code/Scene/Terrain.js</file>
     <file>/Code/Scene/Skybox.js</file>
+	  <file>/Code/Scene/Interaction.ts</file>
     <file>/Code/Scene/Environment.js</file>
     <file>/Code/Scene/Weapon.js</file>
     <file>/Code/Scene/Character.js</file>

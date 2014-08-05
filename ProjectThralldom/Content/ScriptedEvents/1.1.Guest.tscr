@@ -1,4 +1,5 @@
-﻿place trigger at #sokolov activate at distance of 5
+﻿set trigger #sokolov
+set distance 5
 
 *sokolov:
 say now boycho-sokolov | boycho-sokolov.srt

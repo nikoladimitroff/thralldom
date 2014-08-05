@@ -23,10 +23,7 @@
     <Content Include="app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
-    <Content Include="Code\StringExtensions.js" />
-    <Content Include="Code\StringExtensions.min.js">
-      <DependentUpon>StringExtensions.js</DependentUpon>
-    </Content>
+    <Content Include="Code\Extensions.js" />
     <Content Include="Content\Assets.js" />
     <Content Include="Content\ItemDb.js" />
     <Content Include="Content\Meta.js" />
@@ -115,9 +112,6 @@
     <Content Include="Content\Quests\default.js" />
     <Content Include="Content\Quests\simple.js" />
     <Content Include="Content\Scenes\default.js" />
-    <Content Include="Code\StringExtensions.min.js.map">
-      <DependentUpon>StringExtensions.min.js</DependentUpon>
-    </Content>
     <Content Include="app.css.map">
       <DependentUpon>app.css</DependentUpon>
     </Content>
@@ -235,6 +229,8 @@
     <TypeScriptCompile Include="Code\IController.ts" />
     <TypeScriptCompile Include="Code\Managers\ParticleManager.ts" />
     <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
+    <TypeScriptCompile Include="Code\Managers\QuestManager.ts" />
+    <TypeScriptCompile Include="Code\Managers\ScriptManager.ts" />
     <TypeScriptCompile Include="Code\Managers\Viewmodel.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\Alert.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\Particle2D.ts" />
@@ -246,6 +242,7 @@
     <TypeScriptCompile Include="Code\Physics\PhysicsManagerWorker.ts" />
     <TypeScriptCompile Include="Code\Physics\Worker.ts" />
     <TypeScriptCompile Include="Code\Pool.ts" />
+    <TypeScriptCompile Include="Code\Scene\Interaction.ts" />
     <TypeScriptCompile Include="Code\Scene\Interfaces.ts" />
     <TypeScriptCompile Include="Code\Scene\Inventory.ts" />
     <TypeScriptCompile Include="Scripts\typings\azure.d.ts" />
@@ -263,7 +260,7 @@
     <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.anim" />
     <Content Include="Content\Subtitles\Liars.srt" />
     <Content Include="Content\Subtitles\dialog.srt" />
-    <Content Include="Content\ScriptedEvents\RandomStuff.tscr" />
+    <Content Include="Content\ScriptedEvents\Test.tscr" />
     <Content Include="Fonts\Bulgaria_Moderna_Pro.otf" />
     <Content Include="Docs\PresentationText.md" />
     <Content Include="Content\ScriptedEvents\1.1.Guest.tscr" />
@@ -332,7 +329,7 @@
     <TypeScriptCompile Include="Code\StateMachine\State.ts" />
     <TypeScriptCompile Include="Code\StateMachine\StateMachine.ts" />
     <TypeScriptCompile Include="Code\StateMachine\StateMachineUtils.ts" />
-    <TypeScriptCompile Include="Code\StringExtenstions.d.ts" />
+    <TypeScriptCompile Include="Code\Extenstions.d.ts" />
     <TypeScriptCompile Include="Code\Scene\Terrain.ts" />
     <TypeScriptCompile Include="Code\Utils.ts" />
     <TypeScriptCompile Include="Scripts\typings\ammo.d.ts" />

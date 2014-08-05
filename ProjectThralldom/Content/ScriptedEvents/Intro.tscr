@@ -1,4 +1,6 @@
-﻿place trigger at #hero activate at distance of 10
+﻿set trigger #hero
+set distance 10
+
 
 *$story-text:
 Imprisoned for 8 years...

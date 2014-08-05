@@ -35,7 +35,8 @@ module Thralldom {
 
             }
 
-            public handleKeyboard(delta: number, input: InputManager, keybindings: IKeybindings): void {
+            public handleKeyboard(delta: number, input: InputManager, keybindings: IKeybindings,
+                                  questManager: QuestManager, scriptManager: ScriptManager): void {
                 if (this.script) return;
 
                 var hero = this.character;
@@ -71,7 +72,7 @@ module Thralldom {
                     input.keyboard[keybindings.interact] &&
                     !input.previousKeyboard[keybindings.interact]) {
 
-                    this.interactionTarget.interact(hero);
+                    this.interactionTarget.interaction.interact(hero, questManager, scriptManager);
                 }
 
 
@@ -94,9 +95,9 @@ module Thralldom {
                 if (ray) {
                     // we have new information, delete the old interaction target
                     this.interactionTarget = undefined;
-                    if (ray.hasHit && ray.collisionObjectId != this.character.mesh.id) {
+                    if (ray.hasHit) {
                         var hitObject = <any>world.selectByPhysId(ray.collisionObjectId);
-                        if (hitObject.interact && hitObject.interact.constructor == Function) {
+                        if (hitObject.interaction) {
                             this.interactionTarget = hitObject;
                         }
                     }

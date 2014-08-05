@@ -43,9 +43,7 @@ module Thralldom {
         public static MetaFilePath = "Content/Meta.js";
 
         public world: Thralldom.World;
-        public quest: Thralldom.Quest;
-        private scripts: Array<ScriptedEvent>;
-        private activeScript: ScriptedEvent;
+        public quests: QuestManager;
 
         // Helping variables
         private raycastPromiseUid: number = -1;
@@ -61,6 +59,7 @@ module Thralldom {
         private content: ContentManager;
         private audio: AudioManager;
         private combat: CombatManager;
+        private scripts: ScriptManager;
         private particles: ParticleManager;
         private azure: AzureManager;
         private language: Languages.ILanguagePack;
@@ -81,7 +80,6 @@ module Thralldom {
 
             Const.MaxAnisotropy = this.renderer.getMaxAnisotropy();
 
-
             this.physics = new PhysicsManager();
             this.input = new InputManager(container);
             this.ui = new UIManager();
@@ -92,15 +90,7 @@ module Thralldom {
             this.clock = new THREE.Clock();
 
             // Alerts
-            var alertContainer = this.ui.alerts;
-            Alert.setUi(alertContainer);
-            setTimeout(function () {
-                Alert.info("Initiated Alerts!");
-                setTimeout(function () {
-                    Alert.warning("Warning: Alerts!");
-                }, 2000);
-            }, 20000);
-
+            Alert.setUi(this.ui.alerts);
             // Subs
             var subtitleContainer = this.ui.subtitles;
             Subs.fixDomElement(subtitleContainer);
@@ -114,8 +104,9 @@ module Thralldom {
 
         public init(meta: IMetaGameData): void {
             this.world = this.content.getContent(meta.world);
-            this.quest = this.content.getContent(meta.quest);
-            this.scripts = <Array<ScriptedEvent>> meta.scripts.map((file) => this.content.getContent(file));
+            this.quests = new QuestManager(this.content.getContent(meta.quest), this.world);
+            var scripts = meta.scripts.map(file => this.content.getContent(file));
+            this.scripts = new ScriptManager(scripts, this.hero, this.world);
 
             // World 
 
@@ -130,7 +121,7 @@ module Thralldom {
             
             var heroController = this.world.controllerManager.controllers.filter((c) => c.character == this.hero)[0];
             this.heroController = <CharacterControllers.ICharacterController> heroController;
-            this.hero.inventory = this.content.getContent(SpecialContents.Items);
+            this.hero.inventory = this.content.getContent(meta.items);
 
 
             window.addEventListener("resize", Utils.GetOnResizeHandler(this.webglContainer, this.renderer, this.cameraController.camera));
@@ -187,7 +178,7 @@ module Thralldom {
         }
 
         private handleKeyboard(delta: number) {
-            this.heroController.handleKeyboard(delta, this.input, this.keybindings);
+            this.heroController.handleKeyboard(delta, this.input, this.keybindings, this.quests, this.scripts);
             this.cameraController.handleKeyboard(delta, this.input, this.keybindings);
 
             if (this.input.keyboard[this.keybindings.toggleUI] && !this.input.previousKeyboard[this.keybindings.toggleUI])
@@ -204,34 +195,6 @@ module Thralldom {
             this.heroController.handleMouse(delta, this.input);
             this.cameraController.handleMouse(delta, this.input);
         }
-
-        private triggerScriptedEvents(): void {
-            if (this.activeScript) {
-                if (this.activeScript.finished) {
-                    this.activeScript.disable(this.world);
-
-                    var index = this.scripts.indexOf(this.activeScript);
-                    this.scripts[index] = this.scripts[this.scripts.length - 1];
-                    this.scripts.pop();
-                    this.activeScript = null;
-                    console.log("finished, scripts count:", this.scripts.length);
-                }
-
-                return;
-            }
-
-
-            for (var i = 0; i < this.scripts.length; i++) {
-                var script = this.scripts[i];
-                if (script.tryTrigger(this.hero, this.world, this.cameraController)) {
-                    this.activeScript = script;
-                    console.log("triggering");
-
-                    return;
-                }
-            }
-        }
-
         private update(): void {
             var delta = this.clock.getDelta();
 
@@ -249,19 +212,15 @@ module Thralldom {
             this.heroController.handleInteraction(this.cameraController, this.world);
             this.ui.viewmodel.hud.showHelp = this.heroController.canInteract;
 
-            this.triggerScriptedEvents();
+            this.scripts.update(this.cameraController);
 
-            var questComplete = this.quest.getActiveObjectives().length == 0;
-            var questText = questComplete ?
-                "Quest complete!" :
-                "Your current quest:\n" + this.quest.toString();
 
             var currentAnimTime = this.hero.animation.currentTime;
             //var enemy = <any>this.world.select("#enemy")[0];
             //var enemyhp = "Enemy HP: {0}\n".format(enemy.health)
             //var debug = "HP: {0}\nPosition: {1}\n".format(this.hero.health,
             //                                    Utils.formatVector(this.hero.mesh.position, 3))
-            var uiText = questText// + debug + enemyhp;
+            var uiText = this.quests.questText// + debug + enemyhp;
 
 
             this.ui.hud.innerHTML = uiText;
@@ -270,7 +229,7 @@ module Thralldom {
 
             this.particles.update(delta);
             this.world.update(delta);
-            this.quest.update(frameInfo, this.world);
+            this.quests.update(frameInfo);
 
             THREE.AnimationHandler.update(0.9 * delta);
             this.audio.update(this.cameraController.camera);
@@ -319,7 +278,7 @@ module Thralldom {
         }
 
         private selectBoundingVisual(mesh: THREE.Mesh): THREE.Mesh {
-            return <THREE.Mesh> mesh.children.filter((x) => x instanceof THREE.Mesh && !(x instanceof THREE.SkinnedMesh))[0];;
+            return <THREE.Mesh> mesh.children.first(x => x instanceof THREE.Mesh && !(x instanceof THREE.SkinnedMesh));
         }
 
         // Debugging tools and utilities below
@@ -364,8 +323,8 @@ module Thralldom {
                     boundingShape.visible = this.debugDraw;
                 }
             }
-            var debuggingLines = this.world.renderScene.children.filter((x) => x.name == "debug");
-            debuggingLines.forEach((x) => this.world.renderScene.remove(x));
+            var debuggingLines = this.world.renderScene.children.filter(x => x.name == "debug");
+            debuggingLines.forEach(x => this.world.renderScene.remove(x));
         }
     }
 }

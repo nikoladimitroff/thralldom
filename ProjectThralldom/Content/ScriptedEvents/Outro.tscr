@@ -1,4 +1,6 @@
-﻿place trigger at (-15, 28) activate at distance of 2
+﻿set trigger (-15, 28)
+set distance 2
+
 
 *$story-text:
 Thank you for giving our mission a try!

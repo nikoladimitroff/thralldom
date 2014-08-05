@@ -1,5 +1,4 @@
 module Thralldom {
-
     export module Objectives {
         export class Objective implements ILoadable, IDrawable {
             public group: number;
@@ -19,10 +18,14 @@ module Thralldom {
             }
 
             public loadFromDescription(description: any, content: ContentManager): void {
+                if (!description.text || description.text.trim().length == 0) {
+                    throw new Error("A quest objective is missing text description!");
+                }
+                this.text = description.text;
                 this.group = description.group || 0;
             }
 
-            public update(frameInfo: FrameInfo) {
+            public update(frameInfo: FrameInfo): void {
                 if (this.isComplete) {
                     this.mesh.visible = false;
                 }
@@ -68,10 +71,6 @@ module Thralldom {
                 else {
                     this.targetSelector = description.target;
                 }
-                if (description.text && ReachObjective.DefaultText != description.text) {
-                    ReachObjective.DefaultText = description.text;
-                }
-                this.text = ReachObjective.DefaultText;
 
                 this.radius = description.radius || 0;
                 this.isComplete = false;
@@ -118,12 +117,6 @@ module Thralldom {
                 }
                 super.loadFromDescription(description, content);
 
-
-                if (KillObjective.DefaultText != description.text) {
-                    KillObjective.DefaultText = KillObjective.DefaultText;
-                }
-                this.text = description.text;
-
                 this.targetSelector = description.target;
                 this.requiredKills = description.killCount || 1;
                 this.achievedKills = 0;
@@ -161,6 +154,52 @@ module Thralldom {
 
             public toString(): string {
                 var output = "{0} {1}. ({2}/{3})".format(this.text, this.targetSelector.substr(1), this.achievedKills, this.requiredKills);
+
+                return super.toString(output);
+            }
+        }
+
+
+        export class GatherObjective extends Objective {
+
+            private itemCode: number;
+            private requiredItems: number;
+            private collectedItems: number;
+
+            private static DefaultText = "";
+
+            public loadFromDescription(description: any, content: ContentManager): void {
+                if (!description.itemCode) {
+                    throw new Error("A gather objective must have an itemcode!");
+                }
+                super.loadFromDescription(description, content);
+
+                this.itemCode = description.itemCode;
+                this.requiredItems = description.requiredItems || 1;
+                this.collectedItems = 0;
+                this.isComplete = false;
+
+                this.mesh = new THREE.Mesh();
+                this.mesh.visible = false;
+            }
+
+            private static getCloserTargetComparer(heroPos: THREE.Vector3): (a: LoadableObject, b: LoadableObject) => number {
+                return (a, b) => a.mesh.position.distanceToSquared(heroPos) - b.mesh.position.distanceToSquared(heroPos);
+            }
+
+            public update(frameInfo: FrameInfo) {
+                if (this.isComplete) return;
+
+                // Detect all killing blows on the target.
+                var collected = frameInfo.hero.inventory.getItemQuantity(this.itemCode);
+                this.collectedItems = collected;
+                if (collected == this.requiredItems) {
+                    this.isComplete = true;
+                }
+            }
+
+            public toString(): string {
+                var output = "{0}. ({1}/{2})".format(this.text, this.collectedItems, this.requiredItems);
 
                 return super.toString(output);
             }

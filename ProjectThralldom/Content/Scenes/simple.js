@@ -92,15 +92,54 @@
         },
     ],
     statics: [
-       {
+        {
+            "type":"environment",
+            "pos":[21.182033655203398,0,-0.05357572014003853],
+            "rot":[3.141592653589793,1.5606423359643475,3.141592653589793],
+            "scale":1,
+            "model":"House_03.js",
+            "id":"",
+            "tags":[],
+            "interaction": {
+                type: "quest",
+                quest: "A side quest",
+            },
+        },
+        {
            "type":"environment",
-           "pos":[21.182033655203398,0,-0.05357572014003853],
-           "rot":[3.141592653589793,1.5606423359643475,3.141592653589793],
-           "scale":1,
-           "model":"House_03.js",
-           "id":"",
-           "tags":[],
-           "interaction": "item",
-       },
+            "pos":[-21.182033655203398,0,-0.05357572014003853],
+            "rot":[3.141592653589793,1.5606423359643475,3.141592653589793],
+            "scale":1,
+            "model":"House_03.js",
+            "id":"",
+            "tags":[],
+            "interaction": {
+                type: "item",
+                itemCode: 0x01,
+                quantity: 1,
+            },
+        }
+           /*
+            * "interaction": {
+            *     type: "script",
+            *     itemCode: 0x0,
+            *     quantity: 1
+            * }
+            */
+           /*
+            * "interaction": {
+            *     type: "script",
+            *     script: "frominteraction",
+            * } 
+            * }
+            */
+           
+           /*
+            * interaction: {
+            *   type: "quest",
+            *   quest: "random-side-quest",
+            *   
+            * }
+            */
        ]
 }

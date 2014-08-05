@@ -6,7 +6,7 @@ module Thralldom {
     }
     export class Environment extends LoadableObject implements IInteractable {
 
-        public interaction: InteractableEnvironementType;
+        public interaction: Interaction;
 
         public get displayName(): string {
             return this.id;
@@ -33,11 +33,7 @@ module Thralldom {
             }
 
             if (description.interaction) {
-                var interaction: string = description.interaction[0].toUpperCase() + description.interaction.substr(1);
-                this.interaction = InteractableEnvironementType[interaction];
-            }
-            else {
-                this.interaction = InteractableEnvironementType.None;
+                this.interaction = Interaction.fromDescription(description.interaction)
             }
 
 
@@ -58,18 +54,5 @@ module Thralldom {
 
             PhysicsManager.instance.computePhysicsBody(this, meshInfo, BodyType.TriangleMesh);
         }
-
-        public interact(hero: Character): void {
-            switch (this.interaction) {
-                case InteractableEnvironementType.Item:
-                    var itemCode = 0;
-                    hero.inventory.addItemQuantity(itemCode, 1);
-                    break;
-
-                default:
-                    break;
-            };
-        }
-
     }
 } 

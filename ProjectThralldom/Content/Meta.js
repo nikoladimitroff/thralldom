@@ -13,7 +13,9 @@
     world: "Content/Scenes/simple.js",
     quest: "Content/Quests/simple.js",
     assets: "Content/simple-assets.js",
-    scripts: [],
+    scripts: [
+        "Content/ScriptedEvents/Test.tscr",
+    ],
 
     items: "Content/ItemDb.js",
 }

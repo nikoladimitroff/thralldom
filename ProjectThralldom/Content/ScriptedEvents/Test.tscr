@@ -1,0 +1,4 @@
+﻿set name frominteraction
+
+*hero:
+flycamera from (5, 0.1, 0) to (-5, -0.2, 0) for 16000, use arc

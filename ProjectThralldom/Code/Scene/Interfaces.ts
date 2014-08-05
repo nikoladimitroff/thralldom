@@ -13,7 +13,7 @@
     }
 
     export interface IInteractable {
-        interact(hero: Character): void;
+        interaction: Interaction;
         displayName: string;
     }
 } 

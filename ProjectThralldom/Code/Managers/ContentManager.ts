@@ -3,10 +3,6 @@ module Thralldom {
         update(percentage: number, text: string): void;
     }
 
-    export var SpecialContents = {
-        Items: "ItemsDb",
-    }
-
     export class ContentManager {
 
         private loadedContent: IIndexable<any> = <IIndexable<any>>{};
@@ -26,6 +22,7 @@ module Thralldom {
         private static objectiveTypes = {
             "reach": Thralldom.Objectives.ReachObjective,
             "kill": Thralldom.Objectives.KillObjective,
+            "gather": Thralldom.Objectives.GatherObjective,
         }
 
         private static controllerTypes = {
@@ -333,12 +330,17 @@ module Thralldom {
 
         private loadQuest(path: string): void {
             this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
-                var questDescription = eval("Object(" + xhr.responseText + ")");
-                var quest = new Quest();
-                quest.name = quest["name"];
-                this.parseCollection(questDescription.objectives, ContentManager.objectiveTypes, quest.objectives.push.bind(quest.objectives));
-
-                this.onContentLoaded(path, () => quest);
+                var questDescription = eval(xhr.responseText);
+                var quests = new Array<Quest>();
+                for (var i = 0; i < questDescription.length; i++) {
+                    var quest = new Quest();
+                    quest.name = questDescription[i]["name"];
+                    this.parseCollection(questDescription[i].objectives,
+                                         ContentManager.objectiveTypes,
+                                         quest.objectives.push.bind(quest.objectives));
+                    quests.push(quest);
+                }
+                this.onContentLoaded(path, () => quests);
             });
         }
 
@@ -357,26 +359,26 @@ module Thralldom {
                 var items = eval(xhr.responseText);
                 var inventory = new Inventory();
                 inventory.loadFromDescription(items, this);
-                this.onContentLoaded(SpecialContents.Items, () => inventory);
+                this.onContentLoaded(path, () => inventory);
             });
         }
 
         private loadAssets(path: string): void {
             this.ajaxLoad(path, (xhr: XMLHttpRequest) => {
                 var assets = eval("Object(" + xhr.responseText + ")");
-                for (var i in assets.textures) {
+                for (var i = 0; i < assets.textures.length; i++) {
                     this.loadTexture(assets.textures[i]);
                 }
-                for (var i in assets.skinned) {
+                for (var i = 0; i < assets.skinned.length; i++) {
                     this.loadSkinnedModel(assets.skinned[i].path, assets.skinned[i].animationData);
                 }
-                for (var i in assets.models) {
+                for (var i = 0; i < assets.models.length; i++) {
                     this.loadModel(assets.models[i]);
                 }
-                for (var i in assets.audio) {
+                for (var i = 0; i < assets.audio.length; i++) {
                     this.loadAudio(assets.audio[i].sound, assets.audio[i].path, assets.audio[i].volume);
                 }
-                for (var i in assets.subtitles) {
+                for (var i = 0; i < assets.subtitles.length; i++) {
                     this.loadSubtitles(assets.subtitles[i]);
                 }
 

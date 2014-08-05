@@ -11,19 +11,11 @@ module Thralldom {
             }
 
             public runQuery(start: THREE.Vector3, goal: THREE.Vector3): Array<THREE.Vector2> {
-                var startNode: Vertex = this.vertices.filter((node) => node.x == start.x && node.y == start.z)[0];
-                var goalNode: Vertex = this.vertices.filter((node) => node.x == goal.x && node.y == goal.z)[0];
+                var startNode: Vertex = this.vertices.first((node) => node.x == start.x && node.y == start.z);
+                var goalNode: Vertex = this.vertices.first((node) => node.x == goal.x && node.y == goal.z);
                 return AStar.aStar(startNode, goalNode, this.vertices, this.edges).map(p => new THREE.Vector2(p.x, p.y));
             }
 
-            private static arrayRemove<T>(array: Array<T>, element: T): void {
-                var index = array.indexOf(element);
-                if (index != -1) {
-                    // Don't care about order
-                    array[index] = array[array.length - 1];
-                    array.pop();
-                }
-            }
 
             private static neighbourNodes(node: Vertex, points: Array<Vertex>, edges: Array<Edge>): Array<Vertex> {
                 var index = points.indexOf(node);
@@ -59,10 +51,12 @@ module Thralldom {
                         return AStar.reconstruct_path(came_from, goal)
                     }
 
-                    AStar.arrayRemove(openset, current); //remove current from openset
+
+                    openset.removeUnstable(current);//remove current from openset
+
                     closedset.push(current); //add current to closedset
                     var neighbours = AStar.neighbourNodes(current, points, edges);
-                    for (var i in neighbours) {
+                    for (var i = 0; i < neighbours.length; i++) {
                         var neighbour = neighbours[i];
                         if (closedset.indexOf(neighbour) != -1) {
                             continue;

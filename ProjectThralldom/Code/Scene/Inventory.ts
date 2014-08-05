@@ -54,5 +54,13 @@
                 }
             }
         }
+
+        public getItemQuantity(itemCode: number): number {
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].code == itemCode) {
+                    return this.items[i].quantity;
+                }
+            }
+        }
     }
 } 

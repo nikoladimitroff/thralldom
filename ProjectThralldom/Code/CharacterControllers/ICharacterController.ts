@@ -16,7 +16,8 @@ module Thralldom {
             canInteract: boolean;
 
             handleMouse(delta: number, input: InputManager): void;
-            handleKeyboard(delta: number, input: InputManager, keybindings: IKeybindings): void;
+            handleKeyboard(delta: number, input: InputManager, keybindings: IKeybindings,
+                           questManager: QuestManager, scriptManager: ScriptManager): void;
             handleInteraction(camera: CameraControllers.ICameraController, world: World): void;
         }
     }

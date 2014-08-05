@@ -67,18 +67,6 @@ module Thralldom {
             return frame / animation.root.geometry.animation.fps;
         }
 
-        public static arrayRemoveUnstable<T>(array: Array<T>, element: T): void {
-            var index = array.indexOf(element);
-            if (index != -1) {
-                // Don't care about order
-                Utils.arrayRemoveUnstableAt(array, index);
-            }
-        }
-
-        public static arrayRemoveUnstableAt<T>(array: Array<T>, index: number): void {
-            array[index] = array[array.length - 1];
-            array.pop();
-        }
 
         public static parseVector3(text: string): THREE.Vector3 {
             var coordinates = text.match(/-?\d+(?:\.\d+)?/g);
