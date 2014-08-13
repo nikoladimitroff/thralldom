@@ -6,7 +6,7 @@ Sidebar.Thralldom = function ( editor ) {
 
 	var signals = editor.signals;
 
-	var container = new UI.Panel();
+	var container = new UI.CollapsiblePanel();
 	container.setDisplay( 'none' );
 
 	container.add( new UI.Text().setValue( 'THRALLDOM' ) );
@@ -78,9 +78,6 @@ Sidebar.Thralldom = function ( editor ) {
 	};
 
 	editor.signals.objectSelected.add(function () {
-        
-
-
 	    if (editor.selected && Object.keys(editor.selected.userData).length == 0) {
 	        update();
 	    }

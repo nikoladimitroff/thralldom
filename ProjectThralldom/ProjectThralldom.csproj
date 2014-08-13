@@ -116,6 +116,7 @@
       <DependentUpon>app.css</DependentUpon>
     </Content>
     <None Include="Content\ScriptedEvents\Outro.tscr" />
+    <Content Include="Content\Scenes\navmesh.js" />
     <Content Include="Content\Scenes\simple.js" />
     <Content Include="Content\simple-assets.js" />
     <Content Include="Content\Sounds\dialog.mp3" />

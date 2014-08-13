@@ -63,6 +63,10 @@ module Thralldom {
             }
         }
 
+        public static randomColor(): number {
+            return ~~(Math.random() * 0xFFFFFF);
+        }
+
         public static convertFrameToTime(frame: number, animation: THREE.Animation) {
             return frame / animation.root.geometry.animation.fps;
         }

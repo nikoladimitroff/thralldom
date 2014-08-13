@@ -16,6 +16,8 @@
     models: [
         "Content/Models/Terrain/terrain.js",
         "Content/Models/Buildings/Houses/House_03.js",
+        "Content/Models/Buildings/Houses/Tavern.js",
+        "Content/Models/Buildings/Houses/Restaurant_two.js",
     ],
     textures: [
         "Content/Textures/Grass.jpg",

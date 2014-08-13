@@ -174,7 +174,7 @@
     <Content Include="js\Sidebar.Renderer.js" />
     <Content Include="js\Sidebar.Scene.js" />
     <Content Include="js\Storage.js" />
-    <Content Include="js\ThralldomSceneTracker.js" />
+    <Content Include="js\Thralldom.Exporter.js" />
     <Content Include="js\Toolbar.js" />
     <Content Include="js\Viewport.js" />
   </ItemGroup>
@@ -192,6 +192,7 @@
     <Content Include="build\three.min.js.map">
       <DependentUpon>three.min.js</DependentUpon>
     </Content>
+    <Content Include="js\Sidebar.ThralldomGlobal.js" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

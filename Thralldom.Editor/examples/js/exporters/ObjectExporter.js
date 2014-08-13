@@ -3,6 +3,8 @@
  */
 
 THREE.ObjectExporter = function () {};
+// THRALLDOM monkey patch THREE.Geometry2
+THREE.Geometry2 = function () { };
 
 THREE.ObjectExporter.prototype = {
 

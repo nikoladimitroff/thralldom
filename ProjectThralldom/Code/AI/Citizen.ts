@@ -12,24 +12,40 @@ module Thralldom {
                 
                 // COMMENTED
 
-                //var node = this.path[this.currentNode];
-                //var pos = new THREE.Vector2(character.mesh.position.x, character.mesh.position.z);
-                //// WARNING: MAGIC NUMBER!
-                //var radius = 5;
-                //if (pos.distanceTo(node) < radius) {
-                //    this.currentNode = (this.currentNode + 1) % this.path.length;
+                var node = this.path[this.currentNode];
+                var pos = GeometryUtils.Vector3To2(character.mesh.position);
+                // WARNING: MAGIC NUMBER!
+                var diffX = this.character.mesh.geometry.boundingBox.max.x - this.character.mesh.geometry.boundingBox.min.x;
+                var diffZ = this.character.mesh.geometry.boundingBox.max.z - this.character.mesh.geometry.boundingBox.min.z;
+                var radius = Math.max(diffX, diffZ) / 2 * this.character.mesh.scale.x;
+                if (node.distanceTo(pos) < radius) {
+                    this.currentNode++;
 
-                //}
-                //var node = this.path[this.currentNode];
-                //var fromTo = new THREE.Vector2();
+                    if (this.currentNode == this.path.length) {
+                        var current = this.path[this.path.length - 1];
+                        do {
+                            var next = this.graph.nodes[~~(Math.random() * this.graph.nodes.length)];
+                            this.path = Algorithms.AStar.runQuery(this.graph, current, next);
+                        }
+                        while (this.path.length == 0);
+                        this.currentNode = 0;
+                        var geometry = new THREE.Geometry();
+                        this.path.forEach(p => geometry.vertices.push(new THREE.Vector3(p.x, -character.centerToMesh.y, p.y)));
+                        var mat = new THREE.LineBasicMaterial({ color: Utils.randomColor() });
+                        var line = new THREE.Line(geometry, mat);
+                        character.mesh.parent.add(line); 
+                    }
+                }
+                var node = this.path[this.currentNode];
+                var fromTo = new THREE.Vector2();
 
-                //fromTo.subVectors(node, pos).normalize();
+                fromTo.subVectors(new THREE.Vector2(node.x, node.y), pos).normalize();
 
-                //var quat = GeometryUtils.quaternionFromVectors(Const.ForwardVector, new THREE.Vector3(fromTo.x, 0, fromTo.y));
-                //character.mesh.quaternion.copy(quat);
+                var quat = GeometryUtils.quaternionFromVectors(Const.ForwardVector, new THREE.Vector3(fromTo.x, 0, fromTo.y));
+                character.mesh.quaternion.copy(quat);
 
-                ////character.stateMachine.requestTransitionTo(CharacterStates.Falling);
-                //character.stateMachine.requestTransitionTo(CharacterStates.Walking);
+                character.stateMachine.requestTransitionTo(CharacterStates.Falling);
+                character.stateMachine.requestTransitionTo(CharacterStates.Walking);
             }
         }
     }

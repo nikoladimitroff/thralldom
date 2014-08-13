@@ -5,16 +5,32 @@ module Thralldom {
             public character: Character;
             public script: ScriptController;
             public graph: Algorithms.IGraph;
-            public path: Array<THREE.Vector2>;
+            public path: Array<Algorithms.Vertex>;
             public currentNode: number;
 
             constructor(character: Character, graph: Algorithms.IGraph) {
-                var astar = new Algorithms.AStar(graph);
-                var start = new THREE.Vector3(graph.nodes[0].x, 0, graph.nodes[0].y);
-                var goal = new THREE.Vector3(graph.nodes[graph.nodes.length - 1].x, 0, graph.nodes[graph.nodes.length - 1].y)
+                var nodes = graph.nodes;
 
-                this.path = astar.runQuery(start, goal);
+                var characterPos = character.mesh.position;
+                var min = nodes[0],
+                    minDist = (min.x - characterPos.x) * (min.x - characterPos.x) +
+                              (min.y - characterPos.z) * (min.y - characterPos.z)
+                for (var i = 1; i < nodes.length; i++) {
+                    var dist = (nodes[i].x - characterPos.x) * (nodes[i].x - characterPos.x) +
+                               (nodes[i].y - characterPos.z) * (nodes[i].y - characterPos.z);
+
+                    if (dist < minDist) {
+                        minDist = dist;
+                        min = nodes[i];
+                        if (dist == 0)
+                            break;
+                    }
+                }
+                var start = min;
+                this.path = [start];
                 this.currentNode = 0;
+
+                this.graph = graph;
                 this.character = character;
             }
 

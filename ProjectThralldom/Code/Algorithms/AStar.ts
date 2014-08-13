@@ -2,18 +2,9 @@
 module Thralldom {
     export module Algorithms {
         export class AStar {
-            private vertices: Array<Vertex>;
-            private edges: Array<Edge>;
+            public static runQuery(graph: IGraph, start: Vertex, goal: Vertex): Array<Vertex> {
 
-            constructor(graph: IGraph) {
-                this.vertices = graph.nodes;
-                this.edges = graph.edges;
-            }
-
-            public runQuery(start: THREE.Vector3, goal: THREE.Vector3): Array<THREE.Vector2> {
-                var startNode: Vertex = this.vertices.first((node) => node.x == start.x && node.y == start.z);
-                var goalNode: Vertex = this.vertices.first((node) => node.x == goal.x && node.y == goal.z);
-                return AStar.aStar(startNode, goalNode, this.vertices, this.edges).map(p => new THREE.Vector2(p.x, p.y));
+                return AStar.aStar(start, goal, graph.nodes, graph.edges);
             }
 
 
@@ -51,7 +42,6 @@ module Thralldom {
                         return AStar.reconstruct_path(came_from, goal)
                     }
 
-
                     openset.removeUnstable(current);//remove current from openset
 
                     closedset.push(current); //add current to closedset
@@ -77,12 +67,26 @@ module Thralldom {
                 return [];
             }
 
+            //private static reconstruct_path(came_from: any, current_node: Vertex): Array<Vertex> {
+            //    if (came_from[current_node]) {
+            //        var p = AStar.reconstruct_path(came_from, came_from[current_node])
+            //        return p.concat([current_node]);
+            //    }
+            //    return [current_node];
+            //}
+
             private static reconstruct_path(came_from: any, current_node: Vertex): Array<Vertex> {
-                if (came_from[current_node]) {
-                    var p = AStar.reconstruct_path(came_from, came_from[current_node])
-                    return p.concat([current_node]);
+                var stack = [];
+
+                var node = current_node;
+                var path = [];
+                while (came_from[node]) {
+                    stack.push(node);
+                    node = came_from[node];
                 }
-                return [current_node];
+                while (stack.length != 0) path.push(stack.pop());
+
+                return path;
             }
         }
     }

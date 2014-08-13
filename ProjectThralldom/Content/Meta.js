@@ -10,11 +10,19 @@
     //],
     
     /* Quick to load, quick to test below*/
-    world: "Content/Scenes/simple.js",
+    //world: "Content/Scenes/simple.js",
+    //quest: "Content/Quests/simple.js",
+    //assets: "Content/simple-assets.js",
+    //scripts: [
+    //    "Content/ScriptedEvents/Test.tscr",
+    //],
+    
+    /* Quick to load, quick to test below*/
+    world: "Content/Scenes/navmesh.js",
     quest: "Content/Quests/simple.js",
     assets: "Content/simple-assets.js",
     scripts: [
-        "Content/ScriptedEvents/Test.tscr",
+
     ],
 
     items: "Content/ItemDb.js",

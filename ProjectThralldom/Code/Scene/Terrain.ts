@@ -60,10 +60,6 @@ module Thralldom {
         }
 
         public loadFromDescription(description: any, content: ContentManager): void {
-            if (!description.texture) {
-                throw new Error("Terrain needs a texture!");
-            }
-
             super.loadFromDescription(description, content);
             if (!description.scale) {
                 throw new Error("Invalid or missing value for terrain scale!");

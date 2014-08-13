@@ -316,6 +316,8 @@ var Loader = function ( editor ) {
 			var result = loader.parse( data );
 
 			var geometry = result.geometry;
+            // THRALLDOM: CHANGE DEFAULT MATERIAL TO THREE.NORMAL
+			result.materials = [new THREE.MeshNormalMaterial()];
 			var material;
 
 			if ( result.materials !== undefined ) {

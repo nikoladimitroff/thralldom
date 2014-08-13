@@ -5,6 +5,10 @@ Thralldom.Exporter = function (editor) {
     editor = editor || new Editor();
 
     var scene = [];
+    var navmesh = {
+        nodes: [],
+        edges: [],
+    }
 
     var isStateValid = true;
 
@@ -109,12 +113,95 @@ Thralldom.Exporter = function (editor) {
         return result;
     }
 
+
+    function exportNavMesh(defaultHeight, cw, ch, maxSlope, shouldVisualize) {
+        var terrain = scene.filter(getFilterPredicate("Terrain"))[0];
+
+        var dx = Math.sqrt(cw * cw + ch * ch);
+
+        var raycaster = new THREE.Raycaster();
+        var down = new THREE.Vector3(0, -1, 0);
+
+        var visited = [];
+
+        var nodes = navmesh.nodes = [],
+            edges = navmesh.edges = [];
+        function tryAddNode(row, col, parent, parentIndex) {
+            // The following is a bijection from Z to N. See here http://math.stackexchange.com/questions/187751/cardinality-of-the-set-of-all-pairs-of-integers
+            var mappedRow = row < 0 ? -(2 * row + 1) : 2 * row + 2,
+                mappedCol = col < 0 ? -(2 * col + 1) : 2 * col + 2;
+            // The following is a bijection from N^2 to N. See here http://www.physicsforums.com/showthread.php?t=536900
+            var code = ((mappedRow + mappedCol) * (mappedRow + mappedCol) + 3 * mappedRow + mappedCol) / 2;
+            if (visited[code]) return;
+
+            visited[code] = true;
+            var mid = new THREE.Vector3(cw * (col + 0.5), defaultHeight, ch * (row + 0.5));
+            raycaster.set(mid, down);
+            var result = raycaster.intersectObjects(scene);
+
+            var hitIndex = 0;
+            var firstHit;
+            do firstHit = result[hitIndex++];
+            while (firstHit && firstHit.object.userData.exportAs != "Environment" && firstHit.object != terrain)
+
+            // No appropriate hit
+            if (!firstHit) return;
+
+            if (firstHit.object == terrain) {
+                var hit = firstHit.point;
+                var dh = parent !== undefined ? Math.abs(hit.y - parent.y) : 0;
+                var slope = dh / dx;
+                if (slope < maxSlope) {
+                    nodes.push([mid.x, mid.z]);
+                    var index = nodes.length - 1;
+                    if (parentIndex !== undefined)
+                        edges.push([parentIndex, index]);
+
+                    tryAddNode(row + 1, col, hit, index);
+                    tryAddNode(row - 1, col, hit, index);
+                    tryAddNode(row, col + 1, hit, index);
+                    tryAddNode(row, col - 1, hit, index);
+                }
+            }
+        }
+
+        var hero = scene.filter(function (o) { o.userData.id == "hero" })[0];
+        var initialRow = 0, initialCol = 0;
+        if (hero) {
+            initialRow = hero.position.x / cw;
+            initialCol = hero.position.y / ch;
+        }
+        tryAddNode(initialRow, initialCol, undefined, undefined);
+
+        var name = "NAVMESHVISUALIZER";
+        var previous = editor.scene.getObjectByName(name);
+        if (previous) editor.removeObject(previous);
+        if (shouldVisualize) {
+
+            var obj = new THREE.Object3D();
+            obj.name = name;
+            nodes.forEach(function (n) {
+                var geometry = new THREE.BoxGeometry(cw, defaultHeight, ch);
+                var mat = new THREE.MeshNormalMaterial();
+                var mesh = new THREE.Mesh(geometry, mat);
+                mesh.position.set(n[0], defaultHeight / 2, n[1]);
+                obj.add(mesh);
+            })
+            editor.addObject(obj);
+        }
+    }
+
     function exportScene() {
         isStateValid = true;
 
         var env = scene.filter(getFilterPredicate("Environment")).map(exportObject);
         var characters = scene.filter(getFilterPredicate("Character")).map(exportObject);
         var terrain = scene.filter(getFilterPredicate("Terrain"));
+        if (terrain.length == 0) {
+            var msg = "No terrain specified";
+            console.Error(msg);
+            alert(msg);
+        }
         if (terrain.length > 1) {
             console.warn("More than one mesh marked as terrain, only the first will be xported");
         }
@@ -128,16 +215,6 @@ Thralldom.Exporter = function (editor) {
         else {
             terrain = undefined;
         }
-
-        var nodes = [],
-            edges = [];
-        var waypoints = scene.filter(getFilterPredicate("Waypoint Path")).forEach(exportWaypointPath.bind(undefined, nodes, edges));
-        nodes = nodes.map(function (p) { return [p.x, p.y]; });
-        var graph = {
-            nodes: nodes,
-            edges: edges,
-        }
-
         if (!isStateValid)
             return;
 
@@ -145,7 +222,7 @@ Thralldom.Exporter = function (editor) {
             "statics": env,
             "dynamics": characters,
             "terrain": terrain,
-            "graph": graph,
+            "navmesh": navmesh,
         }
 
         var blob = new Blob([prettyJsonStringify(data)], { type: 'text/plain' });
@@ -155,7 +232,10 @@ Thralldom.Exporter = function (editor) {
         window.focus();
     }
 
-    return {
-        exportScene: exportScene
+
+    return  {
+        exportScene: exportScene,
+        generateNavMesh: exportNavMesh,
+        scene: scene,
     };
 };

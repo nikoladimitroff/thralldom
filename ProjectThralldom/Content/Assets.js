@@ -19,7 +19,7 @@
         //"Content/Models/Buildings/Houses/objectMarket.js",
         //"Content/Models/Buildings/Houses/barrels_one.js",
         //"Content/Models/Buildings/Houses/barrels_two.js",
-        //"Content/Models/Buildings/Houses/Tavern.js",
+        "Content/Models/Buildings/Houses/Tavern.js",
         //"Content/Models/Buildings/Houses/oldwarehouse.js",
         //"Content/Models/Buildings/Houses/Restaurant_one.js",
         //"Content/Models/Buildings/Houses/Restaurant_two.js",

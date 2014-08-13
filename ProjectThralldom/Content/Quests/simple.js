@@ -9,12 +9,6 @@
                 text: "Go touch him.",
                 group: 0,
             },
-            {
-                type: "kill",
-                target: ".guard",
-                text: "Kill some mofos.",
-                group: 0,
-            },
         ]
     },
     {

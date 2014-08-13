@@ -305,13 +305,13 @@ module Thralldom {
             this.parseCollection(singletons, ContentManager.staticTypes, world.addStatic.bind(world));
 
             // Waypoints
-            if (!worldDescription.waypoints) {
+            if (!worldDescription.navmesh) {
                 console.error("No pathfinding graph supplied to scene, AI cannot move!");
             }
 
             var graph = {
-                nodes: worldDescription.waypoints.nodes.map((array) => new Algorithms.Vertex(array[0], array[1])),
-                edges: worldDescription.waypoints.edges.map((array) => new Algorithms.Edge(array[0], array[1])),
+                nodes: worldDescription.navmesh.nodes.map((array) => new Algorithms.Vertex(array[0], array[1])),
+                edges: worldDescription.navmesh.edges.map((array) => new Algorithms.Edge(array[0], array[1])),
             }
 
             this.loadControllers(world, graph);

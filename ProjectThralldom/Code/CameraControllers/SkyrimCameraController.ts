@@ -81,7 +81,7 @@ module Thralldom {
 
                 // TODO: replace magic numbers! 
                 this.distance -= movement.z * this.zoomSpeed;
-                this.distance = THREE.Math.clamp(this.distance, -28, 28);
+                this.distance = THREE.Math.clamp(this.distance, -200, 200);
                 var turnSpeed = movement.y * speed; 
                 this.yaw -= turnSpeed
                 this.pitch = THREE.Math.clamp(this.pitch + movement.x * speed, THREE.Math.degToRad(75), THREE.Math.degToRad(150));

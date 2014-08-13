@@ -155,9 +155,12 @@ Menubar.File = function ( editor ) {
 	}
 
     // Thralldom export
-	var thralldom = Thralldom.Exporter(editor);
+	var thralldomExporter = Thralldom.Exporter(editor);
 	function onExportThralldomClick() {
-	    thralldom.exportScene();
+	    thralldomExporter.exportScene();
+	}
+	editor.thralldom = {
+	    exporter: thralldomExporter,
 	}
 
 	// create file input element for scene import

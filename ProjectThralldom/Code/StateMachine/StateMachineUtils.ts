@@ -45,9 +45,9 @@ module Thralldom {
             var startTime = Utils.convertFrameToTime(animationData.startFrame, animation);
             var endTime = Utils.convertFrameToTime(animationData.endFrame, animation);
 
-            if (animation.currentTime >= endTime && !animation.isPaused) {
-                animation.pause();
-                character.weapon.animation.pause();
+            if (animation.currentTime >= endTime && animation.isPlaying) {
+                animation.stop();
+                character.weapon && character.weapon.animation.stop();
 
                 return true;
             }
