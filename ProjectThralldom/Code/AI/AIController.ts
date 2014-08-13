@@ -7,6 +7,7 @@ module Thralldom {
             public graph: Algorithms.IGraph;
             public path: Array<Algorithms.Vertex>;
             public currentNode: number;
+            public radiusSquared: number;
 
             constructor(character: Character, graph: Algorithms.IGraph) {
                 var nodes = graph.nodes;
@@ -32,6 +33,11 @@ module Thralldom {
 
                 this.graph = graph;
                 this.character = character;
+
+                var diffX = character.mesh.geometry.boundingBox.max.x - character.mesh.geometry.boundingBox.min.x;
+                var diffZ = character.mesh.geometry.boundingBox.max.z - character.mesh.geometry.boundingBox.min.z;
+                var radius = Math.max(diffX, diffZ) / 2 * character.mesh.scale.x;
+                this.radiusSquared = radius * radius;
             }
 
             public update(delta: number, world: Thralldom.World): void {

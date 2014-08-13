@@ -31,6 +31,11 @@ module Thralldom {
                 var p = this;
                 return Math.sqrt((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y));
             }
+
+            public distanceToSquared(q: Vertex) {
+                var p = this;
+                return (p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y);
+            }
         }
     }
 }

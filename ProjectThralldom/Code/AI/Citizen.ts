@@ -14,11 +14,7 @@ module Thralldom {
 
                 var node = this.path[this.currentNode];
                 var pos = GeometryUtils.Vector3To2(character.mesh.position);
-                // WARNING: MAGIC NUMBER!
-                var diffX = this.character.mesh.geometry.boundingBox.max.x - this.character.mesh.geometry.boundingBox.min.x;
-                var diffZ = this.character.mesh.geometry.boundingBox.max.z - this.character.mesh.geometry.boundingBox.min.z;
-                var radius = Math.max(diffX, diffZ) / 2 * this.character.mesh.scale.x;
-                if (node.distanceTo(pos) < radius) {
+                if (node.distanceToSquared(pos) <= this.radiusSquared) {
                     this.currentNode++;
 
                     if (this.currentNode == this.path.length) {

@@ -122,6 +122,8 @@ Thralldom.Exporter = function (editor) {
         var raycaster = new THREE.Raycaster();
         var down = new THREE.Vector3(0, -1, 0);
 
+        // Visited is a map from an unique code computed from the coordinates to the index of the nodes or
+        // -1 if the node should not be created or undefined if the node hasn't been visited
         var visited = [];
 
         var nodes = navmesh.nodes = [],
@@ -132,9 +134,13 @@ Thralldom.Exporter = function (editor) {
                 mappedCol = col < 0 ? -(2 * col + 1) : 2 * col + 2;
             // The following is a bijection from N^2 to N. See here http://www.physicsforums.com/showthread.php?t=536900
             var code = ((mappedRow + mappedCol) * (mappedRow + mappedCol) + 3 * mappedRow + mappedCol) / 2;
-            if (visited[code]) return;
 
-            visited[code] = true;
+            if (visited[code] === -1) return;
+            if (visited[code] !== undefined) {
+                edges.push([parentIndex, visited[code]])
+                return;
+            }
+
             var mid = new THREE.Vector3(cw * (col + 0.5), defaultHeight, ch * (row + 0.5));
             raycaster.set(mid, down);
             var result = raycaster.intersectObjects(scene);
@@ -154,6 +160,7 @@ Thralldom.Exporter = function (editor) {
                 if (slope < maxSlope) {
                     nodes.push([mid.x, mid.z]);
                     var index = nodes.length - 1;
+                    visited[code] = index;
                     if (parentIndex !== undefined)
                         edges.push([parentIndex, index]);
 
@@ -161,8 +168,11 @@ Thralldom.Exporter = function (editor) {
                     tryAddNode(row - 1, col, hit, index);
                     tryAddNode(row, col + 1, hit, index);
                     tryAddNode(row, col - 1, hit, index);
+
+                    return;
                 }
             }
+            visited[code] = -1;
         }
 
         var hero = scene.filter(function (o) { o.userData.id == "hero" })[0];
