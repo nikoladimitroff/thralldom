@@ -164,10 +164,16 @@ Thralldom.Exporter = function (editor) {
                     if (parentIndex !== undefined)
                         edges.push([parentIndex, index]);
 
+                    // Direct neighbours
                     tryAddNode(row + 1, col, hit, index);
                     tryAddNode(row - 1, col, hit, index);
                     tryAddNode(row, col + 1, hit, index);
                     tryAddNode(row, col - 1, hit, index);
+                    // Diagonals
+                    tryAddNode(row + 1, col + 1, hit, index);
+                    tryAddNode(row + 1, col - 1, hit, index);
+                    tryAddNode(row - 1, col + 1, hit, index);
+                    tryAddNode(row - 1, col - 1, hit, index);
 
                     return;
                 }

@@ -9,11 +9,10 @@ module Thralldom {
             public updateCallback(delta: number, world: Thralldom.World): void {
 
                 var character = this.character;
-                
-                // COMMENTED
 
                 var node = this.path[this.currentNode];
                 var pos = GeometryUtils.Vector3To2(character.mesh.position);
+
                 if (node.distanceToSquared(pos) <= this.radiusSquared) {
                     this.currentNode++;
 
