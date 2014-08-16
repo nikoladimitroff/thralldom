@@ -45,58 +45,21 @@ Thralldom.Exporter = function (editor) {
             isStateValid = false;
             return;
         }
+        function fixDecimals(num) {
+            return num.toFixed(precision);
+        }
 
         return {
             type: object.userData.exportAs.toLowerCase(),
-            pos: [object.position.x, object.position.y, object.position.z],
-            rot: [object.rotation.x, object.rotation.y, object.rotation.z],
-            scale: object.scale.x,
+            pos: [object.position.x, object.position.y, object.position.z].map(fixDecimals),
+            rot: [object.rotation.x, object.rotation.y, object.rotation.z].map(fixDecimals),
+            scale: sx,
             model: object.name,
             id: object.userData.id,
             tags: object.userData.tags,
         }
     }
 
-    function exportWaypointPath(nodes, edges, object) {
-        if (!(object instanceof THREE.Line)) {
-            console.warn("Something other from a line marked as a waypoint, ignoring");
-            return;
-        }
-        var p = object.geometry.vertices[0],
-            q = object.geometry.vertices[1];
-
-        p.applyMatrix4(object.matrix);
-        q.applyMatrix4(object.matrix);
-        var firstNode = new THREE.Vector2(p.x, p.z);
-        var secondNode = new THREE.Vector2(q.x, q.z);
-
-        var errorMargin = 10;
-
-        var firstIndex = -1;
-        var firstCloseEnough = nodes.filter(function (value, index) {
-            if (value.distanceToSquared(firstNode) <= errorMargin) {
-                firstIndex = index;
-            }
-        });
-        if (firstIndex == -1) {
-            nodes.push(firstNode);
-            firstIndex = nodes.length - 1;
-        }
-
-        var secondIndex = -1;
-        var secondCloseEnough = nodes.filter(function (value, index) {
-            if (value.distanceToSquared(secondNode) <= errorMargin) {
-                secondIndex = index;
-            }
-        });
-        if (secondIndex == -1) {
-            nodes.push(secondNode);
-            secondIndex = nodes.length - 1;
-        }
-
-        edges.push([firstIndex, secondIndex]);
-
-    }
 
     function getFilterPredicate(value) {
         return function (object) {
@@ -113,22 +76,27 @@ Thralldom.Exporter = function (editor) {
         return result;
     }
 
+    function scaleEnvironment(factor) {
+        for (var i = 0; i < scene.length; i++) {
+            if (scene[i].userData.exportAs == "Environment") {
+                console.log("BEFORE", scene[i].scale.x, scene[i].scale.z)
+                scene[i].scale.x *= factor;
+                scene[i].scale.z *= factor;
+                scene[i].updateMatrixWorld(true);
+                console.log("AFTER", scene[i].scale.x, scene[i].scale.z)
+            }
+        }
+    }
 
-    function exportNavMesh(defaultHeight, cw, ch, maxSlope, shouldVisualize) {
-        var terrain = scene.filter(getFilterPredicate("Terrain"))[0];
-
-        var dx = Math.sqrt(cw * cw + ch * ch);
+    function bindTryAddNode(maxSlope,
+                            cw, ch, defaultHeight,
+                            terrain,
+                            visited, nodes, edges) {
 
         var raycaster = new THREE.Raycaster();
         var down = new THREE.Vector3(0, -1, 0);
-
-        // Visited is a map from an unique code computed from the coordinates to the index of the nodes or
-        // -1 if the node should not be created or undefined if the node hasn't been visited
-        var visited = [];
-
-        var nodes = navmesh.nodes = [],
-            edges = navmesh.edges = [];
-        function tryAddNode(row, col, parent, parentIndex) {
+        var dx = Math.sqrt(cw * cw + ch * ch);
+        return function tryAddNode(row, col, parent, parentIndex) {
             // The following is a bijection from Z to N. See here http://math.stackexchange.com/questions/187751/cardinality-of-the-set-of-all-pairs-of-integers
             var mappedRow = row < 0 ? -(2 * row + 1) : 2 * row + 2,
                 mappedCol = col < 0 ? -(2 * col + 1) : 2 * col + 2;
@@ -180,20 +148,14 @@ Thralldom.Exporter = function (editor) {
             }
             visited[code] = -1;
         }
+    }
 
-        var hero = scene.filter(function (o) { o.userData.id == "hero" })[0];
-        var initialRow = 0, initialCol = 0;
-        if (hero) {
-            initialRow = hero.position.x / cw;
-            initialCol = hero.position.y / ch;
-        }
-        tryAddNode(initialRow, initialCol, undefined, undefined);
-
+    function visualizeNavmesh(nodes, cw, ch, defaultHeight, shouldVisualize) {
         var name = "NAVMESHVISUALIZER";
         var previous = editor.scene.getObjectByName(name);
         if (previous) editor.removeObject(previous);
-        if (shouldVisualize) {
 
+        if (shouldVisualize) {
             var obj = new THREE.Object3D();
             obj.name = name;
             nodes.forEach(function (n) {
@@ -205,6 +167,39 @@ Thralldom.Exporter = function (editor) {
             })
             editor.addObject(obj);
         }
+    }
+
+    function generateNavmesh(defaultHeight, cw, ch, maxSlope, shouldVisualize) {
+        var terrain = scene.filter(getFilterPredicate("Terrain"))[0];
+
+        // Visited is a map from an unique code computed from the coordinates to the index of the nodes or
+        // -1 if the node should not be created or undefined if the node hasn't been visited
+        var visited = [];
+
+        var nodes = navmesh.nodes = [],
+            edges = navmesh.edges = [];
+
+
+        var hero = scene.filter(function (o) { o.userData.id == "hero" })[0];
+        var initialRow = 0, initialCol = 0;
+        if (hero) {
+            initialRow = hero.position.x / cw;
+            initialCol = hero.position.y / ch;
+        }
+
+        var tryAddNode = bindTryAddNode(maxSlope,
+                                        cw, ch, defaultHeight,
+                                        terrain,
+                                        visited, nodes, edges);
+
+        tryAddNode(initialRow, initialCol, undefined, undefined);
+        visualizeNavmesh(nodes, cw, ch, defaultHeight, shouldVisualize);
+    }
+
+    function exportNavmesh(defaultHeight, cw, ch, maxSlope, factor, shouldVisualize) {
+        scaleEnvironment(factor);
+        generateNavmesh(defaultHeight, cw, ch, maxSlope, shouldVisualize);
+        scaleEnvironment(1 / factor);
     }
 
     function exportScene() {
@@ -251,7 +246,8 @@ Thralldom.Exporter = function (editor) {
 
     return  {
         exportScene: exportScene,
-        generateNavMesh: exportNavMesh,
+        exportNavmesh: exportNavmesh,
+        scaleEnvironment: scaleEnvironment,
         scene: scene,
     };
 };

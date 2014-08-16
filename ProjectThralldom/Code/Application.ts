@@ -104,13 +104,14 @@ module Thralldom {
 
         public init(meta: IMetaGameData): void {
             this.world = this.content.getContent(meta.world);
+            this.hero = <Character> this.world.select("#hero")[0];
+
             this.quests = new QuestManager(this.content.getContent(meta.quest), this.world);
             var scripts = meta.scripts.map(file => this.content.getContent(file));
             this.scripts = new ScriptManager(scripts, this.hero, this.world);
 
             // World 
 
-            this.hero = <Character> this.world.select("#hero")[0];
             // Camera controller
             this.cameraController = new CameraControllers.SkyrimCameraController(
                 this.webglContainer.offsetWidth / this.webglContainer.offsetHeight,

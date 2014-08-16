@@ -22,7 +22,7 @@
     quest: "Content/Quests/simple.js",
     assets: "Content/simple-assets.js",
     scripts: [
-
+        "Content/ScriptedEvents/NavmeshTest.tscr",
     ],
 
     items: "Content/ItemDb.js",

@@ -35,11 +35,14 @@ Sidebar.ThralldomGlobal = function (editor) {
 	thralldomCellDimensionsRow.add(thralldomCellWidth, thralldomCellDepth);
 
 	// slope
-	var thralldomSlopeRow = new UI.Panel();
+	var thralldomSlopeFactorRow = new UI.Panel();
 	var thralldomMaxSlope = new UI.Number(Math.PI / 12).setWidth('50px').onChange(saveOptions);
+	var thralldomFactor = new UI.Number(1.2).setWidth('50px').onChange(saveOptions);
 
-	thralldomSlopeRow.add(new UI.Text('Max Slope').setWidth('90px'));
-	thralldomSlopeRow.add(thralldomMaxSlope);
+    thralldomSlopeFactorRow.add(new UI.Text('Max Slope').setWidth('60px'));
+    thralldomSlopeFactorRow.add(thralldomMaxSlope);
+    thralldomSlopeFactorRow.add(new UI.Text('Factor').setWidth('60px'));
+    thralldomSlopeFactorRow.add(thralldomFactor);
 
 	// generation
 	var thralldomGenerateMeshRow = new UI.Panel();
@@ -77,17 +80,18 @@ Sidebar.ThralldomGlobal = function (editor) {
 			depth = thralldomCellDepth.getValue();
 
 		var slope = thralldomMaxSlope.getValue();
+		var factor = thralldomFactor.getValue();
 
 		var shouldVisualize = thralldomVisualizeMesh.getValue();
 
-		editor.thralldom.exporter.generateNavMesh(height, width, depth, slope, shouldVisualize);
+		editor.thralldom.exporter.exportNavmesh(height, width, depth, slope, factor, shouldVisualize);
 	};
 
 
 
 	container.add(thralldomHeightRow);
 	container.add(thralldomCellDimensionsRow);
-	container.add(thralldomSlopeRow);
+	container.add(thralldomSlopeFactorRow);
 	container.add(thralldomGenerateMeshRow);
 	loadOptions();
 

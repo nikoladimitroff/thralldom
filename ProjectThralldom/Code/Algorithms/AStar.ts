@@ -1,10 +1,37 @@
 /// <reference path="graphdefinitions.ts" />
 module Thralldom {
     export module Algorithms {
-        export class AStar {
+        export class AStar {            
             public static runQuery(graph: IGraph, start: Vertex, goal: Vertex): Array<Vertex> {
-
                 return AStar.aStar(start, goal, graph.nodes, graph.edges);
+            }
+
+            public static runQueryOnVectors(graph: IGraph, start: THREE.Vector3, goal: THREE.Vector3): Array<Vertex> {
+                var start2d = GeometryUtils.Vector3To2(start),
+                    goal2d = GeometryUtils.Vector3To2(goal);
+
+                var minDistances = [graph.nodes[0].distanceToSquared(start2d), graph.nodes[0].distanceToSquared(goal2d)];
+                var minElements = [graph.nodes[0], graph.nodes[0]];
+
+                for (var i = 1; i < graph.nodes.length; i++) {
+                    var element = graph.nodes[i];
+                    var toStart = element.distanceToSquared(start),
+                        toGoal = element.distanceToSquared(goal);
+                    if (toStart < minDistances[0]) {
+                        minDistances[0] = toStart;
+                        minElements[0] = element;
+                    }
+                    if (toGoal < minDistances[1]) {
+                        minDistances[1] = toGoal; 
+                        minElements[1] = element;
+                    }
+                }
+
+                var queryResult = AStar.aStar(minElements[0], minElements[1], graph.nodes, graph.edges);
+                queryResult.unshift(start2d);
+                queryResult.push(goal2d);
+
+                return queryResult;
             }
 
 
@@ -32,7 +59,7 @@ module Thralldom {
                 var f_score: any = {};
 
                 g_score[start] = 0    // Cost from start along best known path.
-                // Estimated total cost from start to goal through y.
+                // Estimated total cost from start to goal.
                 f_score[start] = g_score[start] + start.distanceTo(goal);
 
                 while (openset.length) {
@@ -66,14 +93,6 @@ module Thralldom {
 
                 return [];
             }
-
-            //private static reconstruct_path(came_from: any, current_node: Vertex): Array<Vertex> {
-            //    if (came_from[current_node]) {
-            //        var p = AStar.reconstruct_path(came_from, came_from[current_node])
-            //        return p.concat([current_node]);
-            //    }
-            //    return [current_node];
-            //}
 
             private static reconstruct_path(came_from: any, current_node: Vertex): Array<Vertex> {
                 var stack = [];

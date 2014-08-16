@@ -115,6 +115,7 @@
     <Content Include="app.css.map">
       <DependentUpon>app.css</DependentUpon>
     </Content>
+    <Content Include="Content\ScriptedEvents\NavmeshTest.tscr" />
     <None Include="Content\ScriptedEvents\Outro.tscr" />
     <Content Include="Content\Scenes\navmesh.js" />
     <Content Include="Content\Scenes\simple.js" />

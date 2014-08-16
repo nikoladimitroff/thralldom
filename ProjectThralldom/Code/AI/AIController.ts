@@ -2,6 +2,8 @@ module Thralldom {
     export module AI {
         export class AIController implements IController {
 
+            public static Graph: Algorithms.IGraph;
+
             public character: Character;
             public script: ScriptController;
             public graph: Algorithms.IGraph;
@@ -10,6 +12,7 @@ module Thralldom {
             public radiusSquared: number;
 
             constructor(character: Character, graph: Algorithms.IGraph) {
+                AIController.Graph = graph;
                 var nodes = graph.nodes;
 
                 var characterPos = character.mesh.position;
