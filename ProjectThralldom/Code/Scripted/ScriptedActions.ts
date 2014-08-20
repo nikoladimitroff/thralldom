@@ -44,7 +44,7 @@ module Thralldom {
 
         public hasCompleted: boolean;
 
-        private path: Array<Algorithms.Vertex>;
+        private path: Array<Algorithms.Rectangle>;
         private currentNode: number;
 
         private destination: THREE.Vector2;
@@ -58,52 +58,52 @@ module Thralldom {
         }
 
         public begin(character: Character, extras: IExtraScriptedData): void {
-            this.destination = this.target;
-            if (this.isAdditive) {
-                var dir = GeometryUtils.Vector2To3(this.target);
-                dir.applyQuaternion(character.mesh.quaternion);
-                this.destination = GeometryUtils.Vector3To2(dir);
-                this.destination.add(GeometryUtils.Vector3To2(character.mesh.position));
-            }
-            this.path = Algorithms.AStar.runQueryOnVectors(AI.AIController.Graph,
-                character.mesh.position,
-                GeometryUtils.Vector2To3(this.destination));
-            this.currentNode = 0;
+            //this.destination = this.target;
+            //if (this.isAdditive) {
+            //    var dir = GeometryUtils.Vector2To3(this.target);
+            //    dir.applyQuaternion(character.mesh.quaternion);
+            //    this.destination = GeometryUtils.Vector3To2(dir);
+            //    this.destination.add(GeometryUtils.Vector3To2(character.mesh.position));
+            //}
+            //this.path = Algorithms.AStar.runQueryOnVectors(AI.AIController.Graph,
+            //    character.mesh.position,
+            //    GeometryUtils.Vector2To3(this.destination));
+            //this.currentNode = 0;
 
 
-            var geometry = new THREE.Geometry();
-            this.path.forEach(p => geometry.vertices.push(new THREE.Vector3(p.x, -character.centerToMesh.y, p.y)));
-            var mat = new THREE.LineBasicMaterial({ color: Utils.randomColor() });
-            var line = new THREE.Line(geometry, mat);
-            character.mesh.parent.add(line); 
+            //var geometry = new THREE.Geometry();
+            //this.path.forEach(p => geometry.vertices.push(new THREE.Vector3(p.x, -character.centerToMesh.y, p.y)));
+            //var mat = new THREE.LineBasicMaterial({ color: Utils.randomColor() });
+            //var line = new THREE.Line(geometry, mat);
+            //character.mesh.parent.add(line); 
         }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
-            if (this.hasCompleted) {
-                character.stateMachine.requestTransitionTo(CharacterStates.Idle);
-                return;
-            }
+            //if (this.hasCompleted) {
+            //    character.stateMachine.requestTransitionTo(CharacterStates.Idle);
+            //    return;
+            //}
 
-            // MAGIC NUMBER
-            var radiusSquared = 5 * 5;
-            var node = this.path[this.currentNode];
-            var pos = GeometryUtils.Vector3To2(character.mesh.position);
+            //// MAGIC NUMBER
+            //var radiusSquared = 5 * 5;
+            //var node = this.path[this.currentNode];
+            //var pos = GeometryUtils.Vector3To2(character.mesh.position);
 
-            if (node.distanceToSquared(pos) <= radiusSquared) {
-                this.currentNode++;
-                if (this.currentNode == this.path.length) {
-                    this.hasCompleted = true;
-                    return;
-                }
-            }
-            var node = this.path[this.currentNode];
-            var fromTo = new THREE.Vector2();
+            //if (node.distanceToSquared(pos) <= radiusSquared) {
+            //    this.currentNode++;
+            //    if (this.currentNode == this.path.length) {
+            //        this.hasCompleted = true;
+            //        return;
+            //    }
+            //}
+            //var node = this.path[this.currentNode];
+            //var fromTo = new THREE.Vector2();
 
-            fromTo.subVectors(new THREE.Vector2(node.x, node.y), pos).normalize();
-            var quat = GeometryUtils.quaternionFromVectors(Const.ForwardVector, GeometryUtils.Vector2To3(fromTo));
-            character.mesh.quaternion.copy(quat);
+            //fromTo.subVectors(new THREE.Vector2(node.x, node.y), pos).normalize();
+            //var quat = GeometryUtils.quaternionFromVectors(Const.ForwardVector, GeometryUtils.Vector2To3(fromTo));
+            //character.mesh.quaternion.copy(quat);
 
-            character.stateMachine.requestTransitionTo(CharacterStates.Walking);
+            //character.stateMachine.requestTransitionTo(CharacterStates.Walking);
         }
     }
 

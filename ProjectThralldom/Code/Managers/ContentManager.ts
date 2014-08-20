@@ -275,7 +275,7 @@ module Thralldom {
         }
 
         private loadControllers(world: Thralldom.World, graph: Algorithms.IGraph): void {
-            world.controllerManager.graph = graph;
+            Pathfinder.Graph = graph;
 
             for (var typeName in ContentManager.controllerTypes) {
                 var type = ContentManager.controllerTypes[typeName];
@@ -309,10 +309,9 @@ module Thralldom {
                 console.error("No pathfinding graph supplied to scene, AI cannot move!");
             }
 
-            var graph = {
-                nodes: worldDescription.navmesh.nodes.map((array) => new Algorithms.Vertex(array[0], array[1])),
-                edges: worldDescription.navmesh.edges.map((array) => new Algorithms.Edge(array[0], array[1])),
-            }
+            var graph = <Algorithms.IGraph>worldDescription.navmesh;
+            graph.nodes = graph.nodes.map(node => new Algorithms.Rectangle(node.x, node.y, node.width, node.height));
+
 
             this.loadControllers(world, graph);
 

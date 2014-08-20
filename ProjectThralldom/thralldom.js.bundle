@@ -17,10 +17,12 @@
     <file>/Code/Physics/SharedInterfaces.js</file>
     <file>/Code/Extensions.js</file>
     <file>/Code/Constants.js</file>
+	  <file>/Code/AssociativeContainers.ts</file>
     <file>/Code/LanguagePacks/Bulgarian.js</file>
     <file>/Code/LanguagePacks/English.js</file>
     <file>/Code/Algorithms/GraphDefinitions.js</file>
     <file>/Code/Algorithms/AStar.js</file>
+	  <file>/Code/Pathfinder.ts</file>
     <file>/Code/Scripted/ScriptedActions.js</file>
     <file>/Code/Scripted/ScriptedEvent.js</file>
     <file>/Code/Scripted/ScriptController.js</file>

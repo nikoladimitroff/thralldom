@@ -15,6 +15,8 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css">
@@ -238,6 +240,7 @@
     <TypeScriptCompile Include="Code\Overlay2D\Particle2D.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\ParticleEngine2D.ts" />
     <TypeScriptCompile Include="Code\Overlay2D\Storyteller.ts" />
+    <TypeScriptCompile Include="Code\Pathfinder.ts" />
     <TypeScriptCompile Include="Code\Physics\SharedInterfaces.ts" />
     <TypeScriptCompile Include="Code\Managers\CombatManager.ts" />
     <TypeScriptCompile Include="Code\Managers\UIManager.ts" />
@@ -247,6 +250,7 @@
     <TypeScriptCompile Include="Code\Scene\Interaction.ts" />
     <TypeScriptCompile Include="Code\Scene\Interfaces.ts" />
     <TypeScriptCompile Include="Code\Scene\Inventory.ts" />
+    <TypeScriptCompile Include="Code\AssociativeContainers.ts" />
     <TypeScriptCompile Include="Scripts\typings\azure.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.es5.d.ts" />
@@ -388,4 +392,11 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
 </Project>

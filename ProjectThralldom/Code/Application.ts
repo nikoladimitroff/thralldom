@@ -167,6 +167,8 @@ module Thralldom {
             this.loadEffects();
 
             this.world.mergeStatics();
+
+            Pathfinder.addNavmesh(this.world.renderScene, -this.hero.centerToMesh.y);
         }
 
         private loadEffects(): void {
@@ -278,10 +280,6 @@ module Thralldom {
             this.loop();
         }
 
-        private selectBoundingVisual(mesh: THREE.Mesh): THREE.Mesh {
-            return <THREE.Mesh> mesh.children.first(x => x instanceof THREE.Mesh && !(x instanceof THREE.SkinnedMesh));
-        }
-
         // Debugging tools and utilities below
         public pause(): void {
             this.ui.pausedScreen.style.display = "block";
@@ -317,13 +315,9 @@ module Thralldom {
                 this.debugDraw = !this.debugDraw;
             }
 
-            var allObjects = this.world.statics.concat(this.world.dynamics);
-            for (var index in allObjects) {
-                var boundingShape = this.selectBoundingVisual(allObjects[index].mesh);
-                if (boundingShape) {
-                    boundingShape.visible = this.debugDraw;
-                }
-            }
+            if (Pathfinder.NavmeshVisualizer) Pathfinder.NavmeshVisualizer.visible = this.debugDraw;
+
+
             var debuggingLines = this.world.renderScene.children.filter(x => x.name == "debug");
             debuggingLines.forEach(x => this.world.renderScene.remove(x));
         }

@@ -1,40 +1,23 @@
 module Thralldom {
     export module AI {
         export class AIController implements IController {
-
-            public static Graph: Algorithms.IGraph;
-
             public character: Character;
             public script: ScriptController;
-            public graph: Algorithms.IGraph;
-            public path: Array<Algorithms.Vertex>;
-            public currentNode: number;
+
+            public currentRectangle: number;
+
+            public path: Array<Algorithms.Rectangle>;
             public radiusSquared: number;
 
             constructor(character: Character, graph: Algorithms.IGraph) {
-                AIController.Graph = graph;
                 var nodes = graph.nodes;
 
                 var characterPos = character.mesh.position;
-                var min = nodes[0],
-                    minDist = (min.x - characterPos.x) * (min.x - characterPos.x) +
-                              (min.y - characterPos.z) * (min.y - characterPos.z)
-                for (var i = 1; i < nodes.length; i++) {
-                    var dist = (nodes[i].x - characterPos.x) * (nodes[i].x - characterPos.x) +
-                               (nodes[i].y - characterPos.z) * (nodes[i].y - characterPos.z);
 
-                    if (dist < minDist) {
-                        minDist = dist;
-                        min = nodes[i];
-                        if (dist == 0)
-                            break;
-                    }
-                }
-                var start = min;
-                this.path = [start];
-                this.currentNode = 0;
+                this.currentRectangle = 0;
 
-                this.graph = graph;
+                this.path = [];
+
                 this.character = character;
 
                 var diffX = character.mesh.geometry.boundingBox.max.x - character.mesh.geometry.boundingBox.min.x;

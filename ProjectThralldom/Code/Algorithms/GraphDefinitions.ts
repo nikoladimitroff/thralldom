@@ -1,40 +1,60 @@
 module Thralldom {
     export module Algorithms {
         export interface IGraph {
-            nodes: Array<Vertex>;
-            edges: Array<Edge>;
+            rowCount: number;
+            colCount: number;
+            size: number;
+            nodes: Array<Rectangle>;
+            edges: INumberIndexable<Array<number>>;
         }
 
-        export class Edge {
-            first: number;
-            second: number;
+        export class Rectangle implements IHashable {
+            public x: number;
+            public y: number;
+            public width: number;
+            public height: number;
+            public center: THREE.Vector2;
 
-            constructor(first: number, second: number) {
-                this.first = first;
-                this.second = second;
-            }
-        }
+            public points: Array<THREE.Vector2>;
 
-        export class Vertex {
-            x: number;
-            y: number;
-            constructor(x, y) {
+            constructor(x, y, width, height) {
                 this.x = x;
                 this.y = y;
+                this.width = width;
+                this.height = height;
+                this.center = new THREE.Vector2(x + width / 2, y + height / 2);
+
+                this.points = [
+                    new THREE.Vector2(x, y),
+                    new THREE.Vector2(x + width, y),
+                    new THREE.Vector2(x + width, y + height),
+                    new THREE.Vector2(x, y + height),
+                ];
             }
 
-            public toString() {
-                return this.x + "" + this.y;
+            public toString(): string {
+                return "X: ", this.x + ", Y:" + this.y + ", W: " + this.width + ", H: " + this.height;
             }
 
-            public distanceTo(q: Vertex) {
-                var p = this;
-                return Math.sqrt((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y));
+            public hash(): number {
+                // Rectangles are nonoverlapping thus we only need their toplefties
+                var hash = 23;
+                hash = hash * 31 + this.x;
+                hash = hash * 31 + this.y;
+                return hash;
             }
 
-            public distanceToSquared(q: Vertex) {
-                var p = this;
-                return (p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y);
+            public distanceTo(other: Rectangle): number {
+                return this.center.distanceTo(other.center);
+            }
+
+            public distanceToSquared(other: Rectangle): number {
+                return this.center.distanceToSquared(other.center);
+            }
+
+            public contains(p: THREE.Vector2): boolean {
+                return this.x <= p.x && this.x + this.width >= p.x &&
+                       this.y <= p.y && this.y + this.height >= p.y;
             }
         }
     }

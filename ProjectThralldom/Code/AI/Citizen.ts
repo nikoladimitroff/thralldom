@@ -2,41 +2,53 @@ module Thralldom {
     export module AI {
         export class Citizen extends AIController {
 
+            public target: THREE.Vector2;
+            public goal: THREE.Vector2;
+
             constructor(character: Character, graph: Algorithms.IGraph) {
                 super(character, graph);
+
+                this.goal = new THREE.Vector2(-50.43, 203.6);
+                this.path = Pathfinder.query(character.mesh.position, GeometryUtils.Vector2To3(this.goal));
+                var pos = character.mesh.position;
+                this.target = GeometryUtils.closestPoint(GeometryUtils.Vector3To2(pos), this.path[0], this.path[1], 0);
             }
 
             public updateCallback(delta: number, world: Thralldom.World): void {
 
                 var character = this.character;
-
-                var node = this.path[this.currentNode];
                 var pos = GeometryUtils.Vector3To2(character.mesh.position);
 
-                if (node.distanceToSquared(pos) <= this.radiusSquared) {
-                    this.currentNode++;
-
-                    if (this.currentNode == this.path.length) {
-                        var current = this.path[this.path.length - 1];
-                        do {
-                            var next = this.graph.nodes[~~(Math.random() * this.graph.nodes.length)];
-                            this.path = Algorithms.AStar.runQuery(this.graph, current, next);
-                        }
-                        while (this.path.length == 0);
-                        this.currentNode = 0;
-                        var geometry = new THREE.Geometry();
-                        this.path.forEach(p => geometry.vertices.push(new THREE.Vector3(p.x, -character.centerToMesh.y, p.y)));
-                        var mat = new THREE.LineBasicMaterial({ color: Utils.randomColor() });
-                        var line = new THREE.Line(geometry, mat);
-                        character.mesh.parent.add(line); 
+                var node = this.path[this.currentRectangle];
+                if (pos.distanceToSquared(this.target) <= this.radiusSquared) {
+                    if (this.currentRectangle == this.path.length - 1) {
+                        this.target = this.goal;
+                        var nextRect = Pathfinder.Graph.nodes[~~(Math.random() * Pathfinder.Graph.nodes.length)];
+                        this.goal = GeometryUtils.randomPointInRect(nextRect);
+                        this.path = Pathfinder.query(this.target, this.goal);
+                        character.mesh.parent.remove(character.mesh.parent.getObjectByName(character.id + "GOAL", false));
+                        character.mesh.parent.add(GeometryUtils.getLine([this.target, this.goal], -character.centerToMesh.y,
+                                                  character.id + "GOAL", 0xFFFFFF));
+                        this.currentRectangle = -1;
                     }
+                    else 
+                        this.target = GeometryUtils.closestPoint(pos,
+                            this.path[this.currentRectangle],
+                            this.path[this.currentRectangle + 1],
+                            Math.sqrt(this.radiusSquared));
+
+                    this.currentRectangle++;
+
+                    character.mesh.parent.remove(character.mesh.parent.getObjectByName(character.id + "TARGET", false));
+                    character.mesh.parent.add(GeometryUtils.getLine([pos, this.target], -character.centerToMesh.y, character.id + "TARGET"));
                 }
-                var node = this.path[this.currentNode];
+
+
                 var fromTo = new THREE.Vector2();
 
-                fromTo.subVectors(new THREE.Vector2(node.x, node.y), pos).normalize();
+                fromTo.subVectors(this.target, pos).normalize();
 
-                var quat = GeometryUtils.quaternionFromVectors(Const.ForwardVector, new THREE.Vector3(fromTo.x, 0, fromTo.y));
+                var quat = GeometryUtils.quaternionFromVectors(Const.ForwardVector, GeometryUtils.Vector2To3(fromTo));
                 character.mesh.quaternion.copy(quat);
 
                 character.stateMachine.requestTransitionTo(CharacterStates.Falling);

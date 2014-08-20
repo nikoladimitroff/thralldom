@@ -119,5 +119,87 @@ module Thralldom {
         public static Vector2To3(vec: THREE.Vector2): THREE.Vector3 {
             return new THREE.Vector3(vec.x, 0, vec.y);
         }
+
+        // Finds the point P closest to pos for which the following holds:
+        // - currentRect and nextRect are neighbours
+        // - P lies in nextRect
+        // - distance from P to any corner of nextRect is no less than radius
+        public static closestPoint(pos: THREE.Vector2,
+                                   currentRect: Algorithms.Rectangle,
+                                   nextRect: Algorithms.Rectangle,
+                                   radius: number): THREE.Vector2 {
+
+            var points = currentRect.points.concat(nextRect.points)
+                .filter(p => currentRect.contains(p) && nextRect.contains(p));
+
+            if (points.length == 3) { // The rectangles share a point, find the duplicate and remove it
+                if (points[0].x == points[1].x && points[0].y == points[1].y)
+                    points.shift();
+                else
+                    points.pop();
+            }
+
+
+            if (points.length != 2)
+                console.error("SOMETHING AWFUL HAPPENED DURING PATHFINDING");
+
+            var p = points[0],
+                q = points[1];
+
+            var u = (new THREE.Vector2()).subVectors(p, q);
+
+            var v = (new THREE.Vector2()).subVectors(q, pos);
+
+            var a = u.x * u.x + u.y * u.y,
+                b = 2 * (u.x * v.x + u.y * v.y),
+                c = v.x * v.x + v.y * v.y;
+
+            var vertex = - b / (2 * a);
+
+            var dist = p.distanceTo(q);
+            var acceptableRatio = radius / dist;
+            var leftEnd = acceptableRatio,
+                rightEnd = 1 - acceptableRatio;
+
+
+            var lambda = null;
+            if (vertex >= leftEnd && vertex <= rightEnd) {
+                lambda = vertex;
+            }
+            else {
+                var fLeft = a * leftEnd * leftEnd + b * leftEnd + c,
+                    fRight = a * rightEnd * rightEnd + b * rightEnd + c;
+
+                if (fLeft < fRight)
+                    lambda = leftEnd
+                else
+                    lambda = rightEnd;
+            }
+            if (lambda < 0 || lambda > 1)
+                throw new Error("Unpassable terrain found while pathfinding");
+
+            return new THREE.Vector2(
+                lambda * p.x + (1 - lambda) * q.x,
+                lambda * p.y + (1 - lambda) * q.y
+            );
+        }
+
+        public static getLine(path: Array<THREE.Vector2>, height: number, name?: string, color?: number): THREE.Line {
+
+            var geometry = new THREE.Geometry();
+            path.forEach(p => geometry.vertices.push(new THREE.Vector3(p.x, height, p.y)));
+            var mat = new THREE.LineBasicMaterial({ color: color || Utils.randomColor() });
+            var line = new THREE.Line(geometry, mat);
+            line.name = name || "";
+
+            return line;
+        }
+
+        public static randomPointInRect(rect: Algorithms.Rectangle): THREE.Vector2 {
+            return new THREE.Vector2(
+                rect.x + Math.random() * rect.width,
+                rect.y + Math.random() * rect.height
+            );
+        }
     }
 }
