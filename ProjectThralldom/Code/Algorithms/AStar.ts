@@ -55,7 +55,6 @@ module Thralldom {
                     closedset.add(current);
 
                     var neighbours = edges[current.hash()].map(i => points[i]);
-                    console.log("NEIGBHS OF: ", current.hash(), " ARE ", neighbours.map(n => n.hash()).join(", "));
                     for (var i = 0; i < neighbours.length; i++) {
                         var neighbour = neighbours[i];
                         if (closedset.contains(neighbour)) {

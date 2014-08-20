@@ -45,65 +45,65 @@ module Thralldom {
         public hasCompleted: boolean;
 
         private path: Array<Algorithms.Rectangle>;
-        private currentNode: number;
+        private currentRectangle: number;
 
-        private destination: THREE.Vector2;
+        private goal: THREE.Vector2;
         private target: THREE.Vector2;
         private isAdditive: boolean;
 
         constructor(args: string, content: ContentManager, extras: IExtraScriptedData) {
             this.isAdditive = args.startsWith("+");
             // Replace the plus at the start if one is present
-            this.target = Utils.parseVector2(args.replace(/^\+/g, ""));
+            this.goal = Utils.parseVector2(args.replace(/^\+/g, ""));
         }
 
         public begin(character: Character, extras: IExtraScriptedData): void {
-            //this.destination = this.target;
-            //if (this.isAdditive) {
-            //    var dir = GeometryUtils.Vector2To3(this.target);
-            //    dir.applyQuaternion(character.mesh.quaternion);
-            //    this.destination = GeometryUtils.Vector3To2(dir);
-            //    this.destination.add(GeometryUtils.Vector3To2(character.mesh.position));
-            //}
-            //this.path = Algorithms.AStar.runQueryOnVectors(AI.AIController.Graph,
-            //    character.mesh.position,
-            //    GeometryUtils.Vector2To3(this.destination));
-            //this.currentNode = 0;
-
-
-            //var geometry = new THREE.Geometry();
-            //this.path.forEach(p => geometry.vertices.push(new THREE.Vector3(p.x, -character.centerToMesh.y, p.y)));
-            //var mat = new THREE.LineBasicMaterial({ color: Utils.randomColor() });
-            //var line = new THREE.Line(geometry, mat);
-            //character.mesh.parent.add(line); 
+            if (this.isAdditive) {
+                var dir = GeometryUtils.Vector2To3(this.target);
+                dir.applyQuaternion(character.mesh.quaternion);
+                this.goal = GeometryUtils.Vector3To2(dir);
+                this.goal.add(GeometryUtils.Vector3To2(character.mesh.position));
+            }
+            var pos = GeometryUtils.Vector3To2(character.mesh.position);
+            this.path = Pathfinder.query(pos, this.goal);
+            this.target = Pathfinder.closestPoint(pos, this.path[0], this.path[1], character.radius);
+            this.currentRectangle = 0;
         }
 
         public update(character: Character, world: Thralldom.World, delta: number): void {
-            //if (this.hasCompleted) {
-            //    character.stateMachine.requestTransitionTo(CharacterStates.Idle);
-            //    return;
-            //}
+            if (this.hasCompleted) {
+                character.stateMachine.requestTransitionTo(CharacterStates.Idle);
+                return;
+            }
 
-            //// MAGIC NUMBER
-            //var radiusSquared = 5 * 5;
-            //var node = this.path[this.currentNode];
-            //var pos = GeometryUtils.Vector3To2(character.mesh.position);
+            var pos = GeometryUtils.Vector3To2(character.mesh.position);
 
-            //if (node.distanceToSquared(pos) <= radiusSquared) {
-            //    this.currentNode++;
-            //    if (this.currentNode == this.path.length) {
-            //        this.hasCompleted = true;
-            //        return;
-            //    }
-            //}
-            //var node = this.path[this.currentNode];
-            //var fromTo = new THREE.Vector2();
+            var node = this.path[this.currentRectangle];
+            if (pos.distanceToSquared(this.target) <= character.radius * character.radius) {
+                if (this.target == this.goal) {
+                    this.hasCompleted = true;
+                    return;
+                }
 
-            //fromTo.subVectors(new THREE.Vector2(node.x, node.y), pos).normalize();
-            //var quat = GeometryUtils.quaternionFromVectors(Const.ForwardVector, GeometryUtils.Vector2To3(fromTo));
-            //character.mesh.quaternion.copy(quat);
+                if (this.currentRectangle == this.path.length - 1) {
+                    this.target = this.goal;
+                    character.mesh.parent.remove(character.mesh.parent.getObjectByName(character.id + "GOAL", false));
+                    character.mesh.parent.add(GeometryUtils.getLine([this.target, this.goal], -character.centerToMesh.y,
+                        character.id + "GOAL", 0xFFFFFF));
+                }
+                else
+                    this.target = Pathfinder.closestPoint(pos,
+                        this.path[this.currentRectangle],
+                        this.path[this.currentRectangle + 1],
+                        character.radius);
 
-            //character.stateMachine.requestTransitionTo(CharacterStates.Walking);
+                this.currentRectangle++;
+
+                character.mesh.parent.remove(character.mesh.parent.getObjectByName(character.id + "TARGET", false));
+                character.mesh.parent.add(GeometryUtils.getLine([pos, this.target], -character.centerToMesh.y, character.id + "TARGET"));
+            }
+
+            character.walkTowards(pos, this.target);
         }
     }
 

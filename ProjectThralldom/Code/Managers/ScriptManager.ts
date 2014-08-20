@@ -32,6 +32,7 @@
                 if (!script.isInteractionTriggered &&
                     script.tryTrigger(this.hero, this.world, this.cameraController)) {
                     this.active = script;
+                    console.log("Triggering script: ", script.name);
                     return;
                 }
             }
