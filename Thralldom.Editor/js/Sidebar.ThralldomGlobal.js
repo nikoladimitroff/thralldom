@@ -28,11 +28,10 @@ Sidebar.ThralldomGlobal = function (editor) {
 
 	// dimensions
 	var thralldomCellDimensionsRow = new UI.Panel();
-	var thralldomCellWidth = new UI.Number(50).setWidth('50px').onChange(saveOptions);
-	var thralldomCellDepth = new UI.Number(50).setWidth('50px').onChange(saveOptions);
+	var thralldomCellSize = new UI.Number(25).setWidth('50px').onChange(saveOptions);
 
-	thralldomCellDimensionsRow.add(new UI.Text('Cell Dimensions').setWidth('90px'));
-	thralldomCellDimensionsRow.add(thralldomCellWidth, thralldomCellDepth);
+	thralldomCellDimensionsRow.add(new UI.Text('Cell Size').setWidth('90px'));
+	thralldomCellDimensionsRow.add(thralldomCellSize);
 
 	// slope
 	var thralldomSlopeFactorRow = new UI.Panel();
@@ -54,10 +53,19 @@ Sidebar.ThralldomGlobal = function (editor) {
 	thralldomGenerateMeshRow.add(new UI.Text('Visualize Mesh').setWidth('90px'));
 	thralldomGenerateMeshRow.add(thralldomVisualizeMesh, thralldomGenerateMesh);
 
+    // inspection
+
+	var thralldomInspectMeshRow = new UI.Panel();
+
+	var thralldomInspectButton = new UI.Button("Inspect Mesh")
+                                .setWidth("90px")
+                                .onClick(editor.thralldom.exporter.inspectMesh);
+
+	thralldomInspectMeshRow.add(thralldomInspectButton);
+
 	var pairs = [
 		[thralldomHeight, "thralldom_height"], 
-		[thralldomCellWidth, "thralldom_cell_width"],
-		[thralldomCellDepth, "thralldom_cell_depth"],
+		[thralldomCellSize, "thralldom_cell_size"],
 		[thralldomMaxSlope, "thralldom_max_slope"],
 		[thralldomVisualizeMesh, "thralldom_visualize_mesh"]
 	]
@@ -75,26 +83,23 @@ Sidebar.ThralldomGlobal = function (editor) {
 
 
 	function generateMesh() {
-		var height = thralldomHeight.getValue(),
-			width = thralldomCellWidth.getValue(),
-			depth = thralldomCellDepth.getValue();
+	    var height = thralldomHeight.getValue(),
+			size = thralldomCellSize.getValue();
 
 		var slope = thralldomMaxSlope.getValue();
 		var factor = thralldomFactor.getValue();
 
 		var shouldVisualize = thralldomVisualizeMesh.getValue();
 
-		editor.thralldom.exporter.exportNavmesh(height, width, depth, slope, factor, shouldVisualize);
+		editor.thralldom.exporter.exportNavmesh(height, size, slope, factor, shouldVisualize);
 	};
-
-
 
 	container.add(thralldomHeightRow);
 	container.add(thralldomCellDimensionsRow);
 	container.add(thralldomSlopeFactorRow);
 	container.add(thralldomGenerateMeshRow);
+	container.add(thralldomInspectMeshRow);
 	loadOptions();
-
 
 	return container;
 
