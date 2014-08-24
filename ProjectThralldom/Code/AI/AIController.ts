@@ -4,16 +4,15 @@ module Thralldom {
             public character: Character;
             public script: ScriptController;
 
-            public currentRectangle: number;
 
-            public path: Array<Algorithms.Rectangle>;
+            public currentNode: number;
+            public path: Array<Pair<THREE.Vector2, Algorithms.Rectangle>>;
             constructor(character: Character, graph: Algorithms.IGraph) {
                 var nodes = graph.nodes;
 
                 var characterPos = character.mesh.position;
 
-                this.currentRectangle = 0;
-
+                this.currentNode = 0;
                 this.path = [];
 
                 this.character = character;

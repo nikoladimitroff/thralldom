@@ -315,7 +315,7 @@ module Thralldom {
                 this.debugDraw = !this.debugDraw;
             }
 
-            if (Pathfinder.NavmeshVisualizer) Pathfinder.NavmeshVisualizer.visible = this.debugDraw;
+            Pathfinder.toggleVisualization();
 
 
             var debuggingLines = this.world.renderScene.children.filter(x => x.name == "debug");

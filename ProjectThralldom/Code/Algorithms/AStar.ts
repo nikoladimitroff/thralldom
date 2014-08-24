@@ -5,15 +5,8 @@ module Thralldom {
             public static runQuery(graph: IGraph, start: Rectangle, goal: Rectangle): Array<Rectangle> {
                 return AStar.aStar(start, goal, graph);
             }
-            public static runQueryOnVectors(graph: IGraph, start: THREE.Vector2, goal: THREE.Vector2): Array<Rectangle>;
-            public static runQueryOnVectors(graph: IGraph, start: THREE.Vector3, goal: THREE.Vector3): Array<Rectangle>;
-           
 
-            public static runQueryOnVectors(graph: IGraph, start: any, goal: any): Array<Rectangle> {
-                if (start.constructor == THREE.Vector3) {
-                    start = <any>GeometryUtils.Vector3To2(start);
-                    goal = <any>GeometryUtils.Vector3To2(goal);
-                }
+            public static runQueryOnVectors(graph: IGraph, start: THREE.Vector2, goal: THREE.Vector2): Array<Rectangle> {
                 var startNode = undefined,
                     goalNode = undefined;
 

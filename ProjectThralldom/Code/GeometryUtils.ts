@@ -125,7 +125,7 @@ module Thralldom {
 
             var geometry = new THREE.Geometry();
             path.forEach(p => geometry.vertices.push(new THREE.Vector3(p.x, height, p.y)));
-            var mat = new THREE.LineBasicMaterial({ color: color || Utils.randomColor() });
+            var mat = new THREE.LineBasicMaterial({ color: color !== undefined ? color : Utils.randomColor() });
             var line = new THREE.Line(geometry, mat);
             line.name = name || "";
 
