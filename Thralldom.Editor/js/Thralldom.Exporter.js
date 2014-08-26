@@ -64,6 +64,7 @@ Thralldom.Exporter = function (editor) {
             model: object.name,
             id: object.userData.id,
             tags: object.userData.tags,
+            interaction: object.userData.interaction,
         }
     }
 

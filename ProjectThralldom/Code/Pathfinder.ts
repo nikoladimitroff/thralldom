@@ -19,6 +19,27 @@
             return undefined;
         }
 
+        public static getClosestRectangle(vec: THREE.Vector2): Algorithms.Rectangle;
+        public static getClosestRectangle(vec: THREE.Vector3): Algorithms.Rectangle;
+
+        public static getClosestRectangle(pos: any): Algorithms.Rectangle {
+            if (pos.constructor === THREE.Vector3)
+                pos = GeometryUtils.Vector3To2(pos);
+
+            var nodes = Pathfinder.Graph.nodes;
+            var minRect = nodes[0];
+            var minDist = pos.distanceToSquared(minRect.center);
+            for (var i = 1; i < nodes.length; i++) {
+                var node = nodes[i];
+                var distance = pos.distanceToSquared(minRect.center);
+                if (distance < minDist) {
+                    minRect = node;
+                    minDist = distance
+                }
+            }
+            return minRect;
+        }
+
         public static query(character: Character, goal: THREE.Vector2): Array<Pair<THREE.Vector2, Algorithms.Rectangle>> {
             var start = <any>GeometryUtils.Vector3To2(character.mesh.position);
 
@@ -68,9 +89,9 @@
                 var curve = new THREE.QuadraticBezierCurve(left.first, middle.first, right.first);
 
                 var generatedPoints = <any>[
-                    // Push the first paramaters of splice here
+                    // Push the first parameters of splice here
                     i,
-                    0,
+                    1,
                 ]
                 // The points themselves
                 for (var j = 1; j < 1 / step - 1; j++)
@@ -78,7 +99,6 @@
 
                 Array.prototype.splice.apply(path, generatedPoints);
                 i += generatedPoints.length - 2;
-                path.splice(i, 1);
             }
         }
 

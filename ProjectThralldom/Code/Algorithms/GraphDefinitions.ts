@@ -56,6 +56,10 @@ module Thralldom {
                 return this.x <= p.x && this.x + this.width >= p.x &&
                        this.y <= p.y && this.y + this.height >= p.y;
             }
+
+            public distanceToPoint(p: THREE.Vector2): number {
+                return 5;
+            }
         }
     }
 }

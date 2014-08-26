@@ -5,13 +5,13 @@ self["Ammo"].btVector3 = self["Ammo"].btVector3 || function (x, y, z) { };
 
 module Thralldom {
     export class Const {
-        public static UpVector = new THREE.Vector3(0, 1, 0);
-        public static DownVector = new THREE.Vector3(0, -1, 0);
-        public static RightVector = new THREE.Vector3(1, 0, 0);
-        public static LeftVector = new THREE.Vector3(-1, 0, 0);
-        public static ForwardVector = new THREE.Vector3(0, 0, 1);
-        public static BackwardVector = new THREE.Vector3(0, 0, -1);
-        public static ZeroVector = new THREE.Vector3(0, 0, 0);
+        public static UpVector = Object.freeze(new THREE.Vector3(0, 1, 0));
+        public static DownVector = Object.freeze(new THREE.Vector3(0, -1, 0));
+        public static RightVector = Object.freeze(new THREE.Vector3(1, 0, 0));
+        public static LeftVector = Object.freeze(new THREE.Vector3(-1, 0, 0));
+        public static ForwardVector = Object.freeze(new THREE.Vector3(0, 0, 1));
+        public static BackwardVector = Object.freeze(new THREE.Vector3(0, 0, -1));
+        public static ZeroVector = Object.freeze(new THREE.Vector3(0, 0, 0));
 
         public static btUpVector = new Ammo.btVector3(0, 1, 0);
         public static btDownVector = new Ammo.btVector3(0, -1, 0);
@@ -22,13 +22,13 @@ module Thralldom {
         public static btZeroVector = new Ammo.btVector3(0, 0, 0);
 
 
-        public static dtoUpVector = new VectorDTO(0, 1, 0);
-        public static dtoDownVector = new VectorDTO(0, -1, 0);
-        public static dtoRightVector = new VectorDTO(1, 0, 0);
-        public static dtoLeftVector = new VectorDTO(-1, 0, 0);
-        public static dtoForwardVector = new VectorDTO(0, 0, 1);
-        public static dtoBackwardVector = new VectorDTO(0, 0, -1);
-        public static dtoZeroVector = new VectorDTO(0, 0, 0);
+        public static dtoUpVector = Object.freeze(new VectorDTO(0, 1, 0));
+        public static dtoDownVector = Object.freeze(new VectorDTO(0, -1, 0));
+        public static dtoRightVector = Object.freeze(new VectorDTO(1, 0, 0));
+        public static dtoLeftVector = Object.freeze(new VectorDTO(-1, 0, 0));
+        public static dtoForwardVector = Object.freeze(new VectorDTO(0, 0, 1));
+        public static dtoBackwardVector = Object.freeze(new VectorDTO(0, 0, -1));
+        public static dtoZeroVector = Object.freeze(new VectorDTO(0, 0, 0));
 
         public static MaxAnisotropy: number = 1;
     }

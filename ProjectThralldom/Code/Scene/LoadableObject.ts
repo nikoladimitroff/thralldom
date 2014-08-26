@@ -1,8 +1,9 @@
 module Thralldom {
-    export class LoadableObject implements ISelectableObject, IDrawable, ILoadable {
+    export class LoadableObject implements ISelectableObject, IDrawable, ILoadable, IInteractable {
         public id: string;
         public tags: Array<string>;
         public mesh: THREE.Mesh;
+        public interaction: Interaction;
 
         constructor() {
             this.id = null;
@@ -17,6 +18,12 @@ module Thralldom {
             if (description.id) {
                 this.id = description.id;
             }
+
+
+            if (description.interaction) {
+                this.interaction = Interaction.fromDescription(description.interaction)
+            }
+
         }
     }
 }

@@ -39,13 +39,18 @@ Sidebar.Thralldom = function ( editor ) {
 	    'Environment': 'Environment',
 	    'Terrain': 'Terrain',
 	    'Character': 'Character',
-	    'Waypoint Path': 'Waypoint Path',
 	}).setWidth('150px').setColor('#444').setFontSize('12px').onChange(update);
 
 
 
 	thralldomExportRow.add(new UI.Text('Export As').setWidth('90px'));
 	thralldomExportRow.add(exportOptions);
+
+	var thralldomInteractionRow = new UI.Panel();
+	var interactionObject = new UI.Input().setWidth('150px').setColor('#444').setFontSize('12px').onChange(update);
+
+	thralldomInteractionRow.add(new UI.Text('Interaction').setWidth('90px'));
+	thralldomInteractionRow.add(interactionObject);
 
 
 	function update() {
@@ -60,10 +65,12 @@ Sidebar.Thralldom = function ( editor ) {
 	    // Get all tags, remove the commas 
 		var extractedTags = tags.match(/\S*[^,\s]/g);
 		var id = thralldomId.getValue();
+		var interactionText = interactionObject.getValue();
 
 		object.userData.exportAs = type;
 		object.userData.tags = extractedTags || [];
 		object.userData.id = id || "";
+		object.userData.interaction = interactionText || "";
 
 		editor.signals.objectChanged.dispatch(object);
 	};
@@ -94,6 +101,7 @@ Sidebar.Thralldom = function ( editor ) {
 	container.add(thralldomIdRow);
 	container.add(thralldomTagsRow);
 	container.add(thralldomExportRow);
+	container.add(thralldomInteractionRow);
 
 
 	return container;

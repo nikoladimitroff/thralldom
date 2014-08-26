@@ -1,12 +1,6 @@
 module Thralldom {
-    export enum InteractableEnvironementType {
-        None,
-        Item,
-
-    }
     export class Environment extends LoadableObject implements IInteractable {
 
-        public interaction: Interaction;
 
         public get displayName(): string {
             return this.id;
@@ -31,11 +25,6 @@ module Thralldom {
                 var scale = description.scale;
                 this.mesh.scale.set(scale, scale, scale);
             }
-
-            if (description.interaction) {
-                this.interaction = Interaction.fromDescription(description.interaction)
-            }
-
 
             this.mesh.geometry.computeBoundingBox();
             var box = this.mesh.geometry.boundingBox;

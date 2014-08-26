@@ -23,7 +23,6 @@
             interaction.loadFromDescription(description, undefined);
 
             return interaction;
-
         }
     }
 
