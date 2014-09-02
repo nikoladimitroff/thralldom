@@ -18,9 +18,17 @@
     //],
     
     /* Quick to load, quick to test below*/
-    world: "Content/Scenes/navmesh.js",
+    //world: "Content/Scenes/navmesh.js",
+    //quest: "Content/Quests/simple.js",
+    //assets: "Content/simple-assets.js",
+    //scripts: [
+    //    //"Content/ScriptedEvents/NavmeshTest.tscr",
+    //],
+
+    /* Оur current main mission */
+    world: "Content/Scenes/main.js",
     quest: "Content/Quests/simple.js",
-    assets: "Content/simple-assets.js",
+    assets: "Content/Assets.js",
     scripts: [
         //"Content/ScriptedEvents/NavmeshTest.tscr",
     ],

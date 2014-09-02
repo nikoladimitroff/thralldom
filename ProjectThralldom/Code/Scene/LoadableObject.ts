@@ -4,6 +4,7 @@ module Thralldom {
         public tags: Array<string>;
         public mesh: THREE.Mesh;
         public interaction: Interaction;
+        public displayName: string;
 
         constructor() {
             this.id = null;

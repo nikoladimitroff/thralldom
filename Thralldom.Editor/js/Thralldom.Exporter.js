@@ -53,7 +53,7 @@ Thralldom.Exporter = function (editor) {
         }
 
         function fixDecimals(num) {
-            return num.toFixed(precision);
+            return parseFloat(num.toFixed(precision));
         }
 
         return {

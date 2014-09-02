@@ -1,17 +1,5 @@
 ﻿[
     {
-        name: "Main quest",
-        objectives: [
-            {
-                type: "reach",
-                target: "#sokolov",
-                radius: 5,
-                text: "Go touch him.",
-                group: 0,
-            },
-        ]
-    },
-    {
         name: "A side quest",
         objectives: [
             {

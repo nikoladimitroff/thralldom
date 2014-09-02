@@ -110,6 +110,7 @@
     <Content Include="Content\Models\Heroes\Boycho\BoychoAnimation.js" />
     <Content Include="Content\Models\Terrain\terrain.js" />
     <Content Include="Content\Models\Terrain\terrainTexture.jpg" />
+    <Content Include="Content\Models\Terrain\terrainTextureMicro.jpg" />
     <Content Include="Content\Models\Terrain\terrainTextureSmall.jpg" />
     <Content Include="Content\Quests\default.js" />
     <Content Include="Content\Quests\simple.js" />
@@ -117,6 +118,7 @@
     <Content Include="app.css.map">
       <DependentUpon>app.css</DependentUpon>
     </Content>
+    <Content Include="Content\Scenes\main.js" />
     <Content Include="Content\ScriptedEvents\NavmeshTest.tscr" />
     <None Include="Content\ScriptedEvents\Outro.tscr" />
     <Content Include="Content\Scenes\navmesh.js" />
