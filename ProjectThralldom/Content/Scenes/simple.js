@@ -71,25 +71,6 @@
             rot: [0, -0.668, 0],
             scale: 0.4,
         },
-        {
-            type: "character",
-            tags: ["statue"],
-            id: "sokolov",
-            model: "SokolovAnimation.js",
-            weapon: "PistolAnimation.js",
-            pos: [-6, 1, -34.574],
-            rot: [0, -1.206, 0],
-            scale: 0.4,
-        },
-        {
-            type: "character",
-            tags: ["npc", "guard"],
-            id: "enemy",
-            model: "BoychoAnimation.js",
-            weapon: "PistolAnimation.js",
-            pos: [-34, 1, -6],
-            scale: 0.4,
-        },
     ],
     statics: [
         {
@@ -97,7 +78,7 @@
             "pos":[21.182033655203398,0,-0.05357572014003853],
             "rot":[3.141592653589793,1.5606423359643475,3.141592653589793],
             "scale":1,
-            "model":"House_03.js",
+            "model":"Konak.js",
             "id":"",
             "tags":[],
             "interaction": {
@@ -110,7 +91,7 @@
             "pos":[-21.182033655203398,0,-0.05357572014003853],
             "rot":[3.141592653589793,1.5606423359643475,3.141592653589793],
             "scale":1,
-            "model":"House_03.js",
+            "model":"oldhouse.js",
             "id":"",
             "tags":[],
             "interaction": {
@@ -118,6 +99,50 @@
                 itemCode: 0x01,
                 quantity: 1,
             },
+        },
+        
+        {
+            "type":"environment",
+            "pos":[-21.182033655203398,0,20],
+            "rot":[3.141592653589793,1.5606423359643475,3.141592653589793],
+            "scale":1,
+            "model":"rock_medium.js",
+            "id":"",
+            "tags":[],
+            "interaction": {
+                type: "item",
+                itemCode: 0x01,
+                quantity: 1,
+            },
+        },
+        
+        {
+            "type":"environment",
+            "pos":[-21.182033655203398,0,-20],
+            "rot":[3.141592653589793,1.5606423359643475,3.141592653589793],
+            "scale":1,
+            "model":"rock_big.js",
+            "id":"",
+            "tags":[],
+            "interaction": {
+                type: "item",
+                itemCode: 0x01,
+                quantity: 1,
+            },
+        },        
+        {
+                "type":"environment",
+                "pos":[-21.182033655203398,0,-30],
+                "rot":[3.141592653589793,1.5606423359643475,3.141592653589793],
+                "scale":1,
+                "model":"Tree_01.js",
+                "id":"",
+                "tags":[],
+                "interaction": {
+                    type: "item",
+                    itemCode: 0x01,
+                    quantity: 1,
+                },
         }
            /*
             * "interaction": {

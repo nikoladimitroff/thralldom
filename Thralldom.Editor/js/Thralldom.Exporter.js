@@ -143,6 +143,71 @@ Thralldom.Exporter = function (editor) {
         }
     }
 
+    function RowColPair(row, col, parentY) {
+        this.row = row;
+        this.col = col;
+        this.parentY = parentY;
+    }
+
+    function tryAddUnvisitedNode(rowColPair, visited, frontier) {
+        var row = rowColPair.row,
+            col = rowColPair.col;
+        // The following is a bijection from Z to N. See here http://math.stackexchange.com/questions/187751/cardinality-of-the-set-of-all-pairs-of-integers
+        var mappedRow = row < 0 ? -(2 * row + 1) : 2 * row + 2,
+            mappedCol = col < 0 ? -(2 * col + 1) : 2 * col + 2;
+        // The following is a bijection from N^2 to N. See here http://www.physicsforums.com/showthread.php?t=536900
+        var code = ((mappedRow + mappedCol) * (mappedRow + mappedCol) + 3 * mappedRow + mappedCol) / 2;
+        if (visited[code]) return;
+
+        visited[code] = true;
+        frontier.push(rowColPair);
+    }
+
+    function addAllNodes(maxSlope, size, defaultHeight, terrain, initialRow, initialCol) {        
+        // Visited[code] is true if the the node with that code has been pushed to the frontier
+        var visited = {},
+            nodes = [];
+
+        var raycaster = new THREE.Raycaster();
+        var down = new THREE.Vector3(0, -1, 0);
+        var dx = Math.sqrt(2 * size * size);
+        var frontier = [new RowColPair(initialRow, initialCol, undefined)];
+        while (frontier.length != 0) {
+            var node = frontier.pop(),
+                row = node.row,
+                col = node.col;
+
+            var mid = new THREE.Vector3(size * (col + 0.5), defaultHeight, size * (row + 0.5));
+            raycaster.set(mid, down);
+            var result = raycaster.intersectObjects(scene);
+
+            var hitIndex = 0;
+            var firstHit;
+            do
+                firstHit = result[hitIndex++];
+            while (firstHit && firstHit.object.userData.exportAs != "Environment" && firstHit.object != terrain)
+
+            // No appropriate hit
+            if (!firstHit) continue;;
+
+            if (firstHit.object == terrain) {
+                var hit = firstHit.point;
+                var parentY = node.parentY;
+                var dh = parentY !== undefined ? Math.abs(hit.y - parentY) : 0;
+                var slope = dh / dx;
+                if (slope < maxSlope) {
+                    nodes.push([mid.x, mid.z]);
+
+                    tryAddUnvisitedNode(new RowColPair(row + 1, col, hit.y), visited, frontier);
+                    tryAddUnvisitedNode(new RowColPair(row - 1, col, hit.y), visited, frontier);
+                    tryAddUnvisitedNode(new RowColPair(row, col + 1, hit.y), visited, frontier);
+                    tryAddUnvisitedNode(new RowColPair(row, col - 1, hit.y), visited, frontier);
+                }
+            }
+        }
+        return nodes;
+    }
+
     function visualizeNavmesh(nodes, size, defaultHeight, shouldVisualize) {
         var name = "NAVMESHVISUALIZER";
         var previous = editor.scene.getObjectByName(name);
@@ -165,12 +230,6 @@ Thralldom.Exporter = function (editor) {
     function buildNodes(defaultHeight, size, maxSlope, shouldVisualize) {
         var terrain = scene.filter(getFilterPredicate("Terrain"))[0];
 
-        // Visited is a map from an unique code computed from the coordinates to the index of the nodes or
-        // -1 if the node should not be created or undefined if the node hasn't been visited
-        var visited = [];
-
-        var nodes = [];
-
 
         var hero = scene.filter(function (o) { o.userData.id == "hero" })[0];
         var initialRow = 0, initialCol = 0;
@@ -179,12 +238,7 @@ Thralldom.Exporter = function (editor) {
             initialCol = hero.position.y / size;
         }
 
-        var tryAddNode = bindTryAddNode(maxSlope,
-                                        size, defaultHeight,
-                                        terrain,
-                                        visited, nodes);
-
-        tryAddNode(initialRow, initialCol, undefined, undefined);
+        var nodes = addAllNodes(maxSlope, size, defaultHeight, terrain, initialRow, initialCol);
         visualizeNavmesh(nodes, size, defaultHeight, shouldVisualize);
         return nodes;
     }
@@ -272,10 +326,13 @@ Thralldom.Exporter = function (editor) {
 
         function hashRect(rect) {
             // NOTE: THE IMPORTER MUST USE THE SAME CODE!
-            // Rectangles are nonoverlapping thus we only need their toplefties
+            // Rectangles are nonoverlapping and we only need their toplefties BUT
+            // if include also width and height to reduce hash collisions
             var hash = 23;
             hash = hash * 31 + rect.x;
             hash = hash * 31 + rect.y;
+            hash = hash * 31 + rect.width;
+            hash = hash * 31 + rect.height;
             return hash;
         }
 

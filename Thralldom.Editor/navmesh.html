@@ -35,10 +35,13 @@
 
     function hashRect(rect) {
         // NOTE: THE IMPORTER MUST USE THE SAME CODE!
-        // Rectangles are nonoverlapping thus we only need their toplefties
+        // Rectangles are nonoverlapping and we only need their toplefties BUT
+        // if include also width and height to reduce hash collisions
         var hash = 23;
         hash = hash * 31 + rect.x;
         hash = hash * 31 + rect.y;
+        hash = hash * 31 + rect.width;
+        hash = hash * 31 + rect.height;
         return hash;
     }
 
@@ -55,6 +58,15 @@
         mesh.forEach(function (rect) {
             context.fillStyle = '#' + Math.floor(Math.random() * 16777215).toString(16);
             context.fillRect(rect.x, rect.y, rect.width, rect.height);
+        });
+
+        var hashmap = {};
+        mesh.forEach(function (rect) {
+            var h = hashRect(rect);
+            if (hashmap[h]) {
+                console.warn("WE ARE FUCKED");
+            }
+            hashmap[h] = true;
         });
 
         context.fillStyle = context.strokeStyle = "black";

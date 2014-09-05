@@ -33,10 +33,12 @@
         "Content/Models/Buildings/Houses/cart.js",
         "Content/Models/Buildings/Houses/well.js",
         "Content/Models/Buildings/Houses/House_01.js",
-
-        "Content/Models/Buildings/OldHouse/oldhouse.js",
-        "Content/Models/Buildings/Rocks/rock_big.js",
-        "Content/Models/Buildings/Rocks/rock_medium.js",
+        
+        "Content/Models/Buildings/Houses/Konak.js",
+        "Content/Models/Buildings/Houses/oldhouse.js",
+        "Content/Models/Buildings/Houses/rock_big.js",
+        "Content/Models/Buildings/Houses/rock_medium.js",
+        "Content/Models/Buildings/Houses/Tree_01.js",
     ],                                       
     textures: [
         "Content/Textures/Grass.jpg",

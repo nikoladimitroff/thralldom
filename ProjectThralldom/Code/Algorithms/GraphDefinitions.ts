@@ -37,10 +37,14 @@ module Thralldom {
             }
 
             public hash(): number {
-                // Rectangles are nonoverlapping thus we only need their toplefties
+                // NOTE: THE EXPORTER MUST USE THE SAME CODE!
+                // Rectangles are nonoverlapping and we only need their toplefties BUT
+                // if include also width and height to reduce hash collisions
                 var hash = 23;
                 hash = hash * 31 + this.x;
                 hash = hash * 31 + this.y;
+                hash = hash * 31 + this.width;
+                hash = hash * 31 + this.height;
                 return hash;
             }
 
