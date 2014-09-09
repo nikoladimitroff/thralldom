@@ -15,9 +15,13 @@
     ],
     models: [
         "Content/Models/Terrain/terrain.js",
+        
+        "Content/Models/Buildings/Houses/Workshop.js",
         "Content/Models/Buildings/Houses/House_03.js",
-        "Content/Models/Buildings/Houses/Tavern.js",
-        "Content/Models/Buildings/Houses/Restaurant_two.js",
+        "Content/Models/Buildings/Houses/mill.js",
+        "Content/Models/Buildings/Houses/cart.js",
+        "Content/Models/Buildings/Houses/rock_big.js",
+        "Content/Models/Buildings/Houses/tree_03.js",
     ],
     textures: [
         "Content/Textures/Grass.jpg",

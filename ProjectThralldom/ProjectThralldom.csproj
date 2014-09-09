@@ -109,6 +109,7 @@
     <Content Include="Content\Models\Terrain\terrainTextureMicro.jpg" />
     <Content Include="Content\Models\Terrain\terrainTextureSmall.jpg" />
     <Content Include="Content\Quests\default.js" />
+    <Content Include="Content\Quests\main.js" />
     <Content Include="Content\Quests\simple.js" />
     <Content Include="Content\Scenes\default.js" />
     <Content Include="app.css.map">

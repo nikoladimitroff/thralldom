@@ -21,7 +21,7 @@ module Thralldom {
             }
 
 
-            if (description.interaction) {
+            if (description.interaction && description.interaction.type) {
                 this.interaction = Interaction.fromDescription(description.interaction)
             }
 

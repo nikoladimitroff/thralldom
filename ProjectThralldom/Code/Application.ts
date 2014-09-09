@@ -73,7 +73,7 @@ module Thralldom {
         constructor(container: HTMLElement) {
             this.webglContainer = container;
 
-            this.renderer = new THREE.WebGLRenderer({ antialias: true });
+            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 
             this.renderer.setSize(this.webglContainer.offsetWidth, this.webglContainer.offsetHeight);
             this.webglContainer.appendChild(this.renderer.domElement);

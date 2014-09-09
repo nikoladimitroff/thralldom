@@ -4,12 +4,11 @@ set distance 10
 
 *$story-text:
 Imprisoned for 8 years...
-You've finally escaped
-The fight for freedom must be renewed...
-...and you are the one to lead it.
+You've finally escaped to Byala Cherkva.
+The fight for freedom must be renewed.
 But first, you are to find shelter and take some rest
-Now, seek your father's old friend Marko
+Seek your father's old friend Marko
 
 *hero:
 wait 5000
-goto (22.5, -49.637) and tell story by 3000 and flycamera from (5, 0.1, 0) to (-5, -0.2, 0) for 16000, use arc
+goto +(100, 0) and tell story by 3000 and flycamera from (5, 0.1, 0) to (-5, -0.2, 0) for 16000, use arc

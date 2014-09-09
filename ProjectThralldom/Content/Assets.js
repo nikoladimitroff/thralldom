@@ -39,6 +39,8 @@
         "Content/Models/Buildings/Houses/rock_big.js",
         "Content/Models/Buildings/Houses/rock_medium.js",
         "Content/Models/Buildings/Houses/Tree_01.js",
+        "Content/Models/Buildings/Houses/Tree_02.js",
+        "Content/Models/Buildings/Houses/tree_03.js",
     ],                                       
     textures: [
         "Content/Textures/Grass.jpg",

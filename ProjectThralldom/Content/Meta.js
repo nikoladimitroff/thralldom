@@ -26,9 +26,9 @@
     //],
 
     /* Оur current main mission */
-    world: "Content/Scenes/main.js",
+    world: "Content/Scenes/navmesh.js",
     quest: "Content/Quests/simple.js",
-    assets: "Content/Assets.js",
+    assets: "Content/simple-assets.js",
     scripts: [
         //"Content/ScriptedEvents/NavmeshTest.tscr",
     ],

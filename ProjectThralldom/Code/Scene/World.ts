@@ -202,12 +202,18 @@ module Thralldom {
             this.controllerManager.update(delta, this);
         }
 
-        public mergeStatics(): void {
-            var geometry = new THREE.Geometry();
+        private mergeMaterials(tag: string): THREE.MeshFaceMaterial {
             var megamaterial = new THREE.MeshFaceMaterial();
 
-            // Combine all materials into one
             for (var i = 0; i < this.statics.length; i++) {
+                if (this.statics[i] instanceof Terrain)
+                    continue;
+                if (this.statics[i] instanceof Skybox)
+                    continue;
+
+                if (tag.length != 0 && this.statics[i].tags.indexOf(tag) == -1)
+                    continue;
+
                 var current = this.statics[i].mesh;
                 if (current.material instanceof THREE.MeshFaceMaterial) {
                     megamaterial.materials = megamaterial.materials.concat((<THREE.MeshFaceMaterial>current.material).materials);
@@ -216,9 +222,20 @@ module Thralldom {
                     megamaterial.materials.push(current.material);
                 }
             }
-            
+
             var mats = megamaterial.materials;
             megamaterial.materials = megamaterial.materials.filter((mat, index, arr) => arr.indexOf(mat) == index);
+            return megamaterial;
+        }
+
+        public mergeStatics(): void {
+            var opaqueGeometry = new THREE.Geometry(),
+                transparentGeometry = new THREE.Geometry();
+            
+            // Combine all materials into one
+            var opaqueMaterial = this.mergeMaterials(""),
+                transparentMaterial = this.mergeMaterials("transparent");
+            transparentMaterial.transparent = true;
 
             var processedGeometries: any = {};
             for (var i = 0; i < this.statics.length; i++) {
@@ -237,14 +254,22 @@ module Thralldom {
                 }
 
                 current.updateMatrix();
-                geometry.merge(current.geometry, current.matrix, 0);
+                if (this.statics[i].tags.indexOf("transparent") != -1) {
+                    transparentGeometry.merge(current.geometry, current.matrix, 0);
+                }
+                else {
+                    opaqueGeometry.merge(current.geometry, current.matrix, 0);
+                }
 
                 this.renderScene.remove(current);
             }
             // Since Borko is a nice guy, all static geometry uses a single material, we don't need the megamaterial
-            var mesh = new THREE.Mesh(geometry, megamaterial.materials[0]);
-            mesh.name = "scenery";
-            this.renderScene.add(mesh);
+            var opaqueMesh = new THREE.Mesh(opaqueGeometry, opaqueMaterial);
+            opaqueMesh.name = "OpaqueScenery";
+            var transparentMesh = new THREE.Mesh(transparentGeometry, transparentMaterial);
+            transparentMesh.name = "TransparentScenery";
+            this.renderScene.add(opaqueMesh);
+            this.renderScene.add(transparentMesh);
         }
     }
 } 
