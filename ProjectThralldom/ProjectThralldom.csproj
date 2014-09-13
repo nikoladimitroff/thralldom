@@ -230,6 +230,7 @@
     <TypeScriptCompile Include="Code\CameraControllers\SkyrimCameraController.ts" />
     <TypeScriptCompile Include="Code\CommonInterfaces.ts" />
     <TypeScriptCompile Include="Code\IController.ts" />
+    <TypeScriptCompile Include="Code\Managers\SpawnerManager.ts" />
     <TypeScriptCompile Include="Code\Managers\ParticleManager.ts" />
     <TypeScriptCompile Include="Code\Managers\PhysicsManager.ts" />
     <TypeScriptCompile Include="Code\Managers\QuestManager.ts" />
@@ -250,6 +251,7 @@
     <TypeScriptCompile Include="Code\Scene\Interfaces.ts" />
     <TypeScriptCompile Include="Code\Scene\Inventory.ts" />
     <TypeScriptCompile Include="Code\AssociativeContainers.ts" />
+    <TypeScriptCompile Include="Code\Scene\Spawner.ts" />
     <TypeScriptCompile Include="Scripts\typings\azure.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.es5.d.ts" />

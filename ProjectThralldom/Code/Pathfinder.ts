@@ -196,8 +196,8 @@
                 else
                     lambda = rightEnd;
             }
-            if (lambda < 0 || lambda > 1)
-                throw new Error("Unpassable terrain found while pathfinding");
+            //if (lambda < 0 || lambda > 1)
+            //    throw new Error("Unpassable terrain found while pathfinding");
 
             return new THREE.Vector2(
                 lambda * p.x + (1 - lambda) * q.x,

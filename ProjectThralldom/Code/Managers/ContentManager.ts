@@ -13,7 +13,7 @@ module Thralldom {
 
         private static dynamicTypes = {
             "character": Character,
-        }; 
+        };
         private static staticTypes = {
             "environment": Environment,
             "skybox": Skybox,
@@ -46,6 +46,8 @@ module Thralldom {
             "Winning Imagine Cup 2014",
             "Thinking of funny text to put here",
         ];
+
+        private spawnerManager: SpawnerManager;
 
         private onContentLoaded(path: string, object: any) {
             this.loaded++;
@@ -277,12 +279,15 @@ module Thralldom {
         private loadControllers(world: Thralldom.World, graph: Algorithms.IGraph): void {
             Pathfinder.Graph = graph;
 
-            for (var typeName in ContentManager.controllerTypes) {
-                var type = ContentManager.controllerTypes[typeName];
-
-                var controllers = <Array<IController>> world.selectByTag(typeName).map((character) => new type(character, graph));
-                world.controllerManager.controllers = world.controllerManager.controllers.concat(controllers);
+            for (var typeName in ContentManager.controllerTypes) {                
+                this.loadController(typeName, world, graph);
             }
+        }
+
+        public loadController(typeName: any, world: Thralldom.World, graph: Algorithms.IGraph) {
+            var type = ContentManager.controllerTypes[typeName];
+            var controllers = <Array<IController>> world.selectByTag(typeName).map((character) => new type(character, graph));
+            world.controllerManager.controllers = world.controllerManager.controllers.concat(controllers);
         }
 
         private parseWorld(path: string, worldDescription: any): Thralldom.World {
@@ -293,6 +298,8 @@ module Thralldom {
 
             // Lights
             this.loadLights(worldDescription, world);
+
+            
 
             // Dynamics / statics
             this.parseCollection(worldDescription.dynamics, ContentManager.dynamicTypes, world.addDynamic.bind(world));
@@ -310,10 +317,13 @@ module Thralldom {
             }
 
             var graph = <Algorithms.IGraph>worldDescription.navmesh;
-            graph.nodes = graph.nodes.map(node => new Algorithms.Rectangle(node.x, node.y, node.width, node.height));
-
+            graph.nodes = graph.nodes.map(node => new Algorithms.Rectangle(node.x, node.y, node.width, node.height));   
 
             this.loadControllers(world, graph);
+
+            // Components
+            this.spawnerManager = new SpawnerManager(world, graph);
+            this.spawnerManager.loadFromDescription(worldDescription, this);
 
             return world;
         }

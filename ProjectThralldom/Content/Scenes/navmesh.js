@@ -48,6 +48,13 @@
                 "Content/Textures/Skyboxes/Night/negZ.png", 
         ],
     },
+    components: [
+        {
+            "type": "spawner", 
+            "maxUnits": 10,
+            "character": {"type":"character","pos":[74.8693791932638,100,-252.5646058357889],"rot":[0,0,0],"scale":15.023463780471047,"model":"SokolovAnimation.js","tags":["citizen"]}
+        }
+    ],
     dynamics: [
         {"type":"character","pos":[-50.43913693986309,100,203.60414692307376],"rot":[0,0,0],"scale":14.493631822668243,"model":"BoychoAnimation.js","id":"hero","tags":["skyrim"], weapon: "PistolAnimation.js",},
         {"type":"character","pos":[274.8693791932638,100,-252.5646058357889],"rot":[0,0,0],"scale":15.023463780471047,"model":"SokolovAnimation.js","id":"sokolov","tags":["citizen"]},
