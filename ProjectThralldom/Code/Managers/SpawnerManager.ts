@@ -34,7 +34,7 @@
                     var randomPointInRect = GeometryUtils.randomPointInRect(randomRect);
                     var character: Character = new Character();
                     character.loadFromDescription(componentDescription.character, content);
-                    character.mesh.position = new THREE.Vector3(randomPointInRect.x, 0, randomPointInRect.y);
+                    character.mesh.position = GeometryUtils.Vector2To3(randomPointInRect);
 
                     if (character.tags.indexOf("guard") != -1) {
                         content.loadController("guard", this.world, this.graph);
